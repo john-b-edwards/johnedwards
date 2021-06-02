@@ -1,7 +1,7 @@
 ---
 date: "2021-06-01"
 description: The math heavy portion of how LRMC works
-draft: true
+draft: false
 keywords:
 - math
 - matrices
