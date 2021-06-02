@@ -1,0 +1,31 @@
+theme: hugo-theme-codex
+title: codex
+languageCode: en-us
+baseURL: https://example.org/
+copyright: © 2021
+ignoreErrors:
+  - error-remote-getjson
+params:
+  dateFormat: Jan 2 2006
+  github: https://github.com/john-b-edwards
+  iconOrder:
+    - Twitter
+    - GitHub
+  showPageTitleInTOC: no
+  twitter: https://twitter.com/John_B_Edwards
+markup:
+  goldmark:
+    renderer:
+      unsafe: yes
+  highlight:
+    codeFences: no
+menu:
+  main:
+    - identifier: about
+      name: about
+      title: About
+      url: /
+    - identifier: blog
+      name: blog
+      title: Blog
+      url: /blog
