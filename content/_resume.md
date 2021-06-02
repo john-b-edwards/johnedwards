@@ -5,6 +5,7 @@ math: false
 slug: resume
 title: Resume
 toc: false
+noComment: true
 ---
 
 ### Analyst, Seattle Mariners
