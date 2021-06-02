@@ -2,27 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on codex</title>
-    <link>johnbedwards.io/tags/</link>
+    <link>https://johnedwards.netlify.app/tags/</link>
     <description>Recent content in Tags on codex</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="johnbedwards.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnedwards.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>python</title>
-      <link>johnbedwards.io/tags/python/</link>
+      <link>https://johnedwards.netlify.app/tags/python/</link>
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>johnbedwards.io/tags/python/</guid>
+      <guid>https://johnedwards.netlify.app/tags/python/</guid>
       <description></description>
     </item>
     
     <item>
       <title>math</title>
-      <link>johnbedwards.io/tags/math/</link>
+      <link>https://johnedwards.netlify.app/tags/math/</link>
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>johnbedwards.io/tags/math/</guid>
+      <guid>https://johnedwards.netlify.app/tags/math/</guid>
       <description></description>
     </item>
     
