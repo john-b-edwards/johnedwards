@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Applying LRMC Rankings to College Football, Part Two | codex</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="Programming an implementation of LRMC in Python">
+  <meta name="keywords" content="math , matrices , college_football , college_basketball , football , basketball , lrmc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Applying LRMC Rankings to College Football, Part Two" />
+  <meta name="twitter:description" content="Programming an implementation of LRMC in Python"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css" integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io\/"
+      },
+      "articleSection" : "blog",
+      "name" : "Applying LRMC Rankings to College Football, Part Two",
+      "headline" : "Applying LRMC Rankings to College Football, Part Two",
+      "description" : "Programming an implementation of LRMC in Python",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2021",
+      "datePublished": "2021-06-02 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2021-06-02 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/lrmc_pt_2\/",
+      "wordCount" : "3135",
+      "keywords" : ["math", "matrices", "college_football", "college_basketball", "football", "basketball", "lrmc", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">Applying LRMC Rankings to College Football, Part Two</h1>
+            <time datetime="2021-06-02 00:00:00 &#43;0000 UTC" class="post__date">Jun 2 2021</time> 
+          </header>
+          <article class="post__content">
+              
+<p><em>The following <a href="https://blog.collegefootballdata.com/talking-tech-applying-lrmc-rankings-to-college-football-part-two/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>was originally published on the CFBD Blog</a>
+ and has been reproduced here with edits for clarity.</em></p>
+<p>This is the second and final part of a series on implementing LRMC rankings for CFB! This entry presupposes you are familiar with the mathematical concepts behind LRMC. To view part one, which covers these concepts, click here.</p>
+<p>When we last left off, we covered how LRMC works and how to implement it mathematically. With our understanding of LRMC, we are now prepared to implement a version of LRMC computationally for ranking CFB teams. To start with, let&rsquo;s fire up our Python notebook.</p>
+<pre><code class="language-python">import cfbd
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+import math
+</code></pre>
+<p>First, we&rsquo;ll grab a 6 year sample of CFB games, from 2015-2020 (you&rsquo;ll see why we&rsquo;re grabbing so many games in a second), then filter out any games not against BCS opponents.</p>
+<pre><code class="language-python">seasons = [cfbd.GamesApi().get_games(year=iteryear, season_type='both') for iteryear in range(2015,2021)]
+games = [game for season in seasons for game in season]
+
+games_df = pd.DataFrame().from_records([
+                dict(
+                    id=g.id,
+                    neutral_site=g.neutral_site,
+                    home_team=g.home_team,
+                    home_conference=g.home_conference,
+                    home_points=g.home_points,
+                    away_team=g.away_team,
+                    away_conference=g.away_conference,
+                    away_points=g.away_points,
+                    season=g.season
+                )
+                for g in games
+                if g.home_points is not None
+                    and g.away_points is not None
+                    and g.home_conference is not None
+                    and g.away_conference is not None
+            ])
+games_df.head()
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">id</th>
+<th style="text-align:right">neutral_site</th>
+<th style="text-align:right">home_team</th>
+<th style="text-align:right">home_conference</th>
+<th style="text-align:right">home_points</th>
+<th style="text-align:right">away_team</th>
+<th style="text-align:right">away_conference</th>
+<th style="text-align:right">away_points</th>
+<th>season</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">400603840</td>
+<td style="text-align:right">True</td>
+<td style="text-align:right">South Carolina</td>
+<td style="text-align:right">SEC</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">North Carolina</td>
+<td style="text-align:right">ACC</td>
+<td style="text-align:right">13</td>
+<td>2015</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">400763593</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">UCF</td>
+<td style="text-align:right">American Athletic</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">Florida International</td>
+<td style="text-align:right">Conference USA</td>
+<td style="text-align:right">15</td>
+<td>2015</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">400763399</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Central Michigan</td>
+<td style="text-align:right">Mid-American</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">Oklahoma State</td>
+<td style="text-align:right">Big 12</td>
+<td style="text-align:right">24</td>
+<td>2015</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">400603839</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Vanderbilt</td>
+<td style="text-align:right">SEC</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">Western Kentucky</td>
+<td style="text-align:right">Conference USA</td>
+<td style="text-align:right">14</td>
+<td>2015</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">400756883</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Utah</td>
+<td style="text-align:right">Pac-12</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">Michigan</td>
+<td style="text-align:right">Big Ten</td>
+<td style="text-align:right">17</td>
+<td>2015</td>
+</tr>
+</tbody>
+</table>
+<p>Our first task is to calculate <em>r</em><sub><em>x</em></sub> for each of these games - the probability that the home team is better than the away team given their margin of victory.</p>
+<p>For college basketball, estimating this value is quite easy with logistic regression –  by virtue of conference home-and-home games, we can simply take all home-team margin of victories and run a logistic regression on the away game of the series to determine the odds of the home team winning on the road, then adjust for home court advantage. But since two teams playing each other twice in one season in college football are quite rare (let alone two teams playing a home-and-home series), we have to take a different approach. For college football, Kolbush and Sokol instead use a common-opponent approach for estimating <em>r</em><sub><em>x</em></sub><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Essentially, for a given game, we can look at the opponents Team A and Team B both played over the course of the season, and estimate the odds that Team A is better than Team B based on their win percentages against common opponents. Let&rsquo;s walk through an example.</p>
+<pre><code class="language-python">games_df.loc[(games_df['id'] == 401112476)]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">id</th>
+<th style="text-align:right">neutral_site</th>
+<th style="text-align:right">home_team</th>
+<th style="text-align:right">home_conference</th>
+<th style="text-align:right">home_points</th>
+<th style="text-align:right">away_team</th>
+<th style="text-align:right">away_conference</th>
+<th style="text-align:right">away_points</th>
+<th>season</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">3369</td>
+<td style="text-align:right">401112476</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Miami</td>
+<td style="text-align:right">ACC</td>
+<td style="text-align:right">35</td>
+<td style="text-align:right">Virginia Tech</td>
+<td style="text-align:right">ACC</td>
+<td style="text-align:right">42</td>
+<td>2019</td>
+</tr>
+</tbody>
+</table>
+<p>In this sample game, Miami lost to Virginia Tech by 7 points. How many opponents did Virginia Tech and Miami have in common that year?</p>
+<pre><code class="language-python">opponents = games_df['away_team'][((games_df['home_team'] == 'Virginia Tech') &amp; (games_df['season'] == 2019))].tolist() + games_df['home_team'][((games_df['away_team'] == 'Virginia Tech') &amp; (games_df['season'] == 2019))].tolist() + games_df['away_team'][((games_df['home_team'] == 'Miami') &amp; (games_df['season'] == 2019))].tolist() + games_df['home_team'][((games_df['away_team'] == 'Miami') &amp; (games_df['season'] == 2019))].tolist()
+
+common_opponents = set([team for team in opponents if opponents.count(team) &gt; 1])
+
+common_opponents
+</code></pre>
+<pre><code>{'Duke', 'Georgia Tech', 'North Carolina', 'Pittsburgh', 'Virginia'}`
+</code></pre>
+<p>How well did VT and Miami do against those common opponents?</p>
+<pre><code class="language-python">vt_w = 0
+mia_w = 0
+vt_g = 0
+mia_g = 0
+for index, game in games_df.loc[games_df['season'] == 2019].iterrows():
+    if (game['home_team'] == 'Virginia Tech') &amp; (game['away_team'] in common_opponents):
+        vt_g += 1
+        if game['home_points'] &gt; game['away_points']:
+            vt_w += 1
+    elif (game['home_team'] == 'Miami') &amp; (game['away_team'] in common_opponents):
+        mia_g += 1
+        if game['home_points'] &gt; game['away_points']:
+            mia_w += 1
+    elif (game['away_team'] == 'Virginia Tech') &amp; (game['home_team'] in common_opponents):
+        vt_g += 1
+        if game['away_points'] &gt; game['home_points']:
+            vt_w += 1
+    elif (game['away_team'] == 'Miami') &amp; (game['home_team'] in common_opponents):
+        mia_g += 1
+        if game['away_points'] &gt; game['home_points']:
+            mia_w += 1
+
+print(&quot;Virginia Tech's common opponent WPCT: &quot; + str(vt_w / vt_g))
+print(&quot;Miami's common opponent WPCT: &quot; + str(mia_w / mia_g))
+</code></pre>
+<pre><code>Virginia Tech's common opponent WPCT: 0.6
+Miami's common opponent WPCT: 0.4
+</code></pre>
+<p>Virginia Tech won 60% of their games against their common opponents, and Miami won 40%. Per Kolbush and Sokol&rsquo;s approach, this renders our calculus rather simple. Let <em>p</em><sub><em>j</em></sub> be the winning percentage of the home team (<em>j</em>) against common opponents between <em>j</em> and the away team (<em>i</em>), and <em>p</em><sub><em>i</em></sub> be the winning percentage of <em>i</em> against common opponents, then  <em>r</em><sub><em>x</em></sub> becomes:</p>
+<p>$$
+{\frac {p_j + (1 - p_i)} {2}} = {\frac {0.4 + (1 - 0.6)} {2}} = 0.4
+$$</p>
+<p>There is a 40% approximated chance Miami is better than Virginia Tech based on their common opponents.</p>
+<p>To obtain a smooth estimate, we&rsquo;ll perform this for every game where teams had common opponents in a season, compile the point differentials for those games, then run a weighted logistic regression on those games (remember, our 40% estimate is currently independent of point differential – we wish to translate point differential into this estimate!). Our weights will be the total number of games played against common opponents for the teams in a given game<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>We&rsquo;ll do this for the 2015-2018 seasons to estimate coefficients for the 2019 season (Kolbush and Sokol also used four prior seasons of data to estimate coefficients for a given season<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>). We&rsquo;ll also filter out neutral site games so we can get a better approximation for home field advantage.</p>
+<pre><code class="language-python">train_games_df = games_df.loc[(games_df['season'].isin([2015,2016,2017,2018])) &amp; (~games_df['neutral_site'])]
+
+train_df = []
+
+for index, game in train_games_df.iterrows():
+    season = game['season']
+    team_a = game['home_team']
+    team_b = game['away_team']
+    home_diff = game['home_points'] - game['away_points']
+    opponents = train_games_df['away_team'][((games_df['home_team'] == team_a) &amp; (games_df['season'] == season))].tolist() + games_df['home_team'][((games_df['away_team'] == team_a) &amp; (games_df['season'] == season))].tolist() + games_df['away_team'][((games_df['home_team'] == team_b) &amp; (games_df['season'] == season))].tolist() + games_df['home_team'][((games_df['away_team'] == team_b) &amp; (games_df['season'] == season))].tolist()
+    common_opponents = set([team for team in opponents if opponents.count(team) &gt; 1])
+    if len(common_opponents) &gt; 1:
+        a_w = 0
+        b_w = 0
+        a_g = 0
+        b_g = 0
+        for index, game in games_df.loc[(games_df['season'] == season) &amp;
+                                        ((games_df['home_team'].isin([team_a,team_b])) |
+                                          games_df['away_team'].isin([team_a,team_b]))].iterrows():
+            if (game['home_team'] == team_a) &amp; (game['away_team'] in common_opponents):
+                a_g += 1
+                if game['home_points'] &gt; game['away_points']:
+                    a_w += 1
+            elif (game['home_team'] == team_b) &amp; (game['away_team'] in common_opponents):
+                b_g += 1
+                if game['home_points'] &gt; game['away_points']:
+                    b_w += 1
+            elif (game['away_team'] == team_a) &amp; (game['home_team'] in common_opponents):
+                a_g += 1
+                if game['away_points'] &gt; game['home_points']:
+                    a_w += 1
+            elif (game['away_team'] == team_b) &amp; (game['home_team'] in common_opponents):
+                b_g += 1
+                if game['away_points'] &gt; game['home_points']:
+                    b_w += 1
+
+        r_x = ((a_w / a_g) + (1 - (b_w / b_g))) / 2
+
+        d = {
+            'season' : season,
+            'team_a' : team_a,
+            'team_b' : team_b,
+            'home_diff' : home_diff,
+            'r_x' : r_x,
+            'weight' : a_g+b_g
+        }
+        train_df.append(d)
+
+train_df = pd.DataFrame(train_df)
+train_df.head()
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">season</th>
+<th style="text-align:right">team_a</th>
+<th style="text-align:right">team_b</th>
+<th style="text-align:right">home_diff</th>
+<th style="text-align:right">r_x</th>
+<th style="text-align:right">weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">2015</td>
+<td style="text-align:right">Tulane</td>
+<td style="text-align:right">Duke</td>
+<td style="text-align:right">-30</td>
+<td style="text-align:right">0.25</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2015</td>
+<td style="text-align:right">Western Michigan</td>
+<td style="text-align:right">Michigan State</td>
+<td style="text-align:right">-13</td>
+<td style="text-align:right">0.25</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">2015</td>
+<td style="text-align:right">Northwestern</td>
+<td style="text-align:right">Stanford</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">2015</td>
+<td style="text-align:right">Georgia</td>
+<td style="text-align:right">Louisiana Monroe</td>
+<td style="text-align:right">37</td>
+<td style="text-align:right">0.75</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">2015</td>
+<td style="text-align:right">NC State</td>
+<td style="text-align:right">Troy</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">0.75</td>
+<td style="text-align:right">4</td>
+</tr>
+</tbody>
+</table>
+<p>Now, we&rsquo;ll use our data to make a logistic regression model. Okay, I lied, it&rsquo;s not a strict logistic regression model – because we have a series of continuous probabilities to train on rather than a series of 1s and 0s (which a logistic regression model is usually trained upon), we&rsquo;re going to use the logit transformation to linearize our data, then run a weighted linear regression model, then undo the logit transformation to obtain probabilities for <em>r</em><sub><em>x</em></sub>. Before we do that, we&rsquo;re going transform any probabilities of 100% to 90% and 0% to 10% – the logit transformation can&rsquo;t handle these specific probabilities, and speaking realistically, it would be difficult to project anyone as having a 100% chance of beating a given opponent regardless of their margins of victory against other opponents<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<pre><code class="language-python">train_df.loc[train_df['r_x'] == 1,'r_x'] = 0.9
+train_df.loc[train_df['r_x'] == 0,'r_x'] = 0.1
+
+x = np.array(train_df['home_diff']).reshape(-1,1)
+y = np.log(train_df['r_x'] / (1 - train_df['r_x']))
+w = train_df['weight']
+model = LinearRegression().fit(x, y, w)
+plt.scatter(x, y, s = w)
+plt.plot(x, model.predict(x), color='red', linewidth=3, label='Weighted model')
+a = model.coef_[0]
+b = model.intercept_
+print(&quot;a = &quot; + str(a))
+print(&quot;b = &quot; + str(b))
+</code></pre>
+<pre><code>a = 0.023983237378834784
+b = -0.09541138612221126
+</code></pre>
+<p><img src="https://blog.collegefootballdata.com/content/images/2020/12/index.png" alt="Regression plot between point differential and common win percentage"></p>
+<p>Remember that for a linear regression, we find our coefficients in the form <em>y</em> = <em>ax</em> + <em>b</em>. Since <em>y</em> is logit transformed, we can undo the transformation like so:</p>
+<p>$$
+{\frac {e^{(ax + b)}} {1 + e^{(ax + b)}}}
+$$</p>
+<p>Let&rsquo;s return to that Virginia Tech/Miami game. Based on the point differential of the game and our model, what are the odds that Miami was better than Virginia Tech?</p>
+<pre><code class="language-python">print(math.exp(a * -7 + b) / (1 + math.exp(a * -7 + b)))
+</code></pre>
+<pre><code>0.43455413139478277
+</code></pre>
+<p>Not too far off from our original estimate of 40%!</p>
+<p>We can also quickly calculate the expected home field advantage from these coefficients<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>:</p>
+<pre><code class="language-python">h = (-b / a)
+print(h)
+</code></pre>
+<pre><code>3.9782530029249448
+</code></pre>
+<p>So from 2015-2018, home field advantage appears to be worth about 4 points – not too far off from the 2.5 estimate Bill has been using in his SRS calculations.</p>
+<p>Now that we have our formula for estimating <em>r</em><sub><em>x</em></sub>, we can start building our Markov chain. Recall how we did this by hand in part one:</p>
+<blockquote>
+<p>To generate our transition matrix, we sum up for games involving a particular team (let&rsquo;s say, Team X) by team. In the row of Team X, we place each team&rsquo;s sum of rx in each team&rsquo;s corresponding column (including Team X). Then, we divide all of the values in the row by the number of games Team X played.</p>
+</blockquote>
+<p>We&rsquo;re going to implement this algorithmically for our 2019 dataset. First, let&rsquo;s grab our 2019 values.</p>
+<pre><code class="language-python">games_df_2019 = games_df.loc[games_df['season'] == 2019]
+games_df_2019.head()
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">id</th>
+<th style="text-align:right">neutral_site</th>
+<th style="text-align:right">home_team</th>
+<th style="text-align:right">home_conference</th>
+<th style="text-align:right">home_points</th>
+<th style="text-align:right">away_team</th>
+<th style="text-align:right">away_conference</th>
+<th style="text-align:right">away_points</th>
+<th style="text-align:right">season</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">3073</td>
+<td style="text-align:right">401110723</td>
+<td style="text-align:right">True</td>
+<td style="text-align:right">Florida</td>
+<td style="text-align:right">SEC</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">Miami</td>
+<td style="text-align:right">ACC</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">2019</td>
+</tr>
+<tr>
+<td style="text-align:right">3074</td>
+<td style="text-align:right">401114164</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Hawai&rsquo;i</td>
+<td style="text-align:right">Mountain West</td>
+<td style="text-align:right">45</td>
+<td style="text-align:right">Arizona</td>
+<td style="text-align:right">Pac-12</td>
+<td style="text-align:right">38</td>
+<td style="text-align:right">2019</td>
+</tr>
+<tr>
+<td style="text-align:right">3075</td>
+<td style="text-align:right">401117854</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Cincinnati</td>
+<td style="text-align:right">American Athletic</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">UCLA</td>
+<td style="text-align:right">Pac-12</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">2019</td>
+</tr>
+<tr>
+<td style="text-align:right">3076</td>
+<td style="text-align:right">401114236</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Tulane</td>
+<td style="text-align:right">American Athletic</td>
+<td style="text-align:right">42</td>
+<td style="text-align:right">Florida International</td>
+<td style="text-align:right">Conference USA</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">2019</td>
+</tr>
+<tr>
+<td style="text-align:right">3077</td>
+<td style="text-align:right">401111653</td>
+<td style="text-align:right">False</td>
+<td style="text-align:right">Clemson</td>
+<td style="text-align:right">ACC</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">Georgia Tech</td>
+<td style="text-align:right">ACC</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">2019</td>
+</tr>
+</tbody>
+</table>
+<p>Next, we&rsquo;ll build two matrices: an n x n transition matrix, where n is the number of BCS teams, and a 1 x n matrix, tracking how many games each team plays.</p>
+<pre><code class="language-python">team_names = sorted(list(set(games_df_2019['home_team'].tolist() + games_df_2019['away_team'].tolist())))
+n_teams = len(team_names)
+p = np.zeros((n_teams,n_teams))
+n_games = np.zeros(n_teams)
+</code></pre>
+<p>Now, we&rsquo;ll iterate through each game, calculate <em>r</em><sub><em>x</em></sub>, and put either <em>r</em><sub><em>x</em></sub> or 1 - <em>r</em><sub><em>x</em></sub> in the appropriate place in our transition matrix (to understand why we&rsquo;re playing each value where we are, consult part one of this guide here). For neutral-site games, we&rsquo;ll calculate <em>r</em><sub><em>x</em></sub> after adding the home-field advantage in. We&rsquo;ll also add a game to each team&rsquo;s n_games counter.</p>
+<pre><code class="language-python">for index, game in games_df_2019.iterrows():
+    home_team = game['home_team']
+    away_team = game['away_team']
+    home_points = game['home_points']
+    away_points = game['away_points']
+    neutral_flg = game['neutral_site']
+    home_team_ndx = team_names.index(home_team)
+    away_team_ndx = team_names.index(away_team)
+    spread = home_points - away_points
+    if neutral_flg:
+        spread += h
+    r_x = math.exp(a * spread + b) / (1 + math.exp(a * spread + b))
+    n_games[home_team_ndx] += 1
+    n_games[away_team_ndx] += 1
+    p[home_team_ndx, away_team_ndx] += 1 - r_x
+    p[away_team_ndx, home_team_ndx] += r_x
+    p[home_team_ndx, home_team_ndx] += r_x
+    p[away_team_ndx, away_team_ndx] += 1 - r_x
+</code></pre>
+<p>Next, we&rsquo;ll divide each row of our transition by the number of games we&rsquo;re tracking for each team.</p>
+<pre><code class="language-python">p = p / n_games[:,None]
+print(p)
+</code></pre>
+<pre><code>[[0.57204818 0.         0.         ... 0.         0.         0.03668326]
+ [0.         0.354444   0.         ... 0.         0.         0.        ]
+ [0.         0.         0.64208189 ... 0.         0.         0.        ]
+ ...
+ [0.         0.         0.         ... 0.52879391 0.         0.        ]
+ [0.         0.         0.         ... 0.         0.59096999 0.        ]
+ [0.04665007 0.         0.         ... 0.         0.         0.54762383]]
+</code></pre>
+<p>Finally, we&rsquo;ll approximate the steady state of this matrix to find what team LRMC believes is the best, then multiply our steady state matrix by a vector that counts down from n_teams to 1, which gives us our relative team strength.</p>
+<pre><code class="language-python">prior = n_teams - np.array(list(range(n_teams)))
+steady_state = np.linalg.matrix_power(p, 1000)
+rating = prior.dot(steady_state)
+rating_df = pd.DataFrame({
+    'team': team_names,
+    'lrmc_rating': rating
+
+})
+print(rating_df.sort_values(by=['lrmc_rating'], ascending=False).iloc[0:25])
+</code></pre>
+<pre><code>                  team  lrmc_rating
+77          Ohio State   187.106455
+48                 LSU   175.945528
+21             Clemson   157.969142
+128          Wisconsin   130.052698
+2              Alabama   129.821806
+34             Georgia   118.031678
+82              Oregon   115.817995
+78            Oklahoma   110.981205
+9               Auburn   108.585276
+75          Notre Dame   107.732058
+59            Michigan   106.242719
+117               Utah   105.915359
+84          Penn State   105.042793
+12              Baylor   103.884959
+101              Texas   101.253766
+42                Iowa   100.165017
+29             Florida    96.009519
+56             Memphis    93.568406
+62           Minnesota    90.033058
+20          Cincinnati    89.598700
+123         Washington    88.540195
+43          Iowa State    88.377904
+3    Appalachian State    86.243448
+110                UCF    86.078021
+102          Texas A&amp;M    84.039906
+</code></pre>
+<p>These are some good looking rankings! Most importantly, it seems to be placing G6 teams in the sweet spot of where they usually end up year-to-year (10-3 UCF was also ranked 24th in the AP poll in 2019), which indicates that it&rsquo;s appropriately evaluating strength of schedule.</p>
+<p>So we&rsquo;ve finished with LRMC rankings with 2019 – but how will they work in the messed-up year of 2020, when some teams are playing conference-only schedules? Let&rsquo;s find out. We&rsquo;ll re-run the same analysis but we&rsquo;ll adjust home field advantage for the weird-pandemic stuff, eyeballing it and dropping it by 2 points – removing some to account for the impact of reduced or no crowd, but keeping some to account for rest/travel.</p>
+<pre><code class="language-python">train_games_df = games_df.loc[(games_df['season'].isin([2016,2017,2018,2019])) &amp; (~games_df['neutral_site'])]
+
+train_df = []
+
+for index, game in train_games_df.iterrows():
+    season = game['season']
+    team_a = game['home_team']
+    team_b = game['away_team']
+    home_diff = game['home_points'] - game['away_points']
+    opponents = train_games_df['away_team'][((games_df['home_team'] == team_a) &amp; (games_df['season'] == season))].tolist() + games_df['home_team'][((games_df['away_team'] == team_a) &amp; (games_df['season'] == season))].tolist() + games_df['away_team'][((games_df['home_team'] == team_b) &amp; (games_df['season'] == season))].tolist() + games_df['home_team'][((games_df['away_team'] == team_b) &amp; (games_df['season'] == season))].tolist()
+    common_opponents = set([team for team in opponents if opponents.count(team) &gt; 1])
+    if len(common_opponents) &gt; 1:
+        a_w = 0
+        b_w = 0
+        a_g = 0
+        b_g = 0
+        for index, game in games_df.loc[(games_df['season'] == season) &amp;
+                                        ((games_df['home_team'].isin([team_a,team_b])) |
+                                          games_df['away_team'].isin([team_a,team_b]))].iterrows():
+            if (game['home_team'] == team_a) &amp; (game['away_team'] in common_opponents):
+                a_g += 1
+                if game['home_points'] &gt; game['away_points']:
+                    a_w += 1
+            elif (game['home_team'] == team_b) &amp; (game['away_team'] in common_opponents):
+                b_g += 1
+                if game['home_points'] &gt; game['away_points']:
+                    b_w += 1
+            elif (game['away_team'] == team_a) &amp; (game['home_team'] in common_opponents):
+                a_g += 1
+                if game['away_points'] &gt; game['home_points']:
+                    a_w += 1
+            elif (game['away_team'] == team_b) &amp; (game['home_team'] in common_opponents):
+                b_g += 1
+                if game['away_points'] &gt; game['home_points']:
+                    b_w += 1
+
+        r_x = ((a_w / a_g) + (1 - (b_w / b_g))) / 2
+
+        d = {
+            'season' : season,
+            'team_a' : team_a,
+            'team_b' : team_b,
+            'home_diff' : home_diff,
+            'r_x' : r_x,
+            'weight' : a_g+b_g
+        }
+        train_df.append(d)
+
+train_df = pd.DataFrame(train_df)
+train_df.loc[train_df['r_x'] == 1,'r_x'] = 0.9
+train_df.loc[train_df['r_x'] == 0,'r_x'] = 0.1
+
+x = np.array(train_df['home_diff']).reshape(-1,1)
+y = np.log(train_df['r_x'] / (1 - train_df['r_x']))
+w = train_df['weight']
+model = LinearRegression().fit(x, y, w)
+a = model.coef_[0]
+b = model.intercept_
+h = (-b / a) - 2
+
+games_df_2020 = games_df.loc[games_df['season'] == 2020]
+games_df_2020.head()
+
+team_names = sorted(list(set(games_df_2020['home_team'].tolist() + games_df_2020['away_team'].tolist())))
+n_teams = len(team_names)
+p = np.zeros((n_teams,n_teams))
+n_games = np.zeros(n_teams)
+
+for index, game in games_df_2020.iterrows():
+    home_team = game['home_team']
+    away_team = game['away_team']
+    home_points = game['home_points']
+    away_points = game['away_points']
+    neutral_flg = game['neutral_site']
+    home_team_ndx = team_names.index(home_team)
+    away_team_ndx = team_names.index(away_team)
+    spread = home_points - away_points
+    if neutral_flg:
+        spread += h
+    r_x = math.exp(a * spread + b) / (1 + math.exp(a * spread + b))
+    n_games[home_team_ndx] += 1
+    n_games[away_team_ndx] += 1
+    p[home_team_ndx, away_team_ndx] += 1 - r_x
+    p[away_team_ndx, home_team_ndx] += r_x
+    p[home_team_ndx, home_team_ndx] += r_x
+    p[away_team_ndx, away_team_ndx] += 1 - r_x
+
+p = p / n_games[:,None]
+prior = n_teams - np.array(list(range(n_teams)))
+steady_state = np.linalg.matrix_power(p, 1000)
+rating = prior.dot(steady_state)
+rating_df = pd.DataFrame({
+    'team': team_names,
+    'lrmc_rating': rating
+
+})
+print(rating_df.sort_values(by=['lrmc_rating'], ascending=False).iloc[0:25])
+</code></pre>
+<pre><code>                  team  lrmc_rating
+2              Alabama   135.230015
+16             Buffalo   131.356858
+21             Clemson   130.404969
+73          Notre Dame   129.633899
+10                 BYU   129.319638
+22    Coastal Carolina   113.635301
+42          Iowa State   110.743776
+49           Louisiana   109.852425
+107                UCF   105.703515
+20          Cincinnati   104.514956
+69      North Carolina   103.885852
+124   Western Michigan   103.099373
+76            Oklahoma   100.090273
+104             Tulane    99.269570
+18    Central Michigan    99.083950
+28             Florida    98.579495
+14      Boston College    97.503712
+56               Miami    96.908824
+102             Toledo    96.386918
+64            NC State    95.923478
+52          Louisville    94.467302
+98               Texas    93.446952
+3    Appalachian State    93.341825
+118      Virginia Tech    92.720235
+33             Georgia    92.415851
+</code></pre>
+<p>These ratings are obviously a little rough, for various reasons – Buffalo has played just 4 games and thoroughly dominated their MAC-only opponents in three of them, and since our LRMC model doesn&rsquo;t account for sample size, they appear to be far better than they likely are – but I think it is worth pointing out that the rest of the rankings are more than plausible, and what&rsquo;s more, this ratings system actually resolves instead of base SRS.</p>
+<p>Further, this method is largely empirical – the only manual adjustment we&rsquo;ve made is to our estimate of home field advantage; the rest of it has required no manual adjustments. <a href="https://blog.collegefootballdata.com/talking-tech-calculating-srs-in-a-pandemic/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Bill&rsquo;s conference-adjusted SRS values</a>
+ are likely closest to what the top 25 ratings will look like, but this method is more robust in that it works with relatively few manual adjustments from year-to-year given the oddity of the 2020 season. I think there are advantages and disadvantages to either approach, and you should weigh those before applying the rating technique of your choosing. Still, LRMC, in both normal times and odd, is a powerful, useful tool for estimating team strength, and worthy of consideration for use in rankings.</p>
+<p>To view the notebook for this code, click <a href="https://github.com/Metlover/random_notebooks/blob/main/F-LRMC.ipynb" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>here</a>
+.</p>
+<p>To view the notebook for this code, click here.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://sciendo.com/article/10.1515/ijcss-2017-0014" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Kolbush, J. and J. Sokol, &ldquo;A logistic regression/Markov chain model for American college football&rdquo;, International Journal of Computer Science in Sport (2017), Vol. 16, Iss. 3, pp. 185-196</a>
+&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>If <em>j</em> has a common opponent winning percentage of 100% and <em>i</em> has a common opponent winning percentage of 0%, that difference is far less meaningful if <em>j</em> and <em>i</em> have just one game against a common opponent, and far more meaningful if <em>j</em> and <em>i</em> have 10+ combined games against common opponents. Weighing our regression reflects the amount of confidence we have in our estimate of <em>r</em><sub><em>x</em></sub> relative to other samples.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>You might have noticed that we make no adjustments here for running up the score, as most SRS implementations do. Why is that? Due to the <a href="https://en.wikipedia.org/wiki/Sigmoid_function" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>sigmoid curve</a>
+ of a logistic regression function, running up the score yields diminishing returns as far as LRMC&rsquo;s ratings go.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>This is a little different from our calculation of home field advantage from part one – in part one, we used home point differential to estimate road winning percentage for a given matchup (sx), then adjusted for home field advantage to find rx. But here, we fit home point differential on a location-neutral estimate of team strength, so there isn&rsquo;t an intermediate sx to deal with. In math terms, when sx = 50%, x / 2 = h, when rx = 50%, x = h. We use both of these steps in part one, but here we only need the second step.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+
+              
+                  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/python/">python</a>
+    </li></ul>
+
+ 
+          <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "disqus_lXJY8DBG4I" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+
+
+</body>
+
+</html>

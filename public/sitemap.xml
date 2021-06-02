@@ -3,13 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://johnbedwards.io/</loc>
+    <lastmod>2021-06-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://johnbedwards.io/blog/lrmc_pt_2/</loc>
+    <lastmod>2021-06-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://johnbedwards.io/blog/</loc>
+    <lastmod>2021-06-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://johnbedwards.io/tags/python/</loc>
+    <lastmod>2021-06-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://johnbedwards.io/tags/</loc>
+    <lastmod>2021-06-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://johnbedwards.io/blog/lrmc_pt_1/</loc>
+    <lastmod>2021-06-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://johnbedwards.io/tags/math/</loc>
+    <lastmod>2021-06-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://johnbedwards.io/about/</loc>
   </url><url>
     <loc>https://johnbedwards.io/categories/</loc>
   </url><url>
     <loc>https://johnbedwards.io/resume/</loc>
-  </url><url>
-    <loc>https://johnbedwards.io/tags/</loc>
   </url>
 </urlset>
