@@ -2,12 +2,12 @@
 <html lang="en-us">
 
 <head>
-  <title>Math Typesetting | codex</title>
+  <title>Hello R Markdown | codex</title>
 
   <meta charset="UTF-8">
   <meta name="language" content="en">
-  <meta name="description" content="A brief guide to setup KaTeX">
-  <meta name="keywords" content="gohugo , hugo , go , blog">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,8 +15,8 @@
   
   
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Math Typesetting" />
-  <meta name="twitter:description" content="A brief guide to setup KaTeX"/>
+  <meta name="twitter:title" content="Hello R Markdown" />
+  <meta name="twitter:description" content=""/>
   <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
   <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
   
@@ -55,9 +55,9 @@
             "@id": "https:\/\/example.org\/"
       },
       "articleSection" : "blog",
-      "name" : "Math Typesetting",
-      "headline" : "Math Typesetting",
-      "description" : "A brief guide to setup KaTeX",
+      "name" : "Hello R Markdown",
+      "headline" : "Hello R Markdown",
+      "description" : "",
       "inLanguage" : "en-US",
       "author" : "",
       "creator" : "",
@@ -65,11 +65,11 @@
       "accountablePerson" : "",
       "copyrightHolder" : "",
       "copyrightYear" : "2020",
-      "datePublished": "2020-06-05 00:00:00 \u002b0000 UTC",
-      "dateModified" : "2020-06-05 00:00:00 \u002b0000 UTC",
-      "url" : "https:\/\/example.org\/blog\/math-typesetting\/",
-      "wordCount" : "119",
-      "keywords" : ["gohugo", "hugo", "go", "blog", "Blog"]
+      "datePublished": "2020-12-01 21:13:14 -0500 -0500",
+      "dateModified" : "2020-12-01 21:13:14 -0500 -0500",
+      "url" : "https:\/\/example.org\/blog\/2020-12-01-r-rmarkdown\/",
+      "wordCount" : "159",
+      "keywords" : ["Blog"]
     }
   
   </script>
@@ -114,82 +114,78 @@
       <div class="post__container">
         <div class="post">
           <header class="post__header">
-            <h1 id="post__title">Math Typesetting</h1>
-            <time datetime="2020-06-05 00:00:00 &#43;0000 UTC" class="post__date">Jun 5 2020</time> 
+            <h1 id="post__title">Hello R Markdown</h1>
+            <time datetime="2020-12-01 21:13:14 -0500 -0500" class="post__date">Dec 1 2020</time> 
           </header>
           <article class="post__content">
               
-<p>Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.</p>
-<p>In this example we will be using <a href="https://katex.org/" 
-  
-   target="_blank" rel="noreferrer noopener" 
->KaTeX</a>
+
+<script src="https://example.org/blog/2020-12-01-r-rmarkdown/index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="r-markdown" class="section level1">
+<h1>R Markdown</h1>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>You can embed an R code chunk like this:</p>
+<pre class="r"><code>summary(cars)
+##      speed           dist       
+##  Min.   : 4.0   Min.   :  2.00  
+##  1st Qu.:12.0   1st Qu.: 26.00  
+##  Median :15.0   Median : 36.00  
+##  Mean   :15.4   Mean   : 42.98  
+##  3rd Qu.:19.0   3rd Qu.: 56.00  
+##  Max.   :25.0   Max.   :120.00
+fit &lt;- lm(dist ~ speed, data = cars)
+fit
+## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Coefficients:
+## (Intercept)        speed  
+##     -17.579        3.932</code></pre>
+</div>
+<div id="including-plots" class="section level1">
+<h1>Including Plots</h1>
+<p>You can also embed plots. See Figure <a href="#fig:pie">1</a> for example:</p>
+<pre class="r"><code>par(mar = c(0, 1, 0, 1))
+pie(
+  c(280, 60, 20),
+  c(&#39;Sky&#39;, &#39;Sunny side of pyramid&#39;, &#39;Shady side of pyramid&#39;),
+  col = c(&#39;#0292D8&#39;, &#39;#F7EA39&#39;, &#39;#C4B632&#39;),
+  init.angle = -50, border = NA
+)</code></pre>
+<div class="figure"><span id="fig:pie"></span>
+<img src="https://example.org/blog/2020-12-01-r-rmarkdown/index_files/figure-html/pie-1.png" alt="A fancy pie chart." width="672" />
+<p class="caption">
+Figure 1: A fancy pie chart.
 </p>
-<ul>
-<li>Create a partial under <code>/layouts/partials/math.html</code></li>
-<li>Within this partial reference the <a href="https://katex.org/docs/autorender.html" 
-  
-   target="_blank" rel="noreferrer noopener" 
->Auto-render Extension</a>
- or host these scripts locally.</li>
-<li>Include the partial in your templates like so:</li>
-</ul>
-<pre><code>{{ if or .Params.math .Site.Params.math }}
-{{ partial &quot;math.html&quot; . }}
-{{ end }}
-</code></pre>
-<ul>
-<li>To enable KaTex globally set the parameter <code>math</code> to <code>true</code> in a project&rsquo;s configuration</li>
-<li>To enable KaTex on a per page basis include the parameter <code>math: true</code> in content files.</li>
-</ul>
-<p><strong>Note:</strong> Use the online reference of <a href="https://katex.org/docs/supported.html" 
-  
-   target="_blank" rel="noreferrer noopener" 
->Supported TeX Functions</a>
+</div>
+</div>
 
-</p>
-<h3 id="examples">Examples<a class="anchor" href="#examples">#</a></h3>
-<p>Inline math: $$ \varphi = \dfrac{1+\sqrt5}{2}= 1.6180339887… $$</p>
-<p>Block math:</p>
-<p>$$
-\sigma(t) = \cfrac{1}{1 + e^{-t}}
-$$</p>
 
-              
-                  
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-            showMathMenu: false, //disables context menu
-            tex2jax: {
-            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
-           }
-    });
-</script>
               
           </article>
           
 
 <ul class="tags__list">
     
+    
     <li class="tag__item">
-        <a class="tag__link" href="https://example.org/tags/math/">math</a>
+        <a class="tag__link" href="https://example.org/tags/plot/">plot</a>
+    </li>
+    <li class="tag__item">
+        <a class="tag__link" href="https://example.org/tags/regression/">regression</a>
     </li></ul>
 
  <div class="pagination">
   
-    <a class="pagination__item" href="https://example.org/blog/rich-text/">
+    <a class="pagination__item" href="https://example.org/blog/markdown-syntax-guide/">
         <span class="pagination__label">Previous Post</span>
-        <span class="pagination__title">Rich Content</span>
+        <span class="pagination__title">Markdown Syntax Guide</span>
     </a>
   
 
-  
-    <a class="pagination__item" href="https://example.org/blog/markdown-syntax-guide/">
-      <span class="pagination__label">Next Post</span>
-      <span class="pagination__title" >Markdown Syntax Guide</span>
-    </a>
   
 </div>
 

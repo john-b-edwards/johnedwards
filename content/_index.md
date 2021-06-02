@@ -1,5 +1,5 @@
 ---
-handle: hugo-theme-codex
-heading: Hi, I'm Codex
-subheading: A minimal blog theme for hugo.
+handle: john_b_edwards
+heading: John Edwards
+subheading: sports analytics and data science
 ---

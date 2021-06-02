@@ -3,6 +3,8 @@ title: codex
 languageCode: en-us
 baseURL: https://example.org/
 copyright: © 2021
+enableRobotsTXT: true
+canonifyURLs: true
 ignoreErrors:
   - error-remote-getjson
 params:
@@ -21,11 +23,24 @@ markup:
     codeFences: no
 menu:
   main:
-    - identifier: about
-      name: about
-      title: About
+    - identifier: home
+      name: home
+      title: Home
       url: /
+      weight: 10
     - identifier: blog
       name: blog
       title: Blog
       url: /blog
+      weight: 20
+    - identifier: about
+      name: about
+      title: About
+      url: /about
+      weight: 30
+    - identifier: resume
+      name: resume
+      title: Resume
+      url: /resume
+      weight: 40
+      
