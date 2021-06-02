@@ -8,6 +8,37 @@ toc: false
 noComment: true
 ---
 
+## Proficiencies
+
+* R
+  * `caret`
+  * `catboost`
+  * `ggplot`
+  * `shiny`
+  * `lme4`
+  * `mgcv`
+  * `rvest`
+  * `rselenium`
+  * `tensorflow`
+  * `tidyverse`
+  * `tidymodels`
+  * `xgboost`
+* Python
+  * `catboost`
+  * `django`
+  * `numpy`
+  * `pandas`
+  * `sklearn`
+  * `tensorflow`
+  * `xgboost`
+* SQL
+* HTML
+* CSS
+* PHP
+* Git
+
+## Experiences
+
 ### Analyst, Seattle Mariners
 #### 2020 - Present
 
