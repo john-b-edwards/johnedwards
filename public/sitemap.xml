@@ -2,31 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://johnedwards.netlify.app/</loc>
+    <loc>https://johnbedwards.io/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/blog/lrmc_pt_2/</loc>
+    <loc>https://johnbedwards.io/blog/lrmc_pt_2/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/blog/</loc>
+    <loc>https://johnbedwards.io/blog/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/tags/python/</loc>
+    <loc>https://johnbedwards.io/tags/python/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/tags/</loc>
+    <loc>https://johnbedwards.io/tags/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/blog/lrmc_pt_1/</loc>
+    <loc>https://johnbedwards.io/blog/lrmc_pt_1/</loc>
     <lastmod>2021-06-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/tags/math/</loc>
+    <loc>https://johnbedwards.io/tags/math/</loc>
     <lastmod>2021-06-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnedwards.netlify.app/about/</loc>
+    <loc>https://johnbedwards.io/about/</loc>
   </url><url>
-    <loc>https://johnedwards.netlify.app/categories/</loc>
+    <loc>https://johnbedwards.io/categories/</loc>
   </url><url>
-    <loc>https://johnedwards.netlify.app/resume/</loc>
+    <loc>https://johnbedwards.io/resume/</loc>
   </url>
 </urlset>

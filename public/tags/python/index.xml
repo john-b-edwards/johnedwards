@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>python on codex</title>
-    <link>https://johnedwards.netlify.app/tags/python/</link>
+    <link>https://johnbedwards.io/tags/python/</link>
     <description>Recent content in python on codex</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnedwards.netlify.app/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Applying LRMC Rankings to College Football, Part Two</title>
-      <link>https://johnedwards.netlify.app/blog/lrmc_pt_2/</link>
+      <link>https://johnbedwards.io/blog/lrmc_pt_2/</link>
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://johnedwards.netlify.app/blog/lrmc_pt_2/</guid>
+      <guid>https://johnbedwards.io/blog/lrmc_pt_2/</guid>
       <description>The following was originally published on the CFBD Blog and has been reproduced here with edits for clarity.
 This is the second and final part of a series on implementing LRMC rankings for CFB! This entry presupposes you are familiar with the mathematical concepts behind LRMC. To view part one, which covers these concepts, click here.
 When we last left off, we covered how LRMC works and how to implement it mathematically.</description>
