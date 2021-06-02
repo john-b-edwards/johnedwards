@@ -1,7 +1,7 @@
 theme: hugo-theme-codex
 title: codex
 languageCode: en-us
-baseURL: https://example.org/
+baseURL: https://brave-einstein-908c5b.netlify.app/
 copyright: © 2021
 enableRobotsTXT: true
 canonifyURLs: true
