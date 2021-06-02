@@ -1,12 +1,10 @@
 theme: hugo-theme-codex
 title: codex
 languageCode: en-us
-baseURL: johnbedwards.io
+baseURL: johnedwards.netlify.app
 copyright: © 2021
 canonifyURLs: true
 disqusShortname: disqus_lXJY8DBG4I
-ignoreErrors:
-  - error-remote-getjson
 params:
   dateFormat: Jan 2 2006
   github: https://github.com/john-b-edwards
