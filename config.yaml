@@ -3,7 +3,6 @@ title: codex
 languageCode: en-us
 baseURL: https://johnbedwards.io/
 copyright: © 2021
-enableRobotsTXT: true
 canonifyURLs: true
 disqusShortname: disqus_lXJY8DBG4I
 ignoreErrors:
