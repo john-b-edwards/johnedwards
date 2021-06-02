@@ -5,6 +5,7 @@ baseURL: https://johnedwards.netlify.app/
 copyright: © 2021
 enableRobotsTXT: true
 canonifyURLs: true
+disqusShortname: disqus_lXJY8DBG4I
 ignoreErrors:
   - error-remote-getjson
 params:
