@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>codex</title>
-    <link>https://johnbedwards.io/</link>
+    <link>johnbedwards.io/</link>
     <description>Recent content on codex</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Applying LRMC Rankings to College Football, Part Two</title>
-      <link>https://johnbedwards.io/blog/lrmc_pt_2/</link>
+      <link>johnbedwards.io/blog/lrmc_pt_2/</link>
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://johnbedwards.io/blog/lrmc_pt_2/</guid>
+      <guid>johnbedwards.io/blog/lrmc_pt_2/</guid>
       <description>The following was originally published on the CFBD Blog and has been reproduced here with edits for clarity.
 This is the second and final part of a series on implementing LRMC rankings for CFB! This entry presupposes you are familiar with the mathematical concepts behind LRMC. To view part one, which covers these concepts, click here.
 When we last left off, we covered how LRMC works and how to implement it mathematically.</description>
@@ -21,29 +21,29 @@ When we last left off, we covered how LRMC works and how to implement it mathema
     
     <item>
       <title>Applying LRMC Rankings to College Football, Part One</title>
-      <link>https://johnbedwards.io/blog/lrmc_pt_1/</link>
+      <link>johnbedwards.io/blog/lrmc_pt_1/</link>
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://johnbedwards.io/blog/lrmc_pt_1/</guid>
+      <guid>johnbedwards.io/blog/lrmc_pt_1/</guid>
       <description>The following was originally published on the CFBD Blog and has been reproduced here with edits for clarity.
 As Bill covered earlier this season , calculating strength-of-schedule adjusted metrics like SRS are a little tricky given how few non-conference games teams play this year. While I think his technique for conference-based SRS is a great attempt at a really difficult problem, I think there is some value in discussing alternative approaches to evaluating team strength this year that do not struggle with the same singularity issues as SRS.</description>
     </item>
     
     <item>
       <title>About Me</title>
-      <link>https://johnbedwards.io/about/</link>
+      <link>johnbedwards.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://johnbedwards.io/about/</guid>
+      <guid>johnbedwards.io/about/</guid>
       <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my bachelors in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing in my current position as analyst for the Seattle Mariners.</description>
     </item>
     
     <item>
       <title>Resume</title>
-      <link>https://johnbedwards.io/resume/</link>
+      <link>johnbedwards.io/resume/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://johnbedwards.io/resume/</guid>
+      <guid>johnbedwards.io/resume/</guid>
       <description>Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.
 Baseball Projects Intern, Seattle Mariners 2020 I worked with the Mariners&#39; baseball projects department to develop tools to assist in communication between the analytics department and other areas of baseball operations, giving coaches and players better access to advanced analytics.</description>
     </item>

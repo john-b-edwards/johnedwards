@@ -2,31 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://johnbedwards.io/</loc>
+    <loc>johnbedwards.io/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/blog/lrmc_pt_2/</loc>
+    <loc>johnbedwards.io/blog/lrmc_pt_2/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/blog/</loc>
+    <loc>johnbedwards.io/blog/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/tags/python/</loc>
+    <loc>johnbedwards.io/tags/python/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/tags/</loc>
+    <loc>johnbedwards.io/tags/</loc>
     <lastmod>2021-06-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/blog/lrmc_pt_1/</loc>
+    <loc>johnbedwards.io/blog/lrmc_pt_1/</loc>
     <lastmod>2021-06-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/tags/math/</loc>
+    <loc>johnbedwards.io/tags/math/</loc>
     <lastmod>2021-06-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://johnbedwards.io/about/</loc>
+    <loc>johnbedwards.io/about/</loc>
   </url><url>
-    <loc>https://johnbedwards.io/categories/</loc>
+    <loc>johnbedwards.io/categories/</loc>
   </url><url>
-    <loc>https://johnbedwards.io/resume/</loc>
+    <loc>johnbedwards.io/resume/</loc>
   </url>
 </urlset>
