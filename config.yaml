@@ -1,7 +1,7 @@
 theme: hugo-theme-codex
 title: codex
 languageCode: en-us
-baseURL: johnbedwards.io/
+baseURL: johnbedwards.io
 copyright: © 2021
 canonifyURLs: true
 disqusShortname: disqus_lXJY8DBG4I
