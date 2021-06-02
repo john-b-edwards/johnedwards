@@ -9,6 +9,16 @@
     <copyright>© 2021</copyright>
     <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>2021 March Madness Kaggle Solution</title>
+      <link>https://johnbedwards.io/blog/march_madness_2021/</link>
+      <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/march_madness_2021/</guid>
+      <description>Our approach is ensemble the shit out of everything. We will hold out the 2015-2019 games for validation purposes. We will prepare and optimize two sets of models - one, an ensemble of general team strength features trained on 1985-2014 games, and two - an ensemble of general team strength features + adjusted ratings based on box-score data trained on 2002-2014 games. Let&amp;rsquo;s prepare the first approach.
+import sys!{sys.executable} -m pip install pandas sklearn numpy rpy2 trueskill catboost hyperopt rayimport numpy as npimport pandas as pdfrom sklearn.</description>
+    </item>
+    
+    <item>
       <title>Applying LRMC Rankings to College Football, Part Two</title>
       <link>https://johnbedwards.io/blog/lrmc_pt_2/</link>
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
@@ -39,12 +49,22 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
     </item>
     
     <item>
+      <title>Projects</title>
+      <link>https://johnbedwards.io/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/projects/</guid>
+      <description>Kaggle 2021 March Mania Contest Finished 27th overall in Kaggle&amp;rsquo;s 2021 March Mania contest relying on a variety of team-strength metrics, domain knowledge, and other features to predict performance in the 2021 Men&amp;rsquo;s Basketball National Championship. You can view my code for this project here .
+Big Data Bowl 2020 Worked with a team to evaluate the pass-defense of individual players using NFL tracking data, creating an R package to estimate and evaluate defensive skills of specific NFL players.</description>
+    </item>
+    
+    <item>
       <title>Resume</title>
       <link>https://johnbedwards.io/resume/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/resume/</guid>
-      <description>Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.
+      <description>Proficiencies  R  caret catboost ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   SQL HTML CSS PHP Git  Experiences Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.
 Baseball Projects Intern, Seattle Mariners 2020 I worked with the Mariners&#39; baseball projects department to develop tools to assist in communication between the analytics department and other areas of baseball operations, giving coaches and players better access to advanced analytics.</description>
     </item>
     

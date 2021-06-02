@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blogs on John Edwards</title>
-    <link>https://johnbedwards.io/blog/</link>
-    <description>Recent content in Blogs on John Edwards</description>
+    <title>old-posts on John Edwards</title>
+    <link>https://johnbedwards.io/tags/old-posts/</link>
+    <description>Recent content in old-posts on John Edwards</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>2021 March Madness Kaggle Solution</title>
-      <link>https://johnbedwards.io/blog/march_madness_2021/</link>
-      <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://johnbedwards.io/blog/march_madness_2021/</guid>
-      <description>Our approach is ensemble the shit out of everything. We will hold out the 2015-2019 games for validation purposes. We will prepare and optimize two sets of models - one, an ensemble of general team strength features trained on 1985-2014 games, and two - an ensemble of general team strength features + adjusted ratings based on box-score data trained on 2002-2014 games. Let&amp;rsquo;s prepare the first approach.
-import sys!{sys.executable} -m pip install pandas sklearn numpy rpy2 trueskill catboost hyperopt rayimport numpy as npimport pandas as pdfrom sklearn.</description>
-    </item>
-    
+    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/old-posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Applying LRMC Rankings to College Football, Part Two</title>
       <link>https://johnbedwards.io/blog/lrmc_pt_2/</link>

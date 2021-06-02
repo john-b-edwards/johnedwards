@@ -41,4 +41,9 @@ menu:
       title: Resume
       url: /resume
       weight: 40
+    - identifier: projects
+      name: projects
+      title: Projects
+      url: /projects
+      weight: 50
       

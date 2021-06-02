@@ -11,9 +11,11 @@ keywords:
 - basketball
 - lrmc
 math: true
+pagination: true
 slug: lrmc_pt_2
 tags:
 - python
+- old-posts
 title: Applying LRMC Rankings to College Football, Part Two
 toc: false
 ---

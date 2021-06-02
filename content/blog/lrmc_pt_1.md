@@ -9,10 +9,13 @@ keywords:
 - college_basketball
 - football
 - basketball
+- lrmc
 math: true
+pagination: true
 slug: lrmc_pt_1
 tags:
 - math
+- old-posts
 title: Applying LRMC Rankings to College Football, Part One
 toc: false
 ---
