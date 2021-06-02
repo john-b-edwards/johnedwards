@@ -20,7 +20,7 @@ I worked with the Mariners' baseball projects department to develop tools to ass
 ### Baseball Operations Intern, Baltimore Orioles
 #### 2019
 
-I worked in the Orioles baseball operation department to build internal tools to assist with data management on the scouting and high performance fronts.
+I worked in the Orioles baseball operations department to build internal tools to assist with data management on the scouting and high performance fronts.
 
 ### Sports Editor, The Technique
 #### 2017-2019
