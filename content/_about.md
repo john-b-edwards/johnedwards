@@ -13,3 +13,4 @@ I am a sports analyst/data scientist from Virginia Beach, VA, currently residing
 
 In my spare time, I am an avid tabletop gamer and a longtime D&D Dungeon Master, enjoy urban hiking, and reading/writing about politics.
 
+_The theme for this website is [Codex](https://themes.gohugo.io/hugo-theme-codex/)._
