@@ -57,7 +57,7 @@ I worked in the Orioles baseball operations department to build internal tools t
 ### Sports Editor, The Technique
 #### 2017-2019
 
-I worked first as an assistant sports editor, then primary sports editor for Georgia Tech's student newspaper The Technique, directing coverage of Tech sports, creating and arranging layouts, and creating content for the Newspaper.
+I worked first as an assistant sports editor, then primary sports editor for Georgia Tech's student newspaper The Technique, directing coverage of Tech sports, creating and arranging layouts, and creating content.
 
 ### Contributor, The Athletic
 #### 2018
