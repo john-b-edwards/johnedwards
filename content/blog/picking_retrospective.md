@@ -15,7 +15,7 @@ title: Lessons from picking the 2022 CFB Season
 toc: false
 ---
 
-![social-image](football.jpg)
+![social-image](https://github.com/john-b-edwards/johnedwards/raw/f724922b0d89b87c1253a9f6974ff2098281216f/themes/hugo-theme-codex/static/football.jpg)
 
 As we reach the end of the 2021-22 college football season (the national championship game is unfolding on my TV as I type this), I wanted to take a look back at my performance in the [College Football Data predictions contest](https://predictions.collegefootballdata.com/leaderboard). Minimum 400 games picked (not count the NCG, but it should not affect my performance) (I picked 726 games total, for reference), I finished:
 
