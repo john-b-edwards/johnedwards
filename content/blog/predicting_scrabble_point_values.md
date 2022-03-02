@@ -8,6 +8,7 @@ keywords:
 math: true
 slug: predicting-scrabble-point-values
 pagination: true
+twitterImg: https://i.imgur.com/pL1MNW7.png
 tags:
 - julia
 title: Using Flux.jl to model Scrabble turns
