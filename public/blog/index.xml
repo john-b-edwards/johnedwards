@@ -7,7 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Using Flux.jl to model Scrabble turns</title>
+      <link>https://johnbedwards.io/blog/predicting-scrabble-point-values/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/predicting-scrabble-point-values/</guid>
+      <description>I recently participated in a Kaggle community competition where the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on Woogles.io , an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia.</description>
+    </item>
+    
+    <item>
+      <title>Lessons from picking the 2022 CFB Season</title>
+      <link>https://johnbedwards.io/blog/picking_2022/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/picking_2022/</guid>
+      <description>As we reach the end of the 2021-22 college football season (the national championship game is unfolding on my TV as I type this), I wanted to take a look back at my performance in the College Football Data predictions contest . Minimum 400 games picked (not count the NCG, but it should not affect my performance) (I picked 726 games total, for reference), I finished:
+ 1st in straight-up picks 3rd in ATS picks 1st in absolute error 4th in mean squared error  So I did pretty well, especially for someone who picked as many games as I did!</description>
+    </item>
+    
     <item>
       <title>2021 March Madness Kaggle Solution</title>
       <link>https://johnbedwards.io/blog/march_madness_2021/</link>
