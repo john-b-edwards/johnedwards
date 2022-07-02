@@ -73,8 +73,8 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/projects/</guid>
-      <description>Kaggle 2021 March Mania Contest Finished 27th overall in Kaggle&amp;rsquo;s 2021 March Mania contest relying on a variety of team-strength metrics, domain knowledge, and other features to predict performance in the 2021 Men&amp;rsquo;s Basketball National Championship. You can view my code for this project here .
-Big Data Bowl 2020 Worked with a team to evaluate the pass-defense of individual players using NFL tracking data, creating an R package to estimate and evaluate defensive skills of specific NFL players.</description>
+      <description>nflverse Contributor to the open-source NFL data package family nflverse. Found obscure API endpoints and built scripts to hit these endpoints, download and clean the sourced data, and then make the data available via the {nflreadr} package. You can view the nflverse family of packages here .
+Predicting Scrabble Point Values Finished 1st overall in a Kaggle community competition to predict the point value of the 20th turn of a Scrabble game given only the 19 previous turns.</description>
     </item>
     
     <item>
@@ -83,8 +83,7 @@ Big Data Bowl 2020 Worked with a team to evaluate the pass-defense of individual
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/resume/</guid>
-      <description>Proficiencies  R  caret catboost ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   SQL HTML CSS PHP Git  Experiences Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.
-Baseball Projects Intern, Seattle Mariners 2020 I worked with the Mariners&#39; baseball projects department to develop tools to assist in communication between the analytics department and other areas of baseball operations, giving coaches and players better access to advanced analytics.</description>
+      <description>Proficiencies  R  caret catboost ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   Julia  Dataframes.jl Flux.jl Plots.jl MixedModels.jl   SQL HTML CSS Git  Experiences Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.</description>
     </item>
     
   </channel>
