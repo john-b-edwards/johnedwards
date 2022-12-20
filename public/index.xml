@@ -7,7 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Using Flux.jl to model Scrabble turns</title>
+      <link>https://johnbedwards.io/blog/predicting-scrabble-point-values/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/predicting-scrabble-point-values/</guid>
+      <description>I recently participated in a Kaggle community competition where the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on Woogles.io , an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia.</description>
+    </item>
+    
+    <item>
+      <title>Lessons from picking the 2022 CFB Season</title>
+      <link>https://johnbedwards.io/blog/picking_2022/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/picking_2022/</guid>
+      <description>As we reach the end of the 2021-22 college football season (the national championship game is unfolding on my TV as I type this), I wanted to take a look back at my performance in the College Football Data predictions contest . Minimum 400 games picked (not count the NCG, but it should not affect my performance) (I picked 726 games total, for reference), I finished:
+ 1st in straight-up picks 3rd in ATS picks 1st in absolute error 4th in mean squared error  So I did pretty well, especially for someone who picked as many games as I did!</description>
+    </item>
+    
     <item>
       <title>2021 March Madness Kaggle Solution</title>
       <link>https://johnbedwards.io/blog/march_madness_2021/</link>
@@ -45,7 +64,7 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/about/</guid>
-      <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my bachelors in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing in my current position as analyst for the Seattle Mariners.</description>
+      <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my BS in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing in my current position as analyst for the Seattle Mariners.</description>
     </item>
     
     <item>
@@ -54,8 +73,8 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/projects/</guid>
-      <description>Kaggle 2021 March Mania Contest Finished 27th overall in Kaggle&amp;rsquo;s 2021 March Mania contest relying on a variety of team-strength metrics, domain knowledge, and other features to predict performance in the 2021 Men&amp;rsquo;s Basketball National Championship. You can view my code for this project here .
-Big Data Bowl 2020 Worked with a team to evaluate the pass-defense of individual players using NFL tracking data, creating an R package to estimate and evaluate defensive skills of specific NFL players.</description>
+      <description>nflverse Contributor to the open-source NFL data package family nflverse. Found obscure API endpoints and built scripts to hit these endpoints, download and clean the sourced data, and then make the data available via the {nflreadr} package. You can view the nflverse family of packages here .
+Predicting Scrabble Point Values Finished 1st overall in a Kaggle community competition to predict the point value of the 20th turn of a Scrabble game given only the 19 previous turns.</description>
     </item>
     
     <item>
@@ -64,8 +83,7 @@ Big Data Bowl 2020 Worked with a team to evaluate the pass-defense of individual
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/resume/</guid>
-      <description>Proficiencies  R  caret catboost ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   SQL HTML CSS PHP Git  Experiences Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.
-Baseball Projects Intern, Seattle Mariners 2020 I worked with the Mariners&#39; baseball projects department to develop tools to assist in communication between the analytics department and other areas of baseball operations, giving coaches and players better access to advanced analytics.</description>
+      <description>Proficiencies  R  caret catboost ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   Julia  Dataframes.jl Flux.jl Plots.jl MixedModels.jl   SQL HTML CSS Git  Experiences Analyst, Seattle Mariners 2020 - Present I work with the Mariners&#39; pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.</description>
     </item>
     
   </channel>

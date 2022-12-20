@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>julia</title>
+      <link>https://johnbedwards.io/tags/julia/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/tags/julia/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>misc</title>
+      <link>https://johnbedwards.io/tags/misc/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/tags/misc/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>old-posts</title>
       <link>https://johnbedwards.io/tags/old-posts/</link>

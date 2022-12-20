@@ -1,0 +1,2888 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Using Flux.jl to model Scrabble turns | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="Predicting the point value of Scrabble turns">
+  <meta name="keywords" content="board_games , machine_learning">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Using Flux.jl to model Scrabble turns" />
+  <meta name="twitter:description" content="Predicting the point value of Scrabble turns"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "Using Flux.jl to model Scrabble turns",
+      "headline" : "Using Flux.jl to model Scrabble turns",
+      "description" : "Predicting the point value of Scrabble turns",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2022",
+      "datePublished": "2022-03-01 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2022-03-01 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/predicting-scrabble-point-values\/",
+      "wordCount" : "9849",
+      "keywords" : ["board_games", "machine_learning", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">Using Flux.jl to model Scrabble turns</h1>
+            <time datetime="2022-03-01 00:00:00 &#43;0000 UTC" class="post__date">Mar 1 2022</time> 
+          </header>
+          <article class="post__content">
+              
+<p><img src="https://i.imgur.com/pL1MNW7.png" alt=""></p>
+<p>I recently participated in a <a href="https://www.kaggle.com/c/scrabble-point-value" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Kaggle community competition</a>
+ where the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on <a href="woogles.io" 
+  
+  
+>Woogles.io</a>
+, an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia. I was really happy with this, learned a lot, and have some ideas for follow up projects, so this may not be the last you hear of Scrabble on my blog. Regardless, I enjoyed this project and I hope you enjoy my write-up!</p>
+<h1 id="introduction">Introduction</h1>
+<p>For this competition, we will attempt to estimate the point value of a Scrabble turn given the initial board state and the player&rsquo;s current rack of letters. We are specifically seeking the point value of the 20th turn of games in our test dataset.</p>
+<h2 id="literature">Literature<a class="anchor" href="#literature">#</a></h2>
+<h3 id="scrabble">Scrabble<a class="anchor" href="#scrabble">#</a></h3>
+<p><em>Scrabble</em> is a popular word board game. 2-4 players begin the game with a rack of seven randomly-drawn letter tiles, drawn from a bag of 100 letter tiles. The first player places the tiles either horizontally or vertically at the center of a 15x15 grid to form a valid word, as determined by a dictionary agreed upon prior to the start of the game. Players then take turns attempting to place any number of letter tiles from their rack on the board to form valid words, intersecting with existing words on the board. When a player plays a word, they score a number of points depending on the point values of the individual letters used to form the word along with any multipliers they receive from placing a tile on a bonus spot, marked on the board. Players may double their point total if they play all seven tiles from their rack on a given turn, a move known in the Scrabble community as a &ldquo;bingo&rdquo;. Players can also challenge the validity of a word played by another player &ndash; if the challenge is successful, the player who played the offending word loses their turn. After players play tiles from their rack, they replenish their rack with up to seven tiles from the bag, until there are no more tiles remaining. The game ends when no players can place valid words on the board.</p>
+<p>There are several variations on the standard Scrabble ruleset. For example, some variations will place time limits on how long players have to place a word, and players may incur a penalty if they fail to place a word in the requisite time frame. Other formats will penalize unsuccessful challenges.</p>
+<p>Scrabble is played all over the world and in a variety of languages. The website <a href="woogles.io" 
+  
+  
+>Woogles.io</a>
+ allows for English-language players to participate in online matchups against each other or against bots, under a variety of rulesets.</p>
+<h3 id="cnns-and-board-games">CNNs and Board Games<a class="anchor" href="#cnns-and-board-games">#</a></h3>
+<p>The nature of Scrabble makes it difficult to capture the state of the game such that it is easily read by machine learning models that take in tabular data, such as a random forest or XGBoost. For example, a player&rsquo;s ability to play a word in Scrabble is highly dependent upon what letters are on the board and what location those letters are in. This ability is also dependent on the letters in their rack, such that the letters on the rack can be combined into a valid word in the Scrabble dictionary.</p>
+<p>Previously, researchers have employed convolutional neural networks (CNN) with great success to teach computers to play board games. The nature of a board game with a grid-space, a limited move-set, and tokens of different values can be captured using tensor representations, which can then be fed into convolutional layers along with a cost function to determine an optimal move. Some approaches have relied upon feeding expert moves to the neural network (Oshri, 2015), while others have relied upon training the network to play against itself repeatedly (Chellapilla &amp; Fogel, 1999) (Silver et al., 2017).</p>
+<p>Agarwal (2019) takes these insights and applies them to the game of Scrabble, providing a framework for encoding Scrabble boards for a CNN and training on expert Scrabble games.</p>
+<blockquote>
+<p>A 15 × 15 Scrabble board <code>b</code> is encoded into a 15 × 15 × 28 feature vector <code>v(b)</code> where the third dimension pertain[s] to the different type[s] of features used in our encoding of the Scrabble board. For a particular feature, each board position is a given a value. We used the following features for our encoding:</p>
+<ol>
+<li>Whether a position is blank or not</li>
+<li>Whether a position contains a particular [letter of the] alphabet, leading to a total of 26 features for the letters A-Z</li>
+<li>The score of the tile placed on a position. All positions not containing any tiles are given a score of zero except &hellip; [bonus tiles] which are given a score of -1</li>
+</ol>
+</blockquote>
+<h3 id="julia">Julia<a class="anchor" href="#julia">#</a></h3>
+<p>Julia is a high-performance programming language. Julia is designed such that it &ldquo;looks like Python, feels like Lisp, and runs like Fortan&rdquo;. Julia has been effectively used in a variety of academic and professional contexts, especially machine learning tasks, owing to its high performance and easy interoptability with GPU computing. Julia&rsquo;s intuitive and rapid array processing features, coupled with access to the high performance  <a href="https://github.com/FluxML/Flux.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>Flux.jl</code></a>
+ machine learning library, make it an ideal choice for working with and modeling board game data.</p>
+<h2 id="our-approach">Our approach<a class="anchor" href="#our-approach">#</a></h2>
+<p>We will take a twofold approach for modeling. First, we will attempt to determine if a word is challenged and the success of the challenge exactly using the provided metadata. For remaining turns, we will rely on a neural network to estimate the expected score of the word.</p>
+<p>It is noteworthy that our approach will vary from the referenced frameworks in several ways given the constraints of this competition. Below, each consideration is listed and paired with the adjustment to the methodology.</p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Adjustment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Outside of Agarwal (2019), previous approaches have explored games with either a set number of tokens (such as checkers or chess) or an indeterminate number of tokens (such as Go). Scrabble requires players to place letter tiles on the board from their &ldquo;rack&rdquo;, which consists of seven or fewer letter tiles. We may also wish to incorporate information such as the turn of the game.</td>
+<td>We will use a concatenation layer in our neural network to combine the rack and additional metadata into our model, as Ningrum et. al (2021) do in constructing a classifier to identify malignant melanomas from images of suspected melanomas and patient metadata.</td>
+</tr>
+<tr>
+<td>The above approaches have generally sought to determine the best move available to a computer player by means of optimizing a loss function. In our problem, we are not attempting to determine the best move, rather, we are attempting to predict the score of the next move.</td>
+<td>We will train to minimize the RMSE between our estimate of the score of a turn and the actual score of the turn.</td>
+</tr>
+<tr>
+<td>Whereas Oshri (2015) relied upon the data of expert players to train a computer player, our data consists of players of varying skill levels playing against an AI.</td>
+<td>We will incorporate a player&rsquo;s rating prior to the beginning of the game into our model as a part of our training data.</td>
+</tr>
+</tbody>
+</table>
+<p>We will rely on the Julia language (Bezanson et. al, 2017) to parse our data and implement our neural network using the <code>Flux.jl</code> package. The following external packages were used in this notebook:</p>
+<ul>
+<li><a href="https://github.com/JuliaIO/BSON.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>BSON.jl</code></a>
+</li>
+<li><a href="https://github.com/JuliaData/CSV.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>CSV.jl</code></a>
+</li>
+<li><a href="https://github.com/JuliaGPU/CUDA.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>CUDA.jl</code></a>
+</li>
+<li><a href="https://github.com/JuliaData/DataFrames.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>Dataframes.jl</code></a>
+</li>
+<li><a href="https://github.com/andyferris/Dictionaries.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>Dictionaries.jl</code></a>
+</li>
+<li><a href="https://github.com/JuliaStats/MixedModels.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>MixedModels.jl</code></a>
+</li>
+<li><a href="https://github.com/JuliaPlots/Plots.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>Plots.jl</code></a>
+</li>
+<li><a href="https://github.com/JuliaPlots/StatsPlots.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>StatsPlots.jl</code></a>
+</li>
+</ul>
+<p>Additionally, we are using a CUDA-enabled NVIDIA RTX 2070 Super GPU to speed up processing our data and training our model. We also rely on the <a href="https://github.com/Kaggle/kaggle-api" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Kaggle API</a>
+ to download our data and submit predictions from our notebook.</p>
+<h1 id="grabbing-data">Grabbing data</h1>
+<p>To begin, we will grab data for the competition with the Kaggle API.</p>
+<pre><code class="language-julia">run(`kaggle competitions download -c scrabble-point-value --force`)
+run(`mkdir -p data`)
+run(`powershell -command &quot;Expand-Archive -Force scrabble-point-value.zip data&quot;`)
+</code></pre>
+<pre><code>Downloading scrabble-point-value.zip to c:\Users\edwar\Documents\scrabble_jl
+
+100%|██████████| 12.4M/12.4M [00:00&lt;00:00, 60.4MB/s]
+Process(`powershell -command 'Expand-Archive -Force scrabble-point-value.zip data'`, ProcessExited(0))
+</code></pre>
+<p>We can pull our data into Julia using <code>DataFrames.jl</code> and <code>CSV.jl</code>.</p>
+<pre><code class="language-julia">using DataFrames
+using CSV
+ENV[&quot;COLUMNS&quot;] = &quot;1000&quot;; # for display purposes
+</code></pre>
+<p>The data provided for this competition consists of approximately 26,000 Scrabble games played against the &ldquo;BetterBot&rdquo; AI player on the Scrabble website Woogles.io. We are provided with:</p>
+<h2 id="turns_traincsv"><code>turns_train.csv</code><a class="anchor" href="#turns_traincsv">#</a></h2>
+<p>A training dataset of completed games from Woogles.io.</p>
+<ul>
+<li>Each game and player have unique identifiers.</li>
+<li>Games are stored in tabular format, with each row representing a turn. Each game is represented as a sequential series of turns.</li>
+<li>Each player&rsquo;s rack immediately prior to their turn is stored as a column within this dataset.</li>
+<li>Each player&rsquo;s move is also listed, along with the number of points they scored on the turn and their game score following their turn.</li>
+</ul>
+<pre><code class="language-julia">turns_train = CSV.read(&quot;data/turns_train.csv&quot;, DataFrame)
+turns_train[turns_train.game_id .== 1, :]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">game_id</th>
+<th style="text-align:right">turn_number</th>
+<th style="text-align:right">nickname</th>
+<th style="text-align:right">rack</th>
+<th style="text-align:right">location</th>
+<th style="text-align:right">move</th>
+<th style="text-align:right">points</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">turn_type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String7</td>
+<td style="text-align:right">String3</td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String15</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">?EEEFJN</td>
+<td style="text-align:right">8G</td>
+<td style="text-align:right">JEE</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">CEGILRT</td>
+<td style="text-align:right">J6</td>
+<td style="text-align:right">GIRL</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">?EFNRRU</td>
+<td style="text-align:right">7I</td>
+<td style="text-align:right">F.R</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">39</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">CEEITYZ</td>
+<td style="text-align:right">10G</td>
+<td style="text-align:right">CITY</td>
+<td style="text-align:right">34</td>
+<td style="text-align:right">54</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">?ELNORU</td>
+<td style="text-align:right">6J</td>
+<td style="text-align:right">.UL</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">45</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AEEIIIZ</td>
+<td style="text-align:right">L6</td>
+<td style="text-align:right">.EI</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">65</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">?ENOORU</td>
+<td style="text-align:right">G10</td>
+<td style="text-align:right">.OO</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">50</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AEIIPSZ</td>
+<td style="text-align:right">H12</td>
+<td style="text-align:right">PIES</td>
+<td style="text-align:right">34</td>
+<td style="text-align:right">99</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">?ENNORU</td>
+<td style="text-align:right">15A</td>
+<td style="text-align:right">REUNiON.</td>
+<td style="text-align:right">74</td>
+<td style="text-align:right">124</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AADEFIZ</td>
+<td style="text-align:right">B12</td>
+<td style="text-align:right">FAZ.</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">131</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">11</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">ANOOQUV</td>
+<td style="text-align:right">14B</td>
+<td style="text-align:right">.OO</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">140</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">12</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">ADEITUX</td>
+<td style="text-align:right">12B</td>
+<td style="text-align:right">.AUX</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">159</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">13</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">ACNQUVY</td>
+<td style="text-align:right">11D</td>
+<td style="text-align:right">YA</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">173</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">14</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">ABDDEIT</td>
+<td style="text-align:right">14F</td>
+<td style="text-align:right">DI.D</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">178</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">15</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">CNPQUVW</td>
+<td style="text-align:right">K5</td>
+<td style="text-align:right">P..</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">183</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">16</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AABEELT</td>
+<td style="text-align:right">E11</td>
+<td style="text-align:right">..E</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">188</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">17</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">ACNQUVW</td>
+<td style="text-align:right">M8</td>
+<td style="text-align:right">NAW</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">192</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">18</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AABELLT</td>
+<td style="text-align:right">M3</td>
+<td style="text-align:right">BALL</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">205</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">19</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">BCNQUVW</td>
+<td style="text-align:right">4L</td>
+<td style="text-align:right">W.B</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">208</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">20</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AAENTTT</td>
+<td style="text-align:right">N9</td>
+<td style="text-align:right">TEAT</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">220</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">21</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">CKNQTUV</td>
+<td style="text-align:right">12L</td>
+<td style="text-align:right">CU.</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">218</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">22</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AHIMNTT</td>
+<td style="text-align:right">L1</td>
+<td style="text-align:right">THA.</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">235</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">23</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">DEKNQTV</td>
+<td style="text-align:right">O8</td>
+<td style="text-align:right">VENT</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">250</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">24</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">EGIMMNT</td>
+<td style="text-align:right">1J</td>
+<td style="text-align:right">ME.ING</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">262</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">25</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">DEGKQSS</td>
+<td style="text-align:right">K12</td>
+<td style="text-align:right">SEG</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">260</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">26</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AHIMSTV</td>
+<td style="text-align:right">H4</td>
+<td style="text-align:right">VITA.</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">282</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">27</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">ADIKOQS</td>
+<td style="text-align:right">G5</td>
+<td style="text-align:right">QI</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">284</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">28</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DEHMORS</td>
+<td style="text-align:right">F6</td>
+<td style="text-align:right">HO</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">309</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">29</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">29</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">?ADKOOS</td>
+<td style="text-align:right">15K</td>
+<td style="text-align:right">SOAKs</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">316</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">30</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">30</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DEEIMRS</td>
+<td style="text-align:right">E1</td>
+<td style="text-align:right">DERMIS</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">334</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+</tr>
+</tbody>
+</table>
+<h2 id="turns_testcsv"><code>turns_test.csv</code><a class="anchor" href="#turns_testcsv">#</a></h2>
+<p>Formatted identically to <code>turns_train.csv</code>, except that data is only provided up to the 20th turn. The move and points-scored values for the 20th turn are listed as NA.</p>
+<pre><code class="language-julia">turns_test = CSV.read(&quot;data/turns_test.csv&quot;, DataFrame, types = Dict(7=&gt;Int64, 8=&gt;Int64), silencewarnings=true)
+turns_test[turns_test.game_id .== 2, :]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">game_id</th>
+<th style="text-align:right">turn_number</th>
+<th style="text-align:right">nickname</th>
+<th style="text-align:right">rack</th>
+<th style="text-align:right">location</th>
+<th style="text-align:right">move</th>
+<th style="text-align:right">points</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">turn_type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String7</td>
+<td style="text-align:right">String3</td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">Int64?</td>
+<td style="text-align:right">Int64?</td>
+<td style="text-align:right">String15</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">AAEGNTX</td>
+<td style="text-align:right">H8</td>
+<td style="text-align:right">AX</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">?AEHNOY</td>
+<td style="text-align:right">G7</td>
+<td style="text-align:right">AHOY</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">AAEGNTT</td>
+<td style="text-align:right">F9</td>
+<td style="text-align:right">GAT</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">42</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">?ADEENN</td>
+<td style="text-align:right">12A</td>
+<td style="text-align:right">ANNExED</td>
+<td style="text-align:right">71</td>
+<td style="text-align:right">98</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">?AEFNOT</td>
+<td style="text-align:right">C7</td>
+<td style="text-align:right">FONTA.gE</td>
+<td style="text-align:right">80</td>
+<td style="text-align:right">122</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DEJLTWW</td>
+<td style="text-align:right">A11</td>
+<td style="text-align:right">J.WED</td>
+<td style="text-align:right">48</td>
+<td style="text-align:right">146</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">CINOOOR</td>
+<td style="text-align:right">B6</td>
+<td style="text-align:right">COO</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">140</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">FILRRTW</td>
+<td style="text-align:right">8A</td>
+<td style="text-align:right">W..F</td>
+<td style="text-align:right">42</td>
+<td style="text-align:right">188</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">INORRSU</td>
+<td style="text-align:right">7G</td>
+<td style="text-align:right">.R</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">152</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">EEILRRT</td>
+<td style="text-align:right">I4</td>
+<td style="text-align:right">RILE</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">197</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">11</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">EINORSU</td>
+<td style="text-align:right">10B</td>
+<td style="text-align:right">U.</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">156</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">12</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">EELOPRT</td>
+<td style="text-align:right">5E</td>
+<td style="text-align:right">REPT.LE</td>
+<td style="text-align:right">36</td>
+<td style="text-align:right">233</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">13</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">DEINORS</td>
+<td style="text-align:right">15C</td>
+<td style="text-align:right">SORDINE</td>
+<td style="text-align:right">88</td>
+<td style="text-align:right">244</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">14</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">IILMOSS</td>
+<td style="text-align:right">L1</td>
+<td style="text-align:right">LIMOS</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right">259</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">15</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">DIIOSUU</td>
+<td style="text-align:right">3K</td>
+<td style="text-align:right">U.U</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">254</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">16</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AIIKNSU</td>
+<td style="text-align:right">1L</td>
+<td style="text-align:right">.INK</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">283</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">17</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">ADIIIOS</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">-III</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">254</td>
+<td style="text-align:right">Exchange</td>
+</tr>
+<tr>
+<td style="text-align:right">18</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AAIORSU</td>
+<td style="text-align:right">J7</td>
+<td style="text-align:right">AURA</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">293</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">19</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">dezinga</td>
+<td style="text-align:right">ABDENOS</td>
+<td style="text-align:right">4D</td>
+<td style="text-align:right">DOB</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">272</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">20</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">EEGIMOS</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">missing</td>
+<td style="text-align:right">missing</td>
+<td style="text-align:right">NA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scorescsv"><code>scores.csv</code><a class="anchor" href="#scorescsv">#</a></h2>
+<p>Metadata about each player. Includes their Woogles.io rating prior to each game.</p>
+<pre><code class="language-julia">scores = CSV.read(&quot;data/scores.csv&quot;, DataFrame, types = Dict(4=&gt;Float32), silencewarnings=true)
+scores[scores.game_id .== 1,:]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">game_id</th>
+<th style="text-align:right">nickname</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">rating</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String3</td>
+<td style="text-align:right">Float32?</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">348</td>
+<td style="text-align:right">1740.0</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">333</td>
+<td style="text-align:right">1537.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gamescsv"><code>games.csv</code><a class="anchor" href="#gamescsv">#</a></h2>
+<p>Metadata regarding each game in <code>turns_train.csv</code> and <code>turns_test.csv</code>. Administrative information regarding each game is stored here, such as the time limit of the game, or if the game is counted towards rankings.</p>
+<pre><code class="language-julia">games = CSV.read(&quot;data/games.csv&quot;, DataFrame)
+games[games.game_id .== 1, :]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">game_id</th>
+<th style="text-align:right">first</th>
+<th style="text-align:right">time_control_name</th>
+<th style="text-align:right">game_end_reason</th>
+<th style="text-align:right">winner</th>
+<th style="text-align:right">created_at</th>
+<th style="text-align:right">lexicon</th>
+<th style="text-align:right">initial_time_seconds</th>
+<th style="text-align:right">increment_seconds</th>
+<th style="text-align:right">rating_mode</th>
+<th style="text-align:right">max_overtime_minutes</th>
+<th style="text-align:right">game_duration_seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String3</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String7</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String7</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">BLUE</td>
+<td style="text-align:right">rapid</td>
+<td style="text-align:right">STANDARD</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">2021-11-14 16:10:47</td>
+<td style="text-align:right">CSW19</td>
+<td style="text-align:right">600</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">RATED</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">461.512848138809</td>
+</tr>
+</tbody>
+</table>
+<p>Additionally, the dictionary used for each game, encoded as <code>lexicon</code>, is listed here. There are four distinct lexicons used:</p>
+<ul>
+<li><strong>CSW19</strong>—The 2019 edition of Collins' Scrabble Words. This dictionary is used in Scrabble competitions in English-speaking countries except the United States, Thailand, and Canada.</li>
+<li><strong>CSW21</strong>—The 2021 edition of Collins' Scrabble Words, updated to include new or previously excluded words from CSW19 along with the removal of disputed words from CSW19.</li>
+<li><strong>NWL18</strong>—The 2018 edition of the NASPA (formerly the North American Scrabble Players Association, now simply NASPA) World List. This dictionary is used in Scrabble competitions in North America.</li>
+<li><strong>NWL20</strong>—The 2020 edition of the NASPA World List. Like CSW21, this dictionary was updated to include new or previously excluded words and remove disputed words.</li>
+</ul>
+<h2 id="dictionaries">Dictionaries<a class="anchor" href="#dictionaries">#</a></h2>
+<p>These are the distinct words included in each dictionary. This data was pulled and parsed from NASPA&rsquo;s <a href="https://scrabbleplayers.org/w/Zyzzyva" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Zyzzyva</a>
+ software.</p>
+<pre><code class="language-julia">NWL18 = readlines(&quot;ref/NWL18.txt&quot;)
+NWL20 = readlines(&quot;ref/NWL20.txt&quot;)
+CSW19 = readlines(&quot;ref/CSW19.txt&quot;)
+CSW21 = readlines(&quot;ref/CSW21.txt&quot;)
+</code></pre>
+<pre><code>279077-element Vector{String}:
+ &quot;AA&quot;
+ &quot;AAH&quot;
+ &quot;AAHED&quot;
+ &quot;AAHING&quot;
+ &quot;AAHS&quot;
+ &quot;AAL&quot;
+ &quot;AALII&quot;
+ &quot;AALIIS&quot;
+ &quot;AALS&quot;
+ &quot;AARDVARK&quot;
+ &quot;AARDVARKS&quot;
+ &quot;AARDWOLF&quot;
+ &quot;AARDWOLVES&quot;
+ ⋮
+ &quot;ZYMOTECHNICS&quot;
+ &quot;ZYMOTIC&quot;
+ &quot;ZYMOTICALLY&quot;
+ &quot;ZYMOTICS&quot;
+ &quot;ZYMURGIES&quot;
+ &quot;ZYMURGY&quot;
+ &quot;ZYTHUM&quot;
+ &quot;ZYTHUMS&quot;
+ &quot;ZYZZYVA&quot;
+ &quot;ZYZZYVAS&quot;
+ &quot;ZZZ&quot;
+ &quot;ZZZS&quot;
+</code></pre>
+<h1 id="data-exploration">Data Exploration</h1>
+<h2 id="turn-types">Turn-Types<a class="anchor" href="#turn-types">#</a></h2>
+<p>On Woogles.io, there are several types of turns that one can take over the course of a game.</p>
+<pre><code class="language-julia">combine(groupby(turns_train, :turn_type), nrow =&gt; :Freq)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">turn_type</th>
+<th style="text-align:right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">Int64</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">Play</td>
+<td style="text-align:right">495040</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">End</td>
+<td style="text-align:right">16754</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">Exchange</td>
+<td style="text-align:right">9943</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">Pass</td>
+<td style="text-align:right">3338</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">Timeout</td>
+<td style="text-align:right">2325</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">Challenge</td>
+<td style="text-align:right">208</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">106</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">Six-Zero Rule</td>
+<td style="text-align:right">206</td>
+</tr>
+</tbody>
+</table>
+<p>Each turn type represents the following action within a Scrabble game:</p>
+<ul>
+<li>&ldquo;Play&rdquo;—a standard turn of Scrabble in which letter tiles are played on a Scrabble board.</li>
+<li>&ldquo;End&rdquo;—indicates the end of a game. At this point, the point values of tiles remaining on a players' rack are summed and subtracted from a player&rsquo;s current score to determine their final score.</li>
+<li>&ldquo;Exchange&rdquo;—at any point during a game, a player may pass their turn in order to take any number of tiles from their rack and exchange them for an equivalent number of random tiles from the tile bag. As we will see, this encoding is also used to represent successful challenges on Woogles.io.</li>
+<li>&ldquo;Pass&rdquo;—a player decides not to play any words or exchange any tiles.</li>
+<li>&ldquo;Timeout&rdquo;—a player runs out of time on their turn and is assessed a point penalty.</li>
+<li>&ldquo;Challenge&rdquo;—this turn type represents <em>unsuccessful challenges</em>, not all challenges. When a player&rsquo;s word is unsuccessfully challenged, it is marked in this column, and the challenged player may be awarded additional points depending on the ruleset.</li>
+<li>&ldquo;NA&rdquo;—this appears to be a parsing error where players literally place the letters &ldquo;NA&rdquo; in that order. In the <code>turns_test</code> dataset, however, this indicator represents the type of the 20th turn, hidden from competitors of this Kaggle competition.</li>
+<li>&ldquo;Six-Zero Rule&rdquo;—an obscure Scrabble rule allows for the game to end immediately when six consecutive turns pass with zero points scored (through either challenges or passes).</li>
+</ul>
+<p>We can quickly fix &ldquo;NA&rdquo; in our dataset.</p>
+<pre><code class="language-julia">turns_train.turn_type[turns_train.turn_type .== &quot;NA&quot;] .= &quot;Play&quot;;
+</code></pre>
+<p>Does BetterBot use any exchanges?</p>
+<pre><code class="language-julia">combine(groupby(turns_train[turns_train.nickname .== &quot;BetterBot&quot;,:], :turn_type), nrow =&gt; :Freq)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">turn_type</th>
+<th style="text-align:right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">Int64</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">Play</td>
+<td style="text-align:right">251563</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">End</td>
+<td style="text-align:right">9471</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">Pass</td>
+<td style="text-align:right">1199</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">Challenge</td>
+<td style="text-align:right">208</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">Six-Zero Rule</td>
+<td style="text-align:right">103</td>
+</tr>
+</tbody>
+</table>
+<p>It appears the answer is no. BetterBot will challenge, however, and will also pass the turn from time to time (most likely when it has no further moves).</p>
+<p>We noted that unsuccessful challenges are listed in our dataset under the &ldquo;Challenge&rdquo; <code>turn_type</code>—what does a successful challenge look like?</p>
+<pre><code class="language-julia">turns_train[(turns_train.game_id .== 44) .&amp; in.(turns_train.turn_number, [[12,13]]),:]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">game_id</th>
+<th style="text-align:right">turn_number</th>
+<th style="text-align:right">nickname</th>
+<th style="text-align:right">rack</th>
+<th style="text-align:right">location</th>
+<th style="text-align:right">move</th>
+<th style="text-align:right">points</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">turn_type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String7</td>
+<td style="text-align:right">String3</td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String15</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">44</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">Churrrro</td>
+<td style="text-align:right">?BIINTW</td>
+<td style="text-align:right">11C</td>
+<td style="text-align:right">WTIN</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">163</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">44</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">Churrrro</td>
+<td style="text-align:right">?BIINTW</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">&ndash;</td>
+<td style="text-align:right">-16</td>
+<td style="text-align:right">147</td>
+<td style="text-align:right">Exchange</td>
+</tr>
+</tbody>
+</table>
+<p>In this turn, user &ldquo;Churrrro&rdquo; attempted to play the invalid word &ldquo;WTIN&rdquo;. Their opponent successfully challenged the word, so on the immediately following turn, their tiles were returned to their rack, and the score of &ldquo;WTIN&rdquo; was deducted from their previous score.</p>
+<p>Could a game end before turn 20?</p>
+<pre><code class="language-julia">combine(groupby(turns_train[turns_train.turn_type .== &quot;End&quot;,:], :turn_number), nrow =&gt; :Freq)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">turn_number</th>
+<th style="text-align:right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">39</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">173</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">461</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">1011</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right">1623</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">2136</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">2408</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">29</td>
+<td style="text-align:right">2254</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">30</td>
+<td style="text-align:right">1874</td>
+</tr>
+<tr>
+<td style="text-align:right">11</td>
+<td style="text-align:right">31</td>
+<td style="text-align:right">1485</td>
+</tr>
+<tr>
+<td style="text-align:right">12</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">1050</td>
+</tr>
+<tr>
+<td style="text-align:right">13</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">753</td>
+</tr>
+<tr>
+<td style="text-align:right">14</td>
+<td style="text-align:right">34</td>
+<td style="text-align:right">484</td>
+</tr>
+<tr>
+<td style="text-align:right">15</td>
+<td style="text-align:right">35</td>
+<td style="text-align:right">323</td>
+</tr>
+<tr>
+<td style="text-align:right">16</td>
+<td style="text-align:right">36</td>
+<td style="text-align:right">199</td>
+</tr>
+<tr>
+<td style="text-align:right">17</td>
+<td style="text-align:right">37</td>
+<td style="text-align:right">132</td>
+</tr>
+<tr>
+<td style="text-align:right">18</td>
+<td style="text-align:right">38</td>
+<td style="text-align:right">100</td>
+</tr>
+<tr>
+<td style="text-align:right">19</td>
+<td style="text-align:right">39</td>
+<td style="text-align:right">65</td>
+</tr>
+<tr>
+<td style="text-align:right">20</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">44</td>
+</tr>
+<tr>
+<td style="text-align:right">21</td>
+<td style="text-align:right">41</td>
+<td style="text-align:right">43</td>
+</tr>
+<tr>
+<td style="text-align:right">22</td>
+<td style="text-align:right">42</td>
+<td style="text-align:right">26</td>
+</tr>
+<tr>
+<td style="text-align:right">23</td>
+<td style="text-align:right">43</td>
+<td style="text-align:right">15</td>
+</tr>
+<tr>
+<td style="text-align:right">24</td>
+<td style="text-align:right">44</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td style="text-align:right">25</td>
+<td style="text-align:right">45</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td style="text-align:right">26</td>
+<td style="text-align:right">46</td>
+<td style="text-align:right">12</td>
+</tr>
+<tr>
+<td style="text-align:right">27</td>
+<td style="text-align:right">47</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">28</td>
+<td style="text-align:right">48</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right">29</td>
+<td style="text-align:right">51</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">30</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+<td style="text-align:right">⋮</td>
+</tr>
+</tbody>
+</table>
+<p>Our train data (and presumably our test data) has been selected such that no game ends on or before turn twenty—we should not need to worry about encoding the end of games as a potential result for our test dataset.</p>
+<p>A few cues about our data, coupled with our dictionary data, should allow deduce the precise scores recorded on challenge turns:</p>
+<p>If a player takes two turns in a row, the subsequent turn is an administrative turn, usually a challenge.</p>
+<ul>
+<li>If the previously played word was invalid as judged by the game&rsquo;s dictionary, the point value on that turn is equivalent to -1 × the points scored on the previous turn.</li>
+<li>If the previously played word was valid as judged by the game&rsquo;s dictionary, the point value on that turn is equivalent to the point bonus awarded for being challenged unsuccessfully (usually zero).</li>
+</ul>
+<p>We can also pick up on another important pattern and encode it into our predictions: When a player passes several turns in a row, there is a strong likelihood that they have abandoned the game and all subsequent points scored are zero.</p>
+<pre><code class="language-julia">turns_train[turns_train.game_id .== 1867,:]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">game_id</th>
+<th style="text-align:right">turn_number</th>
+<th style="text-align:right">nickname</th>
+<th style="text-align:right">rack</th>
+<th style="text-align:right">location</th>
+<th style="text-align:right">move</th>
+<th style="text-align:right">points</th>
+<th style="text-align:right">score</th>
+<th style="text-align:right">turn_type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String31</td>
+<td style="text-align:right">String7</td>
+<td style="text-align:right">String3</td>
+<td style="text-align:right">String15</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">String15</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">EFOPRST</td>
+<td style="text-align:right">8D</td>
+<td style="text-align:right">FORPETS</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">BEEEIIN</td>
+<td style="text-align:right">F7</td>
+<td style="text-align:right">B.IE</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">GNNOQWW</td>
+<td style="text-align:right">E10</td>
+<td style="text-align:right">WOW</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">105</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">EEEIIMN</td>
+<td style="text-align:right">D11</td>
+<td style="text-align:right">NEEM</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">EGIKNNQ</td>
+<td style="text-align:right">J6</td>
+<td style="text-align:right">QI.</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">137</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DEEGIIT</td>
+<td style="text-align:right">K3</td>
+<td style="text-align:right">DIGIT</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">59</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">EGKNNUY</td>
+<td style="text-align:right">4H</td>
+<td style="text-align:right">KEY.NG</td>
+<td style="text-align:right">38</td>
+<td style="text-align:right">175</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">EEEINTZ</td>
+<td style="text-align:right">M4</td>
+<td style="text-align:right">.EEZ</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">83</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?LMNORU</td>
+<td style="text-align:right">5C</td>
+<td style="text-align:right">UNMORaL</td>
+<td style="text-align:right">73</td>
+<td style="text-align:right">248</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">ACEINRT</td>
+<td style="text-align:right">14A</td>
+<td style="text-align:right">ANE.IC</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">115</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">11</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">DLPSTTU</td>
+<td style="text-align:right">A12</td>
+<td style="text-align:right">PL.T</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">275</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">12</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">CDEEFRT</td>
+<td style="text-align:right">C12</td>
+<td style="text-align:right">FR.T</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">142</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">13</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">DELRSTU</td>
+<td style="text-align:right">H7</td>
+<td style="text-align:right">R.SULTED</td>
+<td style="text-align:right">60</td>
+<td style="text-align:right">335</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">14</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">ACDEEIJ</td>
+<td style="text-align:right">J2</td>
+<td style="text-align:right">JA.</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">174</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">15</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?AADHOU</td>
+<td style="text-align:right">N5</td>
+<td style="text-align:right">AHA</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">375</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">16</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">ABCDEEI</td>
+<td style="text-align:right">D1</td>
+<td style="text-align:right">CABI.</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">198</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">17</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?ADIOTU</td>
+<td style="text-align:right">1D</td>
+<td style="text-align:right">.OATI</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">18</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DEEGHNS</td>
+<td style="text-align:right">O7</td>
+<td style="text-align:right">GHEE</td>
+<td style="text-align:right">37</td>
+<td style="text-align:right">235</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">19</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?AADORU</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">-</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">Pass</td>
+</tr>
+<tr>
+<td style="text-align:right">20</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DINSVXY</td>
+<td style="text-align:right">2F</td>
+<td style="text-align:right">XI</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">287</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">21</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?AADORU</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">-</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">Pass</td>
+</tr>
+<tr>
+<td style="text-align:right">22</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">DNORSVY</td>
+<td style="text-align:right">13G</td>
+<td style="text-align:right">V.NDORS</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">319</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">23</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?AADORU</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">-</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">Pass</td>
+</tr>
+<tr>
+<td style="text-align:right">24</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">24</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">ELOSUVY</td>
+<td style="text-align:right">L8</td>
+<td style="text-align:right">VOYEU.</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">351</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">25</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?AADORU</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">-</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">Pass</td>
+</tr>
+<tr>
+<td style="text-align:right">26</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AILNOS</td>
+<td style="text-align:right">14L</td>
+<td style="text-align:right">SOIL</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">374</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">27</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">?AADORU</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">-</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">396</td>
+<td style="text-align:right">Pass</td>
+</tr>
+<tr>
+<td style="text-align:right">28</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">AN</td>
+<td style="text-align:right">3B</td>
+<td style="text-align:right">NA.</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">384</td>
+<td style="text-align:right">Play</td>
+</tr>
+<tr>
+<td style="text-align:right">29</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">29</td>
+<td style="text-align:right">BetterBot</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">(AADORU?)</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">398</td>
+<td style="text-align:right">End</td>
+</tr>
+<tr>
+<td style="text-align:right">30</td>
+<td style="text-align:right">1867</td>
+<td style="text-align:right">30</td>
+<td style="text-align:right">marvin</td>
+<td style="text-align:right">AADORU?</td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">(time)</td>
+<td style="text-align:right">-10</td>
+<td style="text-align:right">386</td>
+<td style="text-align:right">Timeout</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ratings">Ratings<a class="anchor" href="#ratings">#</a></h2>
+<p>Players on Woogles.io are assigned a rating that indicates their skill at Scrabble, allowing them to be matched easily against similarly skilled opponents.</p>
+<pre><code class="language-julia">describe(scores)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">variable</th>
+<th style="text-align:right">mean</th>
+<th style="text-align:right">min</th>
+<th style="text-align:right">median</th>
+<th style="text-align:right">max</th>
+<th style="text-align:right">nmissing</th>
+<th style="text-align:right">eltype</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right">Symbol</td>
+<td style="text-align:right">Union…</td>
+<td style="text-align:right">Any</td>
+<td style="text-align:right">Union…</td>
+<td style="text-align:right">Any</td>
+<td style="text-align:right">Int64</td>
+<td style="text-align:right">Type</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">game_id</td>
+<td style="text-align:right">12963.0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">12963.0</td>
+<td style="text-align:right">25925</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">Int64</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">nickname</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">10Dots</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">zuzu</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">String31</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">score</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">0</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">NA</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">String3</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">rating</td>
+<td style="text-align:right">1736.7</td>
+<td style="text-align:right">1114.0</td>
+<td style="text-align:right">1748.0</td>
+<td style="text-align:right">2130.0</td>
+<td style="text-align:right">2266</td>
+<td style="text-align:right">Union{Missing, Float32}</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-julia">using StatsPlots
+density(Float32.(skipmissing(scores.rating)),legend = false, title=&quot;Distribution of pre-game ratings&quot;)
+</code></pre>
+<p><img src="https://i.imgur.com/DvuXTje.png" alt=""></p>
+<p>How do our ratings look for BetterBot versus non-BetterBot players?</p>
+<pre><code class="language-julia">density(Float32.(skipmissing(scores.rating[scores.nickname .== &quot;BetterBot&quot;])),label = &quot;BetterBot&quot;,title=&quot;BetterBot Ratings versus Human Ratings&quot;)
+density!(Float32.(skipmissing(scores.rating[scores.nickname .!= &quot;BetterBot&quot;])),label = &quot;Human Players&quot;)
+</code></pre>
+<p><img src="https://i.imgur.com/By50OaG.png" alt=""></p>
+<p>There are two distinct peaks for Better Bot ratings. Could this have something to do with the game difficulty?</p>
+<pre><code class="language-julia">game_ratings = innerjoin(games,scores, on = :game_id)
+density(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.time_control_name .== &quot;rapid&quot;)])),label = &quot;Rapid&quot;,title=&quot;BetterBot Ratings by game type&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.time_control_name .== &quot;regular&quot;)])),label = &quot;Regular&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.time_control_name .== &quot;blitz&quot;)])),label = &quot;Blitz&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.time_control_name .== &quot;ultrablitz&quot;)])),label = &quot;Ultrablitz&quot;)
+</code></pre>
+<p><img src="https://i.imgur.com/Ut2Dryl.png" alt=""></p>
+<p>There appears to be some signal here. Could BetterBot perform better or worse based on the type of dictionary used?</p>
+<pre><code class="language-julia">density(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;CSW19&quot;)])),label = &quot;CSW19&quot;,title=&quot;BetterBot Ratings by Dictionary Type&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;CSW21&quot;)])),label = &quot;CSW21&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;NWL18&quot;)])),label = &quot;NWL18&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .== &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;NWL20&quot;)])),label = &quot;NWL20&quot;)
+</code></pre>
+<p><img src="https://i.imgur.com/ReErTC3.png" alt=""></p>
+<p>So, BetterBot&rsquo;s rating is generally a product of game type and dictionary type. To get the most accurate reflection of the strength of BetterBot, we may consider encoding BetterBot&rsquo;s ratings as the mean of the ratings for each game type and dictionary type.</p>
+<p>Do we observe this in human players as well?</p>
+<pre><code class="language-julia">density(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .!= &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;CSW19&quot;)])),label = &quot;CSW19&quot;,title=&quot;Human Ratings by Dictionary Type&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .!= &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;CSW21&quot;)])),label = &quot;CSW21&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .!= &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;NWL18&quot;)])),label = &quot;NWL18&quot;)
+density!(Float32.(skipmissing(game_ratings.rating[(game_ratings.nickname .!= &quot;BetterBot&quot;) .&amp; (game_ratings.lexicon .== &quot;NWL20&quot;)])),label = &quot;NWL20&quot;)
+</code></pre>
+<p><img src="https://i.imgur.com/cuh2Z9o.png" alt=""></p>
+<p>The answer appears to be no.</p>
+<h1 id="parsing-boards-and-racks">Parsing boards and racks</h1>
+<h2 id="move-and-location"><code>move</code> and <code>location</code><a class="anchor" href="#move-and-location">#</a></h2>
+<p>The <code>turns_</code> datasets allow us to reconstruct the entire Scrabble board at any point in the game relying on the data provided here.</p>
+<p><img src="https://i.imgur.com/vi8cFQm.png" alt=""></p>
+<p>In our <code>turns_</code> datasets:</p>
+<ul>
+<li>All turns are ordered, which allows us to parse each game sequentially.</li>
+<li>Every game begins with an empty board.</li>
+<li>As mentioned above, any successful challenges are identified the subsequent turn as exchanges for negative points.</li>
+<li>As shown above, the Woogles.io board is laid out in a grid form, with columns given a corresponding letter and rows given a corresponding number. When a word is laid out vertically, the <code>location</code> value begins with a letter, and when a word is laid out horizontally, the <code>location</code> value begins with a number.</li>
+<li>When a word is placed, if the word overlaps with an already-placed tile, <code>move</code> represents the character with a &ldquo;.&rdquo; character (e.g. playing the word &ldquo;GRAPE&rdquo; with the tiles &ldquo;G&rdquo;,&ldquo;R&rdquo;,&ldquo;A&rdquo;, and &ldquo;E&rdquo; on the player&rsquo;s rack and the tile &ldquo;P&rdquo; already on the board is represented in <code>move</code> as &ldquo;GRA.E&rdquo;).</li>
+<li>When a word is placed using a wildcard tile (appearing in traditional Scrabble as simply a blank tile, represented in <code>rack</code> as &ldquo;?&quot;), the letter that the wildcard tile becomes is represented as lowercase in <code>move</code> (e.g. playing the word &ldquo;BUCK&rdquo; with the tiles &ldquo;B&rdquo; and &ldquo;C&rdquo; along with a wildcard tile on a player&rsquo;s <code>rack</code> and the tile &ldquo;U&rdquo; already on the board is represented in <code>move</code> as &ldquo;B.Ck&rdquo;).</li>
+</ul>
+<p>From this information, we can reconstruct the Scrabble board as it was immediately prior to each play. We will represent each board as a 15x15 matrix of characters. An empty space is represented with an empty character (<code>' '</code>), a blank tile is represented as an lowercase letter for the word it is intended to represent (e.g. <code>'i'</code>), and all other tiles are represented as upper-case letters (e.g. <code>'F'</code>).</p>
+<p>We will first write a function for parsing moves. The function <code>place_word</code> will take in a <code>board</code> (the 15x15 matrix of characters), <code>location</code>, and <code>move</code>, and return a new board with the <code>move</code> placed in the proper <code>location</code>.</p>
+<pre><code class="language-julia">function place_word(board, location, move)
+    cols = [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;,&quot;F&quot;,&quot;G&quot;,&quot;H&quot;,&quot;I&quot;,&quot;J&quot;,&quot;K&quot;,&quot;L&quot;,&quot;M&quot;,&quot;N&quot;,&quot;O&quot;]
+    place_vertical = isletter(only(location[1:1]))
+    horz_start_coord = findall(cols .== match(r&quot;[A-Z]&quot;,location).match)[1]
+    vert_start_coord = parse(Int64, match(r&quot;\d+&quot;,location).match)[1]
+    word_length = length(move)
+    letters_to_place = collect.(move)
+    if place_vertical
+        vert_end_coord = vert_start_coord + word_length - 1
+        vert_coords = vert_start_coord:vert_end_coord
+        vert_coords = vert_coords[letters_to_place .!= '.']
+        horz_coords = horz_start_coord
+    else
+        horz_end_coord = horz_start_coord + word_length - 1
+        horz_coords = horz_start_coord:horz_end_coord
+        horz_coords = horz_coords[letters_to_place .!= '.']
+        vert_coords = vert_start_coord
+    end
+    letters_to_place = letters_to_place[letters_to_place .!= '.']
+    board[vert_coords,horz_coords] = letters_to_place
+    board
+end
+empty_board = fill(' ',(15,15))
+place_word(empty_board, &quot;E8&quot;, &quot;FOO.AR&quot;)
+</code></pre>
+<pre><code>15×15 Matrix{Char}:
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  'F'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  'O'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  'O'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  'A'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  'R'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+</code></pre>
+<p>We can iterate over the turns of a game to find the status of a board prior to any turn. Note that we will include logic to account for removing successful challenges from the board.</p>
+<pre><code class="language-julia">function create_boards(game)
+    board = fill(' ',(15,15,size(game)[1]))
+    for n in 2:size(game)[1]
+        if game.turn_type[n-1] == &quot;Play&quot;
+            board[:,:,n] = place_word(board[:,:,n-1],game.location[n-1],game.move[n-1])
+        elseif (n &gt; 3) &amp;&amp; (game.turn_type[n-1] == &quot;Exchange&quot;) &amp; (game.turn_type[n-2] == &quot;Play&quot;) &amp; (game.nickname[n-1] == game.nickname[n-2])
+            board[:,:,n] = board[:,:,n-2]
+        else
+            board[:,:,n] = board[:,:,n-1]
+        end
+    end
+    return(board)
+end
+create_boards(turns_train[turns_train.game_id .== 1,:])[:,:,20]
+</code></pre>
+<pre><code>15×15 Matrix{Char}:
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'B'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'W'  'A'  'B'  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'P'  ' '  'L'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'G'  'U'  'L'  'L'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'F'  'I'  'R'  'E'  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  'J'  'E'  'E'  'R'  ' '  'I'  'N'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'L'  ' '  ' '  'A'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  'C'  'I'  'T'  'Y'  ' '  ' '  'W'  ' '  ' '
+ ' '  ' '  ' '  'Y'  'A'  ' '  'O'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  'F'  'A'  'U'  'X'  ' '  'O'  'P'  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  'A'  ' '  ' '  'E'  ' '  ' '  'I'  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  'Z'  'O'  'O'  ' '  'D'  'I'  'E'  'D'  ' '  ' '  ' '  ' '  ' '  ' '
+ 'R'  'E'  'U'  'N'  'i'  'O'  'N'  'S'  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+</code></pre>
+<h2 id="anticipating-challenges">Anticipating Challenges<a class="anchor" href="#anticipating-challenges">#</a></h2>
+<p>With our ruleset, we should be able to perfectly predict any challenge on a specific turn. As mentioned above:</p>
+<blockquote>
+<p>If a player takes two turns in a row, the subsequent turn is an administrative turn, usually a challenge.</p>
+<ul>
+<li>If the previously played word was invalid as judged by the game&rsquo;s dictionary, the point value on that turn is equivalent to -1 × the points scored on the previous turn.</li>
+<li>If the previously played word was valid as judged by the game&rsquo;s dictionary, the point value on that turn is equivalent to the point bonus awarded for being challenged unsuccessfully (usually zero).</li>
+</ul>
+</blockquote>
+<p>We can do this by first writing a function to extract words from the Scrabble board, then writing a second function to compare two boards and see if any of the new words added to the board have made the board invalid.</p>
+<pre><code class="language-julia">board = create_boards(turns_train[turns_train.game_id .== 1,:])[:,:,20]
+</code></pre>
+<pre><code>
+15×15 Matrix{Char}:
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'B'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'W'  'A'  'B'  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'P'  ' '  'L'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'G'  'U'  'L'  'L'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'F'  'I'  'R'  'E'  ' '  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  'J'  'E'  'E'  'R'  ' '  'I'  'N'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '  'L'  ' '  ' '  'A'  ' '  ' '
+ ' '  ' '  ' '  ' '  ' '  ' '  'C'  'I'  'T'  'Y'  ' '  ' '  'W'  ' '  ' '
+ ' '  ' '  ' '  'Y'  'A'  ' '  'O'  ' '  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  'F'  'A'  'U'  'X'  ' '  'O'  'P'  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  'A'  ' '  ' '  'E'  ' '  ' '  'I'  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+ ' '  'Z'  'O'  'O'  ' '  'D'  'I'  'E'  'D'  ' '  ' '  ' '  ' '  ' '  ' '
+ 'R'  'E'  'U'  'N'  'i'  'O'  'N'  'S'  ' '  ' '  ' '  ' '  ' '  ' '  ' '
+</code></pre>
+<pre><code class="language-julia">function extract_words(board)
+    words = Vector{String}()
+    for n in 1:size(board,1)
+        string = board[n,:] |&gt;
+            join |&gt;
+            strip |&gt;
+            uppercase
+        strings = split(string,' ')
+        strings = strings[length.(strings) .&gt; 1]
+        append!(words, strings)
+    end
+    for n in 1:size(board,2)
+        string = board[:,n] |&gt;
+            join |&gt;
+            strip |&gt;
+            uppercase
+        strings = split(string,' ')
+        strings = strings[length.(strings) .&gt; 1]
+        append!(words, strings)
+    end
+    return(words)
+end
+extract_words(board)
+</code></pre>
+<pre><code>27-element Vector{String}:
+ &quot;WAB&quot;
+ &quot;GULL&quot;
+ &quot;FIRE&quot;
+ &quot;JEER&quot;
+ &quot;IN&quot;
+ &quot;CITY&quot;
+ &quot;YA&quot;
+ &quot;FAUX&quot;
+ &quot;OP&quot;
+ &quot;ZOO&quot;
+ &quot;DIED&quot;
+ &quot;REUNIONS&quot;
+ &quot;FAZE&quot;
+ ⋮
+ &quot;ON&quot;
+ &quot;AXE&quot;
+ &quot;DO&quot;
+ &quot;COO&quot;
+ &quot;IN&quot;
+ &quot;PIES&quot;
+ &quot;FE&quot;
+ &quot;GIRLY&quot;
+ &quot;PUR&quot;
+ &quot;LEI&quot;
+ &quot;BALL&quot;
+ &quot;NAW&quot;
+</code></pre>
+<pre><code class="language-julia">function valid_turn(board_pre, board_post, dict)
+    words_pre = extract_words(board_pre)
+    words_post = extract_words(board_post)
+    new_words = words_post[.!(in.(words_post, [words_pre]))]
+    valid_words = in.(new_words,[dict])
+    return(all(valid_words))
+end
+# example of a valid word
+boards = create_boards(turns_train[turns_train.game_id .== 1,:])
+board_pre = boards[:,:,19]
+board_post = boards[:,:,20]
+valid_turn(board_pre, board_post, CSW19)
+</code></pre>
+<pre><code>true
+</code></pre>
+<pre><code class="language-julia"># example of an invalid word
+boards = create_boards(turns_train[turns_train.game_id .== 44,:])
+board_pre = boards[:,:,12]
+board_post = boards[:,:,13]
+valid_turn(board_pre, board_post, CSW19)
+</code></pre>
+<pre><code>false
+</code></pre>
+<p>For convenience, we can also store our dictionaries in (what else?) a dictionary!</p>
+<pre><code class="language-julia">lexicons = Dict(&quot;CSW19&quot; =&gt; CSW19, &quot;CSW21&quot; =&gt; CSW21, &quot;NWL18&quot; =&gt; NWL18, &quot;NWL20&quot; =&gt; NWL20)
+</code></pre>
+<pre><code>Dict{String, Vector{String}} with 4 entries:
+  &quot;CSW19&quot; =&gt; [&quot;AA&quot;, &quot;AAH&quot;, &quot;AAHED&quot;, &quot;AAHING&quot;, &quot;AAHS&quot;, &quot;AAL&quot;, &quot;AALII&quot;, &quot;AALIIS&quot;, &quot;AALS&quot;, &quot;AARDVARK&quot;  …  &quot;ZYMOTICALLY&quot;, &quot;ZYMOTICS&quot;, &quot;ZYMURGIES&quot;, &quot;ZYMURGY&quot;, &quot;ZYTHUM&quot;, &quot;ZYTHUMS&quot;, &quot;ZYZZYVA&quot;, &quot;ZYZZYVAS&quot;, &quot;ZZZ&quot;, &quot;ZZZS&quot;]
+  &quot;CSW21&quot; =&gt; [&quot;AA&quot;, &quot;AAH&quot;, &quot;AAHED&quot;, &quot;AAHING&quot;, &quot;AAHS&quot;, &quot;AAL&quot;, &quot;AALII&quot;, &quot;AALIIS&quot;, &quot;AALS&quot;, &quot;AARDVARK&quot;  …  &quot;ZYMOTICALLY&quot;, &quot;ZYMOTICS&quot;, &quot;ZYMURGIES&quot;, &quot;ZYMURGY&quot;, &quot;ZYTHUM&quot;, &quot;ZYTHUMS&quot;, &quot;ZYZZYVA&quot;, &quot;ZYZZYVAS&quot;, &quot;ZZZ&quot;, &quot;ZZZS&quot;]
+  &quot;NWL18&quot; =&gt; [&quot;AA&quot;, &quot;AB&quot;, &quot;AD&quot;, &quot;AE&quot;, &quot;AG&quot;, &quot;AH&quot;, &quot;AI&quot;, &quot;AL&quot;, &quot;AM&quot;, &quot;AN&quot;  …  &quot;WITHDRAWNNESSES&quot;, &quot;WOEBEGONENESSES&quot;, &quot;WONDERFULNESSES&quot;, &quot;WORRISOMENESSES&quot;, &quot;WORTHLESSNESSES&quot;, &quot;WRONGHEADEDNESS&quot;, &quot;XENOTRANSPLANTS&quot;, &quot;XEROGRAPHICALLY&quot;, &quot;XERORADIOGRAPHY&quot;, &quot;ZOOGEOGRAPHICAL&quot;]
+  &quot;NWL20&quot; =&gt; [&quot;AA&quot;, &quot;AB&quot;, &quot;AD&quot;, &quot;AE&quot;, &quot;AG&quot;, &quot;AH&quot;, &quot;AI&quot;, &quot;AL&quot;, &quot;AM&quot;, &quot;AN&quot;  …  &quot;WITHDRAWNNESSES&quot;, &quot;WOEBEGONENESSES&quot;, &quot;WONDERFULNESSES&quot;, &quot;WORRISOMENESSES&quot;, &quot;WORTHLESSNESSES&quot;, &quot;WRONGHEADEDNESS&quot;, &quot;XENOTRANSPLANTS&quot;, &quot;XEROGRAPHICALLY&quot;, &quot;XERORADIOGRAPHY&quot;, &quot;ZOOGEOGRAPHICAL&quot;]
+</code></pre>
+<p>Now, we can write a block of code that will parse game boards and anticipate the success of challenges. We will join our <code>turns_train</code> dataframe with our <code>games</code> dataframe to determine the ruleset, then assign points for challenged turns based on whether we detect a challenge and if the word is valid.</p>
+<pre><code class="language-julia">turns_train_joined = innerjoin(turns_train, games, on = :game_id)
+turns_train_joined.ndx = 1:size(turns_train_joined,1)
+turns_train_joined.good_challenge .= false
+turns_train_joined.bad_challenge .= false
+game_ids = unique(turns_train_joined.game_id)
+for game_id in game_ids
+    game = turns_train_joined[turns_train_joined.game_id .== game_id,:]
+    boards = create_boards(game)
+    dict = lexicons[game.lexicon[1]]
+    for n in 2:size(boards,3)
+        if (game.turn_number[n] &lt;= 20) &amp;&amp; (game.nickname[n] == game.nickname[n-1]) &amp;&amp; valid_turn(boards[:,:,n-1], boards[:,:,n], dict) # short circuiting for lightning fast parsing
+            turns_train_joined.bad_challenge[game.ndx[n]] = true
+        elseif (game.turn_number[n] &lt;= 20) &amp;&amp; (game.nickname[n] == game.nickname[n-1]) &amp;&amp; !valid_turn(boards[:,:,n-1], boards[:,:,n], dict)
+            turns_train_joined.good_challenge[game.ndx[n]] = true
+        end
+    end
+end
+
+turns_train_joined.xpoints .= 0.0
+turns_train_joined.xpoints[turns_train_joined.bad_challenge] .= sum(turns_train_joined.points[turns_train_joined.turn_type .== &quot;Challenge&quot;]) / sum(turns_train_joined.turn_type .== &quot;Challenge&quot;)
+turns_train_joined.xpoints[turns_train_joined.good_challenge] = -1 .* turns_train_joined.points[turns_train_joined.ndx[turns_train_joined.good_challenge] .- 1]
+
+@df turns_train_joined[turns_train_joined.good_challenge,:] scatter(
+    :xpoints,
+    :points,
+    title = &quot;Expected points lost on successful challenges&quot;,
+    legend=false
+)
+</code></pre>
+<p><img src="https://i.imgur.com/CsKtXnk.png" alt=""></p>
+<pre><code class="language-julia">turns_train_joined = nothing
+GC.gc()
+</code></pre>
+<p>We can see that in all relevant instances, we are perfectly predicting the number of points lost on challenges and can guestimate with a decent bit of accuracy points gained from unsuccessful challenges. This can be quite a boon for our RMSE later in this Kaggle competition.</p>
+<p>Following our data exploration, we can apply several insights to our modeling work to further refine our estimates. We can apply the following techniques to adjust our estimates:</p>
+<ul>
+<li>We can perfectly detect and predict the point values of successful challenge turns</li>
+<li>We can perfectly detect unsuccessful challenges and approximate with a high degree of accuracy the point values of these turns</li>
+<li>We can apply manual adjustments depending on the number of consecutively passed turns.</li>
+<li>We can adjust our estimates with MixedModels.jl on a per-player basis.</li>
+</ul>
+<h1 id="preparing-and-implementing-a-neural-network">Preparing and implementing a neural network</h1>
+<h2 id="data-preparation">Data preparation<a class="anchor" href="#data-preparation">#</a></h2>
+<p>We have a few tricks up our sleeve to handle predictions, but we now need to dive into the grunt work of building a neural network and preparing our data for it. We will need to represent the game board and rack as tensors, then feed these tensors into constructed neural networks, tune these networks, and finally predict on our training data.</p>
+<p>To kick off the grunt work, we will write a function to encode the board state into a matrix. In the first two dimensions, we will encode the positional information of each bit. In the third dimension, we will encode the following information:</p>
+<ul>
+<li>The specific letter tile at each location (1-26), with a 1 representing that tile existing at that location, and a 0 if it does not.</li>
+<li>Any wildcard tiles (27), with a 1 representing that a tile is a wildcard and a 0 if it is not or if the space is empty.</li>
+<li>Whether or not a tile exists at a given location (28), with a 1 representing a tile, and a 0 representing an open space.</li>
+<li>The point value of the letter tile at a given location (29), with a 0 representing an open space or a wildcard tile.</li>
+<li>Available letter-bonus tiles (30), with a 2 representing a double-letter-score bonus tile, a 3 representing a triple-letter-score bonus tile, and a 0 representing that a letter bonus is unavailable at that space.</li>
+<li>Available word-bonus tiles (31), with a 2 representing a double-word-score bonus tile, a 3 representing a triple-word-score bonus tile, and a 0 representing a word bonus is unavailable at that space.</li>
+</ul>
+<pre><code class="language-julia">using Dictionaries 
+LETTER_VALS = Dictionary(Dict( 'E' =&gt; 1,
+                               'A' =&gt; 1,
+                               'I' =&gt; 1,
+                               'O' =&gt; 1,
+                               'N' =&gt; 1,
+                               'R' =&gt; 1,
+                               'T' =&gt; 1,
+                               'L' =&gt; 1,
+                               'S' =&gt; 1,
+                               'U' =&gt; 1,
+                               'D' =&gt; 2,
+                               'G' =&gt; 2,
+                               'B' =&gt; 3,
+                               'C' =&gt; 3,
+                               'M' =&gt; 3,
+                               'P' =&gt; 3,
+                               'F' =&gt; 4,
+                               'H' =&gt; 4,
+                               'V' =&gt; 4,
+                               'W' =&gt; 4,
+                               'Y' =&gt; 4,
+                               'K' =&gt; 5,
+                               'J' =&gt; 8,
+                               'X' =&gt; 8,
+                               'Q' =&gt; 10,
+                               'Z' =&gt; 10 ))
+
+LETTER_BONUSES = 
+[   [   0    0    0    2    0    0    0    0    0     0     0     2     0     0     0  ]
+    [   0    0    0    0    0    3    0    0    0     3     0     0     0     0     0  ]
+    [   0    0    0    0    0    0    2    0    2     0     0     0     0     0     0  ]
+    [   2    0    0    0    0    0    0    2    0     0     0     0     0     0     2  ]
+    [   0    0    0    0    0    0    0    0    0     0     0     0     0     0     0  ]
+    [   0    3    0    0    0    3    0    0    0     3     0     0     0     3     0  ]
+    [   0    0    2    0    0    0    2    0    2     0     0     0     2     0     0  ]
+    [   0    0    0    2    0    0    0    0    0     0     0     2     0     0     0  ]
+    [   0    0    2    0    0    0    2    0    2     0     0     0     2     0     0  ]
+    [   0    3    0    0    0    3    0    0    0     3     0     0     0     3     0  ]
+    [   0    0    0    0    0    0    0    0    0     0     0     0     0     0     0  ]
+    [   2    0    0    0    0    0    0    2    0     0     0     0     0     0     2  ]
+    [   0    0    0    0    0    0    2    0    2     0     0     0     0     0     0  ]
+    [   0    0    0    0    0    3    0    0    0     3     0     0     0     0     0  ]
+    [   0    0    0    2    0    0    0    0    0     0     0     2     0     0     0  ]    ]
+
+WORD_BONUSES =  
+[   [   3    0    0    0    0    0    0    3    0     0     0     0     0     0     3  ]
+    [   0    2    0    0    0    0    0    0    0     0     0     0     0     2     0  ]
+    [   0    0    2    0    0    0    0    0    0     0     0     0     2     0     0  ]
+    [   0    0    0    2    0    0    0    0    0     0     0     2     0     0     0  ]
+    [   0    0    0    0    2    0    0    0    0     0     2     0     0     0     0  ]
+    [   0    0    0    0    0    0    0    0    0     0     0     0     0     0     0  ]
+    [   0    0    0    0    0    0    0    0    0     0     0     0     0     0     0  ]
+    [   3    0    0    0    0    0    0    2    0     0     0     0     0     0     3  ]
+    [   0    0    0    0    0    0    0    0    0     0     0     0     0     0     0  ]
+    [   0    0    0    0    0    0    0    0    0     0     0     0     0     0     0  ]
+    [   0    0    0    0    2    0    0    0    0     0     2     0     0     0     0  ]
+    [   0    0    0    2    0    0    0    0    0     0     0     2     0     0     0  ]
+    [   0    0    2    0    0    0    0    0    0     0     0     0     2     0     0  ]
+    [   0    2    0    0    0    0    0    0    0     0     0     0     0     2     0  ]
+    [   3    0    0    0    0    0    0    3    0     0     0     0     0     0     3  ]    ]
+
+ALPHABET = 'A':'Z'
+
+function encode_board(board)
+    encoded_board = zeros(15,15,31,1)
+    for n in 1:31
+        if n &lt;= 26
+            board_tmp = uppercase.(board) .== ALPHABET[n]
+        elseif n == 27
+            board_tmp = in.(board, [lowercase.(ALPHABET)])
+        elseif n == 28
+            board_tmp = board .!= ' '
+        elseif n == 29
+            board_tmp = encoded_board[:,:,n,1]
+            letters = board[board .!= ' ']
+            vals = map(x -&gt; get(LETTER_VALS,x,0), letters)
+            board_tmp[board .!= ' '] = vals
+        elseif n == 30
+            board_tmp = copy(LETTER_BONUSES)
+            board_tmp[board .!= ' '] .= 0
+        else
+            board_tmp = copy(WORD_BONUSES)
+            board_tmp[board .!= ' '] .= 0
+        end
+        encoded_board[:,:,n,:] = board_tmp
+    end
+    encoded_board
+end
+
+encode_board(create_boards(turns_train[turns_train.game_id .== 1,:])[:,:,25])[:,:,1,:] # shows all 'A's on the board
+</code></pre>
+<pre><code>15×15×1 Array{Float64, 3}:
+[:, :, 1] =
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  0.0
+ 0.0  0.0  1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+</code></pre>
+<p>Finally, we will write a function to parse our rack and metadata into a format readable by a neural network. We will include a count of the number of letter tiles in each rack split out by column, the turn number, the timing format of the game, the rating mode of the game, the lexicon used in the game, and the rating of each player.</p>
+<pre><code class="language-julia">CHARS = ['?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+function encode_game_data(turns, games, scores)
+    # initial parsing
+    main_df = innerjoin(turns, games, on = :game_id)
+    main_df = innerjoin(main_df, scores[:,[:game_id, :nickname, :rating]], on = [:game_id, :nickname])
+    main_df.rating[ismissing.(main_df.rating)] .= sum(scores.rating[(scores.rating .!= &quot;BetterBot&quot;) .&amp; .!ismissing.(scores.rating)]) / sum((scores.rating .!= &quot;BetterBot&quot;) .&amp; .!ismissing.(scores.rating)) # impute missing scores as mean score
+    main_df.rating = convert.(Float32, main_df.rating) 
+    main_df.is_BetterBot = main_df.nickname .== &quot;BetterBot&quot;
+    # encode lexicons, combining for convenience sake
+    main_df.CSW = (main_df.lexicon .== &quot;CSW19&quot;) .| (main_df.lexicon .== &quot;CSW21&quot;)
+    main_df.NWL = (main_df.lexicon .== &quot;NWL18&quot;) .| (main_df.lexicon .== &quot;NWL20&quot;)
+    # one-hot encode categorical variables
+    time_control_encode = select(main_df, [:time_control_name =&gt; ByRow(isequal(v))=&gt; Symbol(v) for v in unique(main_df.time_control_name)])
+    rating_mode_encode = select(main_df, [:rating_mode =&gt; ByRow(isequal(v))=&gt; Symbol(v) for v in unique(main_df.rating_mode)])
+    # categorically encode turn numbers
+    turn_numbers_string = main_df.turn_number
+    turn_numbers_string[turn_numbers_string .&gt;= 30] .= 30
+    turn_numbers_string = string.(turn_numbers_string)
+    turn_numbers_string[turn_numbers_string .== &quot;30&quot;] .= &quot;30+&quot;
+    main_df.turn_numbers_string = turn_numbers_string
+    turn_number_encode = select(main_df, [:turn_numbers_string =&gt; ByRow(isequal(v))=&gt; Symbol(v) for v in [&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,
+                                                                                                          &quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30+&quot;]])
+    # convert rack into columns
+    rack = main_df.rack
+    racks = mapreduce(permutedims, vcat, collect.(rpad.(rack,7,'.')))
+    rack_encode = zeros(Int64, size(racks,1), size(CHARS,1))
+    for j = 1:size(racks,2)
+        for i = 1:size(racks,1)
+            for k in 1:size(CHARS,1)
+                if CHARS[k] == racks[i,j]
+                    rack_encode[i,k] += 1
+                end
+            end
+        end
+    end
+    # combine
+    rack_encode = DataFrame(rack_encode, :auto)
+    rename!(rack_encode, Symbol.(CHARS))
+    main_df = main_df[:,[:points, :rating, :CSW, :NWL, :is_BetterBot]]
+    main_df = hcat(main_df, time_control_encode, rating_mode_encode, rack_encode, turn_number_encode)
+    return(main_df)
+end
+
+encode_game_data(turns_train[turns_train.game_id .== 1,:], games, scores)
+</code></pre>
+<p><code>...truncated...</code></p>
+<h2 id="network-architecture">Network Architecture<a class="anchor" href="#network-architecture">#</a></h2>
+<p>To model our board data, we will employ a convolutional neural network, which will process and flatten our board data. From there, we will concatenate our board data with our related game data and run it through additional layers to arrive at estimates for our figures.</p>
+<pre><code class="language-julia">using Flux
+using Flux.Data: DataLoader
+using CUDA
+
+if CUDA.functional()
+    device = gpu
+else
+    device = cpu
+end
+device
+</code></pre>
+<pre><code>gpu (generic function with 1 method)
+</code></pre>
+<p>We will borrow some custom code from the <a href="https://github.com/FluxML/Flux.jl/blob/master/docs/src/models/advanced.md" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Flux.jl advanced docs</a>
+ and <a href="https://github.com/FluxML/model-zoo" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Model Zoo</a>
+ to implement some helper functions. The <code>Join</code> structure will allow us to concatenate chains within our models.</p>
+<pre><code class="language-julia">struct Join{T, F}
+    combine::F
+    paths::T
+end
+
+Join(combine, paths...) = Join(combine, paths)
+
+Flux.@functor Join
+
+(m::Join)(xs::Tuple) = m.combine(map((f, x) -&gt; f(x), m.paths, xs)...)
+(m::Join)(xs...) = m(xs)
+</code></pre>
+<p><code>eval_mse</code> will allow us to rely on our GPU to quickly evaluate our model at each epoch and determine the best set of parameters.</p>
+<pre><code class="language-julia">function eval_mse(loader, model, device)
+    l = 0f0
+    ntot = 0
+    for (w, x, y) in loader
+        w, x, y = w |&gt; device, x |&gt; device, y |&gt; device
+        ŷ = model((w, x))
+        l += Flux.Losses.mse(ŷ, y') * size(x)[end]
+        ntot += size(x)[end]
+    end
+    return (l/ntot)
+end
+</code></pre>
+<pre><code>eval_mse (generic function with 1 method)
+</code></pre>
+<p>Last, we will encode our data.</p>
+<pre><code class="language-julia"># encode turns_train
+turns_train_game_data = encode_game_data(turns_train, games, scores)
+turns = size(turns_train,1)
+turns_train_boards = fill(' ',15,15,turns)
+turns_train.ndx = 1:size(turns_train,1)
+game_ids = unique(turns_train.game_id)
+for game_id in game_ids
+    turns_train_boards[:,:,turns_train.ndx[turns_train.game_id .== game_id]] = create_boards(turns_train[turns_train.game_id .== game_id,:])
+end
+
+turns_train_boards_data = zeros(15,15,31,turns)
+for n in 1:turns
+    turns_train_boards_data[:,:,:,n] = encode_board(turns_train_boards[:,:,n])
+end
+# encode turns_test
+turns_test_game_data = encode_game_data(turns_test, games, scores)
+turns = size(turns_test,1)
+turns_test_boards = fill(' ',15,15,turns)
+turns_test.ndx = 1:turns
+game_ids = unique(turns_test.game_id)
+for game_id in game_ids
+    turns_test_boards[:,:,turns_test.ndx[turns_test.game_id .== game_id]] = create_boards(turns_test[turns_test.game_id .== game_id,:])
+end
+
+turns_test_boards_data = zeros(15,15,31,turns)
+for n in 1:turns
+    turns_test_boards_data[:,:,:,n] = encode_board(turns_test_boards[:,:,n])
+end
+</code></pre>
+<h2 id="tuning">Tuning<a class="anchor" href="#tuning">#</a></h2>
+<p>To determine the best set of parameters and model infrastructure, we allocate roughly 2/3rds of the <code>turns_train</code> data to a training set and the remaining 1/3rd to a test dataset. Why split up <code>turns_train</code> and not use the existing values in <code>turns_test</code>? We have a different distribution of turn numbers in <code>turns_test</code> compared to <code>turns_train</code>—whereas <code>turns_train</code> contains data from a variety of turns, <code>turns_test</code> only includes data from turns 1 through 19 (which, notably, does not exclude turn 20—the turn we care most about!). Using this approach to select parameters will result in a model that generalizes well on an out-of-sample dataset.</p>
+<p>The tuning code is attached but not run in the interest of time and memory. We selected 90 as the optimal number of epochs.</p>
+<pre><code class="language-julia">tune = false
+train = false;
+</code></pre>
+<pre><code class="language-julia">turns_train_xs_a = turns_train_game_data[turns_train_game_data.points .&gt;= 0,Not(:points)]
+turns_train_xs_a = Array(turns_train_xs_a)'
+turns_train_xs_b = Float32.(turns_train_boards_data[:,:,:,turns_train_game_data.points .&gt;= 0])
+
+turns_train_ys = turns_train_game_data.points[turns_train_game_data.points .&gt;= 0]
+
+if tune
+    train_xs_a = turns_train_xs_a[:,1:end-100000]
+    train_xs_b = turns_train_xs_b[:,:,:,1:end-100000]
+    train_ys = turns_train_ys[1:end-100000]
+
+    valid_xs_a = turns_train_xs_a[:,end-99999:end]
+    valid_xs_b = turns_train_xs_b[:,:,:,end-99999:end]
+    valid_ys = turns_train_ys[end-99999:end]
+end
+</code></pre>
+<p>We use a low batch size for parsing our data, which, coupled with a low learning rate for our ADAM optimizer, allows the optimizer to find the best values for our parameter set (albeit more slowly than a larger batch size or with a higher value of eta).</p>
+<pre><code class="language-julia">batch_size = 32
+
+if tune
+    train_loader = DataLoader((train_xs_a, train_xs_b, train_ys), batchsize=batch_size, shuffle=true)
+    valid_loader = DataLoader((valid_xs_a, valid_xs_b, valid_ys), batchsize=batch_size)
+end
+
+eta = 1e-4
+opt = ADAM(eta)
+</code></pre>
+<pre><code>ADAM(0.0001, (0.9, 0.999), 1.0e-8, IdDict{Any, Any}())
+</code></pre>
+<p>Our model architecture is deliberately simple: we run our board through a convolutional layer, apply batch normalization, then apply a pooling layer. After flattening it down into a nx1 layer, we can join it to our rack/game table (of dimension mx1) and then run it through two dense layers to parse and condense our values into a single point estimate.</p>
+<pre><code class="language-julia">using Random
+Random.seed!(3)
+if tune
+    tuning_model = Chain(
+        Join(vcat,
+            Dense(67,67),
+            Chain(
+                Conv((3,3), 31 =&gt; 16, stride = 1),
+                BatchNorm(16,relu),
+                MaxPool((2,2)),
+                Flux.flatten
+            )
+            ),
+        Dense(643,128,relu),
+        Dense(128,1)
+    ) 
+    tuning_model = tuning_model |&gt; device
+    ps = Flux.params(tuning_model);
+end
+</code></pre>
+<p>Using our train/test sets, we can find the epoch number that minimizes our test RMSE.</p>
+<pre><code class="language-julia">Random.seed!(3)
+
+if tune
+    epochs = 200
+    train_loss = zeros(epochs)
+    valid_loss = zeros(epochs)
+
+    for epoch in 1:epochs
+        for (w, x, y) in train_loader
+            w, x, y = w |&gt; device, x |&gt; device, y |&gt; device
+            gs = Flux.gradient(ps) do
+                    ŷ = tuning_model((w,x))
+                    Flux.Losses.mse(ŷ, y')
+                end
+            Flux.Optimise.update!(opt, ps, gs)
+        end
+        train_loss[epoch] = eval_mse(train_loader, tuning_model, device)
+        valid_loss[epoch] = eval_mse(valid_loader, tuning_model, device)
+    end
+
+    results = DataFrame(Epoch = 1:epochs, Train = train_loss, Validation = valid_loss);
+end
+</code></pre>
+<pre><code class="language-julia">if tune
+    @df results plot(
+        :Epoch,
+        :Train,
+        label = &quot;Train MSE&quot;,
+        title = &quot;Train v. Validation MSE by Epoch&quot;,
+        xlim = (1,epochs),
+        ylim = (200,400)
+    )
+    @df results plot!(
+        :Epoch,
+        :Validation,
+        label = &quot;Validation MSE&quot;
+    )
+end
+</code></pre>
+<pre><code class="language-julia">if tune
+    epochs = results.Epoch[results.Validation .== minimum(results.Validation)][1]
+else
+    epochs = 90
+end
+</code></pre>
+<pre><code>90
+</code></pre>
+<h2 id="final-model">Final Model<a class="anchor" href="#final-model">#</a></h2>
+<p>With our tuned parameters, we can train our model on our entire dataset, including <code>turns_train</code> and <code>turns_test</code>.</p>
+<pre><code class="language-julia">turns_test_xs_a = turns_test_game_data[(turns_test.turn_number .&lt;= 19) .&amp;&amp; (turns_test_game_data.points .&gt;= 0),Not(:points)]
+turns_test_xs_a = Array(turns_test_xs_a)'
+turns_test_xs_b = Float32.(turns_test_boards_data[:,:,:,(turns_test.turn_number .&lt;= 19) .&amp;&amp; (turns_test_game_data.points .&gt;= 0)])
+
+turns_test_ys = turns_test_game_data.points[(turns_test.turn_number .&lt;= 19) .&amp;&amp; (turns_test_game_data.points .&gt;= 0)]
+
+xs_a = cat(turns_train_xs_a, turns_test_xs_a, dims = 2)
+xs_b = cat(turns_train_xs_b, turns_test_xs_b, dims = 4)
+ys = vcat(turns_train_ys, turns_test_ys)
+ys = Int32.(ys) # making this conversion because turn_test_ys dtype is Union{missing, Int64}
+
+if train
+    loader = DataLoader((xs_a, xs_b, ys), batchsize=batch_size, shuffle=true);
+end
+</code></pre>
+<pre><code class="language-julia">using BSON: @save
+using Dates
+Random.seed!(3)
+
+if train
+    model_final = Chain(
+        Join(vcat,
+            Dense(67,67),
+            Chain(
+                Conv((3,3), 31 =&gt; 16, stride = 1),
+                BatchNorm(16,relu),
+                MaxPool((2,2)),
+                Flux.flatten
+            )
+            ),
+        Dense(643,128,relu),
+        Dense(128,1)
+    ) 
+    model_final = model_final |&gt; device
+
+    ps = Flux.params(model_final) 
+    opt = ADAM(eta)
+
+    for epoch in 1:epochs
+        for (w, x, y) in loader
+            w, x, y = w |&gt; device, x |&gt; device, y |&gt; device
+            gs = Flux.gradient(ps) do
+                    ŷ = model_final((w,x))
+                    Flux.Losses.mse(ŷ, y')
+                end
+            Flux.Optimise.update!(opt, ps, gs)
+        end
+    end
+
+    model_final = cpu(model_final)
+    file_name = &quot;models/$(string(Dates.format(now(), &quot;d_m_yyyy_HH_MM&quot;)))_mod_epochs_$(epochs)_eta_$(eta).bson&quot;
+    @save file_name model_final
+    @save &quot;models/model_final.bson&quot; model_final
+end
+</code></pre>
+<h1 id="constructing-predictions">Constructing Predictions</h1>
+<h2 id="base-predictions">Base Predictions<a class="anchor" href="#base-predictions">#</a></h2>
+<p>We are now prepared to predict on our test dataset. First, let us load our saved model into our workspace, then predict the number of expected points <code>xpoints</code> on <code>turns_test</code>.</p>
+<pre><code class="language-julia">using BSON: @load
+@load &quot;models/model_final.bson&quot; model_final
+
+turns_test_xs_a = turns_test_game_data[:,Not(:points)]
+turns_test_xs_a = Array(turns_test_xs_a)'
+turns_test_xs_b = Float32.(turns_test_boards_data)
+
+turns_test.xpoints = vec(model_final((turns_test_xs_a, turns_test_xs_b)));
+</code></pre>
+<p>Next, we will adjust some our estimates manually. For example, some of our predictions still end up negative—we manually set any negative predictions to a reasonable low value, 5 points. I have also taken the liberty of checking for potential abandons (looking for multiple passes in a row before turn 20), and these are set to zero as well.</p>
+<pre><code class="language-julia">turns_test.xpoints[turns_test.xpoints .&lt; 0] .= 5
+turns_test.xpoints[[154441,144221,138001,129301,96621]] .= 0;
+</code></pre>
+<p>Now, we can adjust our predictions by checking for challenges, using the same logic as above.</p>
+<pre><code class="language-julia">turns_test_joined = innerjoin(turns_test, games, on = :game_id)
+turns_test_joined.ndx = 1:size(turns_test_joined,1)
+turns_test_joined.good_challenge .= false
+turns_test_joined.bad_challenge .= false
+curr_game_id = turns_test_joined.game_id[1]
+for n in 2:size(turns_test_joined,1)
+    new_game_id = turns_test_joined.game_id[n]
+    dict = lexicons[turns_test_joined.lexicon[n]]
+    if ((new_game_id == curr_game_id) &amp; (turns_test_joined.nickname[n] == turns_test_joined.nickname[n-1])) &amp;&amp; valid_turn(turns_test_boards[:,:,n-1], turns_test_boards[:,:,n], dict)
+        turns_test_joined.bad_challenge[n] = true
+    elseif ((new_game_id == curr_game_id) &amp; (turns_test_joined.nickname[n] == turns_test_joined.nickname[n-1])) &amp;&amp; !valid_turn(turns_test_boards[:,:,n-1], turns_test_boards[:,:,n], dict)
+        turns_test_joined.good_challenge[n] = true
+    end
+    curr_game_id = new_game_id
+end
+
+turns_test_joined.xpoints[turns_test_joined.bad_challenge] .= sum(skipmissing(turns_test_joined.points[turns_test_joined.turn_type .== &quot;Challenge&quot;])) / sum(skipmissing(turns_test_joined.turn_type .== &quot;Challenge&quot;))
+turns_test_joined.xpoints[turns_test_joined.good_challenge] = -1 .* skipmissing(turns_test_joined.points[turns_test_joined.ndx[turns_test_joined.good_challenge] .- 1]);
+</code></pre>
+<p>With these changes in place, we can save our initial predictions.</p>
+<pre><code class="language-julia">test_preds = DataFrame(game_id = turns_test.game_id[turns_test.turn_number .== 20], points = turns_test_joined.xpoints[turns_test.turn_number .== 20])
+file_name = &quot;outputs/$(string(Dates.format(now(), &quot;d_m_yyyy_HH_MM&quot;)))_base_pred.csv&quot;
+CSV.write(file_name, test_preds)
+</code></pre>
+<pre><code>&quot;outputs/1_3_2022_17_25_base_pred.csv&quot;
+</code></pre>
+<h2 id="mixed-model-predictions">Mixed Model Predictions<a class="anchor" href="#mixed-model-predictions">#</a></h2>
+<p>There is a part of our data that we are not capturing—we have players whose skill level may not be adequately captured in pre-game ratings, such as players who are new to Woogles but otherwise experienced Scrabble players. Neural networks are poorly equipped to capture individual player effects, but we can run our model through a secondary scaler capable of accounting for random effects to adjust our estimates—a mixed model, treating <code>nickname</code> as a random effect. Our mixed model will also ensure our estimates are appropriately scaled such that the mean of our estimates and the means of our outputs are aligned.</p>
+<pre><code class="language-julia">using MixedModels
+
+ŷs = model_final((xs_a, xs_b))
+mm_df = DataFrame(nickname = vcat(turns_train.nickname[turns_train.points .&gt;= 0], turns_test.nickname[(turns_test.turn_number .&lt;= 19) .&amp;&amp; (turns_test.points .&gt;= 0)]),
+                  points = vcat(turns_train.points[turns_train.points .&gt;= 0], turns_test.points[(turns_test.turn_number .&lt;= 19) .&amp;&amp; (turns_test.points .&gt;= 0)]), 
+                  xpoints = vec(ŷs))
+
+m1 = fit(MixedModel, @formula(points ~ 0 + xpoints + (1|nickname)), mm_df)
+</code></pre>
+<pre><code>┌ Warning: ProgressMeter by default refresh meters with additional information in IJulia via `IJulia.clear_output`, which clears all outputs in the cell. 
+│  - To prevent this behaviour, do `ProgressMeter.ijulia_behavior(:append)`. 
+│  - To disable this warning message, do `ProgressMeter.ijulia_behavior(:clear)`.
+└ @ ProgressMeter C:\Users\edwar\.julia\packages\ProgressMeter\Vf8un\src\ProgressMeter.jl:620
+Minimizing 16 	 Time: 0:00:01 (63.06 ms/it)
+Linear mixed model fit by maximum likelihood
+ points ~ 0 + xpoints + (1 | nickname)
+     logLik     -2 logLik        AIC           AICc          BIC      
+ -2770806.9315  5541613.8629  5541619.8629  5541619.8629  5541654.0969
+
+Variance components:
+            Column    Variance Std.Dev. 
+nickname (Intercept)   10.39388  3.22395
+Residual              235.59633 15.34915
+ Number of obs: 667515; levels of grouping factors: 673
+
+  Fixed-effects parameters:
+───────────────────────────────────────────────
+            Coef.  Std. Error       z  Pr(&gt;|z|)
+───────────────────────────────────────────────
+xpoints  0.944415  0.00140901  670.27    &lt;1e-99
+───────────────────────────────────────────────
+</code></pre>
+<pre><code class="language-julia">pred_df = DataFrame(nickname = turns_test.nickname,
+                    xpoints = vec(model_final((turns_test_xs_a, turns_test_xs_b))))
+pred_df.points .= 0
+turns_test.xpoints = predict(m1, pred_df)
+
+turns_test.xpoints[turns_test.xpoints .&lt; 0] .= 5
+turns_test.xpoints[[154441,144221,138001,129301,96621]] .= 0
+
+turns_test_joined = innerjoin(turns_test, games, on = :game_id)
+turns_test_joined.ndx = 1:size(turns_test_joined,1)
+turns_test_joined.good_challenge .= false
+turns_test_joined.bad_challenge .= false
+curr_game_id = turns_test_joined.game_id[1]
+for n in 2:size(turns_test_joined,1)
+    new_game_id = turns_test_joined.game_id[n]
+    dict = lexicons[turns_test_joined.lexicon[n]]
+    if ((new_game_id == curr_game_id) &amp; (turns_test_joined.nickname[n] == turns_test_joined.nickname[n-1])) &amp;&amp; valid_turn(turns_test_boards[:,:,n-1], turns_test_boards[:,:,n], dict)
+        turns_test_joined.bad_challenge[n] = true
+    elseif ((new_game_id == curr_game_id) &amp; (turns_test_joined.nickname[n] == turns_test_joined.nickname[n-1])) &amp;&amp; !valid_turn(turns_test_boards[:,:,n-1], turns_test_boards[:,:,n], dict)
+        turns_test_joined.good_challenge[n] = true
+    end
+    curr_game_id = new_game_id
+end
+
+turns_test_joined.xpoints[turns_test_joined.bad_challenge] .= sum(skipmissing(turns_test_joined.points[turns_test_joined.turn_type .== &quot;Challenge&quot;])) / sum(skipmissing(turns_test_joined.turn_type .== &quot;Challenge&quot;))
+turns_test_joined.xpoints[turns_test_joined.good_challenge] = -1 .* skipmissing(turns_test_joined.points[turns_test_joined.ndx[turns_test_joined.good_challenge] .- 1])
+
+test_preds = DataFrame(game_id = turns_test.game_id[turns_test.turn_number .== 20], points = turns_test_joined.xpoints[turns_test.turn_number .== 20])
+file_name = &quot;outputs/$(string(Dates.format(now(), &quot;d_m_yyyy_HH_MM&quot;)))_mixed_pred.csv&quot;
+CSV.write(file_name, test_preds)
+</code></pre>
+<pre><code>&quot;outputs/1_3_2022_17_29_mixed_pred.csv&quot;
+</code></pre>
+<p>We can submit our predicts using the Kaggle API.</p>
+<pre><code class="language-julia">submit = false
+if submit
+    run(`kaggle competitions submit scrabble-point-value -f $file_name -m &quot;Submission at $(Dates.now())&quot;`)
+end
+</code></pre>
+<h1 id="conclusions">Conclusions</h1>
+<p>This was a fun exploration of an interesting problem. I found that my usual tools (R / some kind of tabular machine learning approach such as a random forest or XGBoost model) were inadequate to deal with a problem like this, and it forced me to go outside of my comfort zone and learn new techniques. Additionally, I had intended on doing more projects with Julia—this was my first medium scale project with Julia—so I felt like this was a great way to learn by doing. I also learned some of the limitations of Julia—encoding the data the way that I did, I frequently ran into memory issues. Still, I appreciated the ease and fluidity of programming with Julia, along with the speed.</p>
+<p>I think I could likely improve my results further if I knew how to better construct deep learning models—I kept the architecture as simple as possible ala Occam&rsquo;s razor and could not justify making it more complex in other ways with my present knowledge base. Learning more about deep learning is a priority for me this year, and I am really looking forward to doing more projects like these in the future.</p>
+<p>For me, this project also emphasized the importance of researching a problem in-depth before attempting a solution. Jumping into this problem without any prior research would have made this task much more difficult than it already was, but previous approaches to similar problems provided a successful framework, albeit with some modifications.</p>
+<h1 id="citations">Citations</h1>
+<p>Agarwal, R. (2019). Evaluation Function Approximation for Scrabble. ArXiv, abs/1901.08728.</p>
+<p>Bezanson, J., Edelman, A., Karpinski, S., &amp; Shah, V.B. (2017). Julia: A Fresh Approach to Numerical Computing. ArXiv, abs/1411.1607.</p>
+<p>Chellapilla, K., &amp; Fogel, D.B. (1999). Evolving neural networks to play checkers without relying on expert knowledge. IEEE transactions on neural networks, 10 6, 1382-91 .</p>
+<p>Oshri, B. (2015). Predicting Moves in Chess using Convolutional Neural Networks.</p>
+<p>Ningrum, D.N., Yuan, S., Kung, W., Wu, C., Tzeng, I., Huang, C., Li, J.Y., &amp; Wang, Y. (2021). Deep Learning Classifier with Patient’s Metadata of Dermoscopic Images in Malignant Melanoma Detection. Journal of Multidisciplinary Healthcare, 14, 877 - 885.</p>
+<p>Silver, D., Schrittwieser, J., Simonyan, K., Antonoglou, I., Huang, A., Guez, A., Hubert, T., Baker, L., Lai, M., Bolton, A., Chen, Y., Lillicrap, T., Hui, F., Sifre, L., Driessche, G. van den, Graepel, T., &amp; Hassabis, D. (2017). Mastering the game of Go without human knowledge. Nature, 550(7676), 354–359.</p>
+<p>Wang, S., Guo, W., Gao, H., &amp; Long, B. (2020). Efficient Neural Query Auto Completion. Proceedings of the 29th ACM International Conference on Information &amp; Knowledge Management.</p>
+<p>Yin, W., Kann, K., Yu, M., &amp; Schütze, H. (2017). Comparative Study of CNN and RNN for Natural Language Processing. ArXiv, abs/1702.01923.</p>
+
+
+              
+                  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/julia/">julia</a>
+    </li></ul>
+
+  <div class="pagination">
+  
+    <a class="pagination__item" href="https://johnbedwards.io/blog/picking_2022/">
+        <span class="pagination__label">Previous Post</span>
+        <span class="pagination__title">Lessons from picking the 2022 CFB Season</span>
+    </a>
+  
+
+  
+</div>
+ 
+	  
+          <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "johnbedwards" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+      <div class="toc-container">
+          
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#literature">Literature</a>
+      <ul>
+        <li><a href="#scrabble">Scrabble</a></li>
+        <li><a href="#cnns-and-board-games">CNNs and Board Games</a></li>
+        <li><a href="#julia">Julia</a></li>
+      </ul>
+    </li>
+    <li><a href="#our-approach">Our approach</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#turns_traincsv"><code>turns_train.csv</code></a></li>
+    <li><a href="#turns_testcsv"><code>turns_test.csv</code></a></li>
+    <li><a href="#scorescsv"><code>scores.csv</code></a></li>
+    <li><a href="#gamescsv"><code>games.csv</code></a></li>
+    <li><a href="#dictionaries">Dictionaries</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#turn-types">Turn-Types</a></li>
+    <li><a href="#ratings">Ratings</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#move-and-location"><code>move</code> and <code>location</code></a></li>
+    <li><a href="#anticipating-challenges">Anticipating Challenges</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#data-preparation">Data preparation</a></li>
+    <li><a href="#network-architecture">Network Architecture</a></li>
+    <li><a href="#tuning">Tuning</a></li>
+    <li><a href="#final-model">Final Model</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#base-predictions">Base Predictions</a></li>
+    <li><a href="#mixed-model-predictions">Mixed Model Predictions</a></li>
+  </ul>
+</nav>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+    <script src="https://johnbedwards.io/js/table-of-contents.js"></script>
+  
+
+
+</body>
+
+</html>

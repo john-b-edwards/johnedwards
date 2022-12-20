@@ -31,10 +31,14 @@ noComment: true
   * `sklearn`
   * `tensorflow`
   * `xgboost`
+* Julia
+  * `Dataframes.jl`
+  * `Flux.jl`
+  * `Plots.jl`
+  * `MixedModels.jl`
 * SQL
 * HTML
 * CSS
-* PHP
 * Git
 
 ## Experiences

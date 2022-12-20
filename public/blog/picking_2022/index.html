@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Lessons from picking the 2022 CFB Season | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="Lessons from picking the 2022 CFB Season">
+  <meta name="keywords" content="college_football , football , machine_learning">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Lessons from picking the 2022 CFB Season" />
+  <meta name="twitter:description" content="Lessons from picking the 2022 CFB Season"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "Lessons from picking the 2022 CFB Season",
+      "headline" : "Lessons from picking the 2022 CFB Season",
+      "description" : "Lessons from picking the 2022 CFB Season",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2022",
+      "datePublished": "2022-01-10 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2022-01-10 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/picking_2022\/",
+      "wordCount" : "1072",
+      "keywords" : ["college_football", "football", "machine_learning", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">Lessons from picking the 2022 CFB Season</h1>
+            <time datetime="2022-01-10 00:00:00 &#43;0000 UTC" class="post__date">Jan 10 2022</time> 
+          </header>
+          <article class="post__content">
+              
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/f724922b0d89b87c1253a9f6974ff2098281216f/themes/hugo-theme-codex/static/football.jpg" alt="social-image"></p>
+<p>As we reach the end of the 2021-22 college football season (the national championship game is unfolding on my TV as I type this), I wanted to take a look back at my performance in the <a href="https://predictions.collegefootballdata.com/leaderboard" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>College Football Data predictions contest</a>
+. Minimum 400 games picked (not count the NCG, but it should not affect my performance) (I picked 726 games total, for reference), I finished:</p>
+<ul>
+<li>1st in straight-up picks</li>
+<li>3rd in ATS picks</li>
+<li>1st in absolute error</li>
+<li>4th in mean squared error</li>
+</ul>
+<p>So I did pretty well, especially for someone who picked as many games as I did! How did I do it? I employed a number of different techniques &ndash; while I do not want to get into the technical weeds of my process, I figured people might be interested in what strategies I employed in generating my predictions. Here are few techniques I employed that could be useful in your own picking games.</p>
+<h2 id="use-a-model">Use a model<a class="anchor" href="#use-a-model">#</a></h2>
+<p>This might seem like a &ldquo;duh&rdquo; &ndash; if you are reading this blog, you are probably at least aware of sports analytics &ndash; but I think it is important to discuss a little <em>why</em> to use a model.</p>
+<p>If I told you that entering a week 10 game, the home team had averaged 5.6 yards per carry for the season, and the road team had allowed an average of 4.5 yards per carry for the season, how would you weight that information into your estimate of which team is better? What if I told you that the away team is starting a freshman QB who was a 4-star recruit, while the home team is starting a 5th-year senior?</p>
+<p>In picking games, there is rarely a magic bullet. Sometimes you can get close with team strength approximations like SRS, Elo, LRMC, but even these are incomplete. When looking at a variety of factors, you <em>need</em> a model to do the grunt work for you of weighing and adjusting a variety of factors. If you are so inclined, you can take a model estimate and adjust it up or down based on your own interpretation of factors, but do so at your own risk! It can be difficult to out-smart a well-built model in the long run (for evidence of this, check the ATS record on both the CFBD prediction game and the position of &ldquo;The Market&rdquo; on the leaderboard of the <a href="https://nflgamedata.com/predict/leaderboard.php" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>NFL Game Data prediction game</a>
+).</p>
+<p>Additionally, for picking games in bulk, a model is a necessity. I could not possibly break down all 726 games I put together in any useful manner. A model allows you to automate inputs and outputs, so you can pick more games more efficiently and accurately.</p>
+<h2 id="listen-to-vegas">Listen to Vegas<a class="anchor" href="#listen-to-vegas">#</a></h2>
+<p>As good as your model might be, there are a number of factors that can be especially difficult to predict. What is the impact of being down a starting quarterback? What happens if the defensive line is dealing with a COVID outbreak? What if it rains? Tracking all of these factors is extremely difficult &ndash; maybe you can keep track of the depth charts of all 120+ college football teams given a full week to prepare, but you likely have things like &ldquo;a social life&rdquo; and &ldquo;work&rdquo; to attend to in the meanwhile.</p>
+<p>The solution is simple &ndash; let someone else handle it! Vegas bookmakers generally act rationally when adjusting spreads and odds. As shown above, Vegas' predictions are extremely accurate, which makes them difficult to beat. You can flip this disadvantage into an advantage by incorporating bookmaker&rsquo;s odds into your model.</p>
+<p>Another benefit is that when something happens that would affect the outcome of a game &ndash; such as a starting quarterback getting hurt at practice &ndash; Vegas responds quickly and accurately. If you regularly update your predictions and effectively incorporate Vegas odds into your model, you can see a significant improvement in accuracy than if you made a single prediction for each game and never updated it.</p>
+<h2 id="blend-preseason-and-in-season">Blend Preseason and In-Season<a class="anchor" href="#blend-preseason-and-in-season">#</a></h2>
+<p>One of the biggest issues pickers encounter when modeling picks is that it can be difficult to pick games early in the season. In the first game of a season, we know very little about how good or bad each team is, and a model that is trained on in-season data will handle early-season predictions overconfidently, if it can handle them at all.</p>
+<p>The best approach I found with this was creating two models &ndash; one based entirely on preseason data, and one based on a mixture of preseason data and a rolling-average of in-season data. The preseason model reflected the uncertainty of early-season games, while the in-season model reflected increasing confidence as learned more about each team. I then weighted my predictions based on how deep in the season I was &ndash; in week 1, my predictions were based entirely off of the preseason model estimates, but in week 4, my predictions were a mix of preseason and in-season model estimates. By the end of the season, I was almost wholly relying on the in-season model.</p>
+<h2 id="automate-everything">Automate Everything<a class="anchor" href="#automate-everything">#</a></h2>
+<p>My goal this season was to pick every single game. As I said before, that would not have been possible without a model, but it also would not have been possible without a solid pipeline for model picks &ndash; bringing data in, cleaning it, running it through a model, then uploading those predictions to the CFBD site. Bringing in new data is trivial thanks to the <a href="https://api.collegefootballdata.com/api/docs/?url=https://johnbedwards.io/api-docs.json" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>CFBD API</a>
+, and with a little Selenium I was able to update my process completely.</p>
+<p>Did I actually pick every game? No &ndash; an internet outage while I was on vacation and an external data source implementing a breaking change mid-season meant two weeks for me were de-facto washes. But still, the work I put in to automate the entire process makes producing and uploading picks an arbitrary task. Being able to update my picks so quickly also means I can be more reactive to changes in the game&rsquo;s outlook, just like the Vegas line.</p>
+<h2 id="conclusion">Conclusion<a class="anchor" href="#conclusion">#</a></h2>
+<p>Picking games accurately is still extremely hard, especially against the spread! Next year, I have some new strategies I want to try to improve my ATS accuracy, which should hopefully improve my performance in other metrics overall as well. For the moment though, I am extremely happy with my performance to date, and I am already looking forward to next season. Go Jackets!</p>
+
+
+              
+                  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/misc/">misc</a>
+    </li></ul>
+
+  <div class="pagination">
+  
+    <a class="pagination__item" href="https://johnbedwards.io/blog/march_madness_2021/">
+        <span class="pagination__label">Previous Post</span>
+        <span class="pagination__title">2021 March Madness Kaggle Solution</span>
+    </a>
+  
+
+  
+    <a class="pagination__item" href="https://johnbedwards.io/blog/predicting-scrabble-point-values/">
+      <span class="pagination__label">Next Post</span>
+      <span class="pagination__title" >Using Flux.jl to model Scrabble turns</span>
+    </a>
+  
+</div>
+ 
+	  
+          <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "johnbedwards" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+
+
+</body>
+
+</html>
