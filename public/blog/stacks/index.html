@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Hacking by stacking—how to get better {tidymodels} performance with {stacks} | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="Getting better {tidymodels} performance with {stacks}">
+  <meta name="keywords" content="machine_learning">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Hacking by stacking—how to get better {tidymodels} performance with {stacks}" />
+  <meta name="twitter:description" content="Getting better {tidymodels} performance with {stacks}"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "Hacking by stacking—how to get better {tidymodels} performance with {stacks}",
+      "headline" : "Hacking by stacking—how to get better {tidymodels} performance with {stacks}",
+      "description" : "Getting better {tidymodels} performance with {stacks}",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2022",
+      "datePublished": "2022-12-21 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2022-12-21 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/stacks\/",
+      "wordCount" : "2915",
+      "keywords" : ["machine_learning", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">Hacking by stacking—how to get better {tidymodels} performance with {stacks}</h1>
+            <time datetime="2022-12-21 00:00:00 &#43;0000 UTC" class="post__date">Dec 21 2022</time> 
+          </header>
+          <article class="post__content">
+              
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png" alt="social-image"></p>
+<h1 id="introduction">Introduction</h1>
+<p>There is no more frustrating feeling than finishing just shy of a podium position in a Kaggle competition. Those precious competition points were right there! If only you had just a slightly better log loss! Alas, you exhausted every tool in your data science toolkit, and that was the best you could do. Unless&hellip; there was another way to get even better performance out of your models. Something so absurdly simple to implement that it felt almost like hacking the leaderboard. Enter the <code>{stacks}</code> package.</p>
+<p>The <code>{stacks}</code> package is a part of the <code>{tidymodels}</code> ecosystem. It allows you to ensemble your models so quickly and so simply it can feel like cheating. Ensembling is a powerful machine learning technique that can boost model performance with additional resources, and it can help you squeeze a few extra points of log loss out of your predictions.</p>
+<h1 id="how-does-ensembling-work">How does ensembling work?</h1>
+<p>The typical data science workflow goes something like this:</p>
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/typical_ds_workflow.png" alt="A flowchart showing a typical data science process. At the top is a box for &ldquo;exploratory data analysis&rdquo;", flowing down into a box saying &ldquo;Generating and evaluating candidate models&rdquo;, which flows into several boxes of individual model candidates titled &ldquo;Candidate A&rdquo;, &ldquo;Candidate B&rdquo;, and so on with the log loss of each model listed. The candidate with the lowest log loss flows down further into boxes titled &ldquo;Selected as best candidate&rdquo; and &ldquo;Predict on test set and submit&rdquo; in order, whereas all other candidates flow into red boxes with the label &ldquo;Rejected&rdquo;."></p>
+<p>We generate several candidate models (perhaps the same model types but with different hyperparameters, or a combination of different model types and different hyperparameters) then select the model that performs the best on out-of-sample data, and use that model to generate and submit our test predictions.</p>
+<p>This process is somewhat inefficient from a performance lens. We discard models that perform worse than the best performing candidate, but what if those models contain additional information that the best performing candidate does not? What we can do instead is take all of the information contained in our candidate models and then weight the predictions of individual candidates to maximize how much information we are extracting from our workflow.</p>
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/ensemble_workflow.png" alt="A flowchart showing the data science process for creating an ensemble. At the top is a box for &ldquo;exploratory data analysis&rdquo;", flowing down into a box saying &ldquo;Generating and evaluating candidate models&rdquo;, which flows into several boxes of individual model candidates titled &ldquo;Candidate A&rdquo;, &ldquo;Candidate B&rdquo;, and so on with the log loss of each model listed. Each candidate box flows into a box showing the weight of each candidate (70% for the model with the lowest log loss, 20% for the second lowest, etc.). Each weight box flows into a single box that says &ldquo;Candidates ensembled&rdquo;, which in turn flows into a box that says &ldquo;Predict and submit on test set&rdquo;."></p>
+<p>Ensembling can yield slightly better results than the best performing individual model. It relies on the <a href="https://en.wikipedia.org/wiki/The_Wisdom_of_Crowds" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>wisdom of the crowd principle</a>
+ in that several informed models will make a better decision than the single-best performing model.</p>
+<p>Ensembling can be tricky and daunting at first glance. How can you put all of these candidates together? With the <code>{stacks}</code> package, you can seamlessly integrate ensembling into your <code>{tidymodels}</code> workflow and get see better results readily!</p>
+<h1 id="how-does-stacks-ensemble-models">How does {stacks} ensemble models?</h1>
+<p>Imagine that you have a bunch of models that you have trained on the same dataset, where the only difference is that each model has been fed a different set of hyperparameters (so some models may be overfit, some may be underfit, some may be better at predicting outliers, and so on). How do you best combine those predictions to squeeze a little extra predictive power out of them? You have several obstacles in your way:</p>
+<ul>
+<li><strong>How do you handle the fact that your model predictions are likely to be highly correlated?</strong> Even with the differences in hyperparameters, your models are all learning off the same set of data. If you fit a secondary model on top of your predictions, you are fitting a model on highly correlated features.</li>
+<li><strong>How do you know which candidates are predictive and which are overfit?</strong> A model that has a training accuracy of 0.90 seems like a model that should be weighed more than a model with a training accuracy of 0.85, but if the first model is overfit and the second model is not, it can cause worse performance if you choose the first for your ensemble rather than the second.</li>
+<li><strong>How do you properly predict on all of these models to create your final predictions?</strong> Say you make an ensemble with 10 models: those are 10 models that you have to store, load, predict, then ensemble those predictions together. That is a lot more complicated than just dealing with one model!</li>
+</ul>
+<p><code>{stacks}</code> helps us address all of these problems while working seamlessly within the tidymodels ecosystem.</p>
+<h2 id="highly-correlated-predictions">Highly correlated predictions<a class="anchor" href="#highly-correlated-predictions">#</a></h2>
+<p>When dealing with highly correlated features in data science, a common approach is <a href="https://en.wikipedia.org/wiki/Lasso_%28statistics%29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>LASSO</a>
+ regression, where the coefficient for a given feature is assigned a shrinkage parameter. When fitting the model, the coefficient for the feature will tend towards zero unless it provides significant predictive power. In a dataset with many highly correlated features, LASSO will reduce how many features are ultimately included in the model by setting the coefficients for many features to zero, allowing only a few remaining features to drive the predictive power of the model. <code>{stacks}</code> by default uses LASSO to reduce the number of highly correlated candidate models included in the ensemble.</p>
+<h2 id="telling-apart-overfit-candidates-from-predictive-candidates">Telling apart overfit candidates from predictive candidates<a class="anchor" href="#telling-apart-overfit-candidates-from-predictive-candidates">#</a></h2>
+<p>Like training any other kind of model, when <code>{stacks}</code> trains an ensemble model, it checks on out-of-sample performance to ensure that the model is not being overfit. For this, <code>{stacks}</code> relies on <a href="https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>bootstrapping</a>
+.  <code>{stacks}</code> will randomly sample rows from the training set, train off of predictions from those rows, then evaluate the ensemble on how it performed on the rows that were <em>not</em> sampled from the training dataset. This results in a more robust ensemble that filters out overfit models and leans more heavily on those that perform well out of sample.</p>
+<h2 id="managing-multiple-models-easily">Managing multiple models easily<a class="anchor" href="#managing-multiple-models-easily">#</a></h2>
+<p>With <code>{stacks}</code>, the workflow to manage these models is absurdly simple. Simply make a few changes to your <code>{tidymodels}</code> workflow and you can easily integrate <code>{stacks}</code>. The wonderful thing is that a &ldquo;stack&rdquo; (what <code>{stacks}</code> calls an ensemble) looks and behaves just like any other model. How does this work? Let us dive into an example.</p>
+<h1 id="how-to-ensemble-with-stacks">How to ensemble with {stacks}</h1>
+<p>To demonstrate how easy it is to ensemble with <code>{stacks}</code>, we can walk through an example of a typical data science workflow with <code>{tidymodels}</code>, then show how with a few lines of code we can modify our code to allow for ensembling. For this example, we will use the <a href="https://www.kaggle.com/competitions/sliced-s01e01/data" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>BoardGameGeek dataset</a>
+ from the first episode of Sliced on Kaggle.</p>
+<p>We can simply kitchen-sink our model for the purposes of this exercise. Our pre-processing will consist of the following steps:</p>
+<ul>
+<li>Deselect ID variables (<code>game_id</code>, <code>names</code>, <code>designer</code>)</li>
+<li>Parse our <code>category</code> variable into one-hot encoded variables</li>
+<li>Parse our <code>mechanic</code> variable into one-hot encoded variables</li>
+</ul>
+<pre><code class="language-r"># install.packages(c(&quot;tidyverse&quot;,&quot;tidymodels&quot;))
+library(tidyverse)
+library(tidymodels)
+
+train &lt;-
+  read_csv(&quot;train.csv&quot;,
+           col_types = list(category11 = col_character(),
+                            category12 = col_character()))
+
+pre_proc &lt;- recipe(geek_rating ~ ., data = train |&gt;
+                     select(-c(game_id, names, designer))) |&gt;
+  step_dummy_multi_choice(starts_with(&quot;category&quot;)) |&gt;
+  step_dummy_extract(mechanic, sep = &quot;, &quot;)
+
+pre_proc |&gt;
+  prep() |&gt;
+  bake(new_data = NULL) |&gt;
+  head()
+#&gt; # A tibble: 6 x 150
+#&gt;   game_id names      min_p~1 max_p~2 avg_t~3 min_t~4 max_t~5  year num_v~6   age
+#&gt;     &lt;dbl&gt; &lt;fct&gt;        &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1   17526 Hecatomb         2       4      30      30      30  2005     360    15
+#&gt; 2     156 Wildlife ~       2       6      60      60      60  1985     535    10
+#&gt; 3    2397 Backgammon       2       2      30      30      30 -3000    9684     8
+#&gt; 4    8147 Maka Bana        2       6      60      45      60  2003     658    10
+#&gt; 5   92190 Super Dun~       2       6     120     120     120  2011    2338    10
+#&gt; 6    1668 Modern Na~       2       6      90      90      90  1989     401    12
+#&gt; # ... with 140 more variables: owned &lt;dbl&gt;, designer &lt;fct&gt;, geek_rating &lt;dbl&gt;,
+#&gt; #   category1_Abstract.Strategy &lt;int&gt;, category1_Action...Dexterity &lt;int&gt;,
+#&gt; #   category1_Adventure &lt;int&gt;, category1_Age.of.Reason &lt;int&gt;,
+#&gt; #   category1_American.Civil.War &lt;int&gt;, category1_American.Indian.Wars &lt;int&gt;,
+#&gt; #   category1_American.Revolutionary.War &lt;int&gt;, category1_American.West &lt;int&gt;,
+#&gt; #   category1_Ancient &lt;int&gt;, category1_Animals &lt;int&gt;, category1_Arabian &lt;int&gt;,
+#&gt; #   category1_Aviation...Flight &lt;int&gt;, category1_Bluffing &lt;int&gt;, ...
+</code></pre>
+<p>We will use a simple repeated 5-fold cross validation to evaluate our parameters, then create a specification for an XGBoost regression model (we are employing a regression model because we want to optimize our root-mean squared error for the <code>geek_rating</code> feature). For the XGBoost model, we will tune it using a latin hypercube to grid search as much of the space covered by the potential values for XGBoost hyperparameters as possible.</p>
+<pre><code class="language-r">folds &lt;- vfold_cv(train, v = 5, repeats = 3)
+
+xgb_spec &lt;- boost_tree(
+  trees = tune(),
+  tree_depth = tune(),
+  min_n = tune(),
+  loss_reduction = tune(),
+  sample_size = tune(),
+  mtry = tune(),
+  learn_rate = tune()
+) |&gt;
+  set_engine(&quot;xgboost&quot;) |&gt;
+  set_mode(&quot;regression&quot;)
+
+xgb_grid &lt;- grid_latin_hypercube(
+  trees(),
+  tree_depth(),
+  min_n(),
+  loss_reduction(),
+  sample_size = sample_prop(),
+  finalize(mtry(), train),
+  learn_rate(),
+  size = 100
+)
+</code></pre>
+<p>We can initialize our workflow and begin to tune it.</p>
+<pre><code class="language-r">xgb_wf &lt;- workflow() |&gt;
+  add_recipe(pre_proc) |&gt;
+  add_model(xgb_spec)
+
+set.seed(123)
+xgb_res &lt;- tune_grid(
+  xgb_wf,
+  resamples = folds,
+  grid = xgb_grid,
+  control = control_grid(),
+  metrics = metric_set(rmse)
+)
+
+</code></pre>
+<p>We can find the model that performed the best for our target metric, select those parameters, then fit a final version of our workflow on those parameters.</p>
+<pre><code class="language-r">best_rmse &lt;- select_best(xgb_res, &quot;rmse&quot;)
+
+final_mod &lt;- finalize_workflow(
+  xgb_wf, 
+  best_rmse
+) |&gt;
+  fit(data = train)
+</code></pre>
+<p>We can predict on our test set and submit our values to Kaggle to see how we did.</p>
+<pre><code class="language-r">test &lt;-
+  readr::read_csv(&quot;test.csv&quot;,
+                  col_types = list(category11 = col_character(),
+                                   category12 = col_character()))
+
+test$geek_rating &lt;- predict(final_mod, test)$.pred
+
+test |&gt;
+  select(game_id, geek_rating) |&gt;
+  write.csv(&quot;basic_submission.csv&quot;,row.names = F)
+</code></pre>
+<p>How did we do?</p>
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/standard_submission.png" alt="A screenshot from Kaggle.com, showing the RMSE of our predictions: a score on the private leaderboard of 0.1617 and a score on the public leaderboard of 0.16119."></p>
+<p>We did pretty solid! Our model performed well on both the public and private leaderboards. But we can do better. Let us adjust our code to show how to stack effectively with <code>{stacks}</code></p>
+<pre><code class="language-r"># install.packages(&quot;stacks&quot;)
+library(stacks)
+</code></pre>
+<p>We are going to pass in <code>stacks::control_stack_grid()</code> for the <code>control</code> argument in <code>tune_grid</code>.</p>
+<pre><code class="language-r">xgb_res &lt;- tune_grid(
+  xgb_wf,
+  resamples = folds,
+  grid = xgb_grid,
+  control = control_stack_grid(),
+  metrics = metric_set(rmse)
+)
+</code></pre>
+<p>What does <code>stacks::control_stack_grid()</code> do differently than <code>tune::control_grid()</code>? Checking the internals makes it obvious:</p>
+<pre><code class="language-r">stacks::control_stack_grid
+#&gt; function () 
+#&gt; {
+#&gt;     tune::control_grid(save_pred = TRUE, save_workflow = TRUE)
+#&gt; }
+#&gt; &lt;bytecode: 0x00000000271c5320&gt;
+#&gt; &lt;environment: namespace:stacks&gt;
+</code></pre>
+<p>When we generate candidate models, by default, <code>tune::control_grid()</code> does not save the predictions generated by the candidate model to be more efficient with memory. Because <code>{stacks}</code> fits an ensemble model using the predictions of each candidate model as features, <code>{stacks}</code> requires that we save the workflow and predictions for each candidate model. Note also that because <code>stacks::control_stack_grid</code> is just a wrapper for <code>tune::control_grid</code>, instead of <code>control_stack_grid()</code>, you can simply pass in <code>tune::control_grid(save_pred = T, save_workflow = T)</code> to the <code>control</code> argument along with any other additional arguments you may want for tuning (such as <code>verbose = T</code> to track the progress of tuning).</p>
+<p>With our candidates generated, we can now build our stack. We do this by initializing a stack with the <code>stacks()</code> function, then pipe in our candidate models using <code>add_candidates()</code>.</p>
+<pre><code class="language-r">xgb_stack &lt;- stacks() |&gt;
+  add_candidates(xgb_res)
+</code></pre>
+<p>We fit our ensemble with the <code>blend_predictions()</code> function.</p>
+<pre><code class="language-r">xgb_stack &lt;- xgb_stack |&gt;
+  blend_predictions()
+</code></pre>
+<p>What is <code>blend_predictions()</code> doing? As mentioned before, <code>{stacks}</code> fits a LASSO model on the predictions of candidate models to determine what candidates to include in the model. This step happens when we call <code>blend_predictions()</code>.</p>
+<p>What does our ensemble look like?</p>
+<pre><code class="language-r">xgb_stack
+#&gt; -- A stacked ensemble model -------------------------------------
+#&gt; 
+#&gt; Out of 83 possible candidate members, the ensemble retained 4.
+#&gt; Penalty: 1e-06.
+#&gt; Mixture: 1.
+#&gt; 
+#&gt; The 4 highest weighted members are:
+#&gt; # A tibble: 4 x 3
+#&gt;   member        type          weight
+#&gt;   &lt;chr&gt;         &lt;chr&gt;          &lt;dbl&gt;
+#&gt; 1 xgb_res_1_085 boost_tree 0.785    
+#&gt; 2 xgb_res_1_067 boost_tree 0.116    
+#&gt; 3 xgb_res_1_019 boost_tree 0.106    
+#&gt; 4 xgb_res_1_098 boost_tree 0.0000350
+#&gt; 
+#&gt; Members have not yet been fitted with `fit_members()`.
+</code></pre>
+<p>We can see that our ensemble retained four models. One of the models is weighted very heavily in our ensemble (with a weight of 0.785), but other models also have significant influence on the ultimate results.</p>
+<p>With the coefficients decided for our stack, we can execute a final fit on our model using the <code>fit_members()</code> function, using only the candidates that our model selected (there is no need to fit a model using candidates whose coefficient we know will be zero).</p>
+<pre><code class="language-r">xgb_stack &lt;- xgb_stack |&gt;
+  fit_members()
+</code></pre>
+<p>Our stack is freshly served, with a pat of butter on top! We can now predict on our test set using the new stack and submit our predictions.</p>
+<pre><code class="language-r">test$geek_rating &lt;- predict(xgb_stack, test)$.pred
+
+test |&gt;
+  select(game_id, geek_rating) |&gt;
+  write.csv(&quot;stacked_submission.csv&quot;,row.names = F)
+</code></pre>
+<p>How did we do?</p>
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/stacked_submission.png" alt="A screenshot from Kaggle.com, showing the RMSE of our prediction from our stacked predictions and our basic predictions. For the stacked predictions, the private score is 0.15816, and the public score is 0.13775. For the basic predictions, the private score is 0.1617 and the public score is 0.16119."></p>
+<p>By stacking our candidate models instead of discarding all but the single best-performing model, our model performs significantly better on both the private and public leaderboards! Look at how little extra code we had to write. This was the extent of the changes we made to our original workflow:</p>
+<ul>
+<li>We loaded in <code>{stacks}</code></li>
+<li>We saved predictions and workflows when tuning</li>
+<li>We added candidates to a stack and fit an ensemble</li>
+<li>We predicted on the ensemble instead of a single model</li>
+</ul>
+<p>With minimal effort, we were able to signficantly boost our model performance. That is the beauty of <code>{stacks}</code>!</p>
+<h1 id="extending-this-example">Extending this example</h1>
+<p><code>{stacks}</code> has a fair bit more functionality than demonstrated in the above example. We can do a lot of different things with it! For example&hellip;</p>
+<h2 id="incorporating-different-kinds-of-models">Incorporating different <em>kinds</em> of models<a class="anchor" href="#incorporating-different-kinds-of-models">#</a></h2>
+<p>We demonstrated how to ensemble using candidate XGBoost models. If we wanted to incorporate different model types, such as random forest or a support vector machine, all we would need to do is generate candidate models for them as well (in a similar manner to how we generated multiple candidate models for XGBoost using <code>tune_grid()</code>) then bake them in using <code>add_candidates()</code>. You can use largely any model type that is available in <code>{parsnip}</code> for this!</p>
+<pre><code class="language-r">full_stack &lt;- stacks() |&gt;
+  add_candidates(xgb_res) |&gt;
+  add_candidates(rf_ref) |&gt;
+  add_candidates(svm_ref)
+</code></pre>
+<h2 id="sing-a-different-tune">Sing a different tune<a class="anchor" href="#sing-a-different-tune">#</a></h2>
+<p>Sometimes you may wish to generate candidates for your models not by grid searching, but through a <a href="https://towardsdatascience.com/gaussian-processes-smarter-tuning-for-your-ml-models-c72c7d4f5833" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Gaussian process</a>
+. You can do this by using <code>tune_bayes()</code> functionality in <code>{tidymodels}</code>, and either pass in <code>stacks::control_stack_bayes()</code> or just ensure that <code>tune::control_bayes()</code> has <code>save_pred</code> and <code>save_workflow</code> set to true.</p>
+<pre><code class="language-r">res &lt;- wf |&gt;
+  tune_bayes(
+    resamples = folds,
+    param_info = params,
+    initial = 10,
+    iter = 100,
+    metrics = metrics,
+    control = control_bayes(
+      no_improve = 10,
+      verbose = F,
+      time_limit = 240,
+      save_pred = T, # set this to true!
+      save_workflow = T # set this to true too!
+    )
+  )
+</code></pre>
+<h2 id="tuning-your-ensemble">Tuning your ensemble<a class="anchor" href="#tuning-your-ensemble">#</a></h2>
+<p>Sometimes you may wish to control <em>how</em> the ensemble creates predictions. The <code>mixture</code> argument in <code>blend_predictions()</code> is set to 1 (for LASSO) by default, but you can also pass in <code>mixture = 0</code> to fit a ridge regression, pass in a value between 0 and 1 for an elastic fit, or even tune the mixture penalty by passing in a range of values to search over (i.e. <code>mixture = seq(0,1,by=0.1)</code>). The penalty parameter is tuned by default in <code>blend_predictions()</code>, but you can pass in your own set of penalty values to tune over as well. You can also change the number of boostrap samples used by <code>blend_predictions()</code> with the <code>times</code> parameter.</p>
+<pre><code class="language-r">stacks() |&gt;
+  add_candidates(xgb_res) |&gt;
+  blend_predictions(
+    penalty = 10^(-9:-1), # tune over these penalty values
+    mixture = 0, # do a ridge regression instead of a LASSO regression
+    times = 50 # bootstrap 50 samples from the train set
+  )
+</code></pre>
+<h2 id="treating-your-ensemble-like-a-tidymodel">Treating your ensemble like a tidymodel<a class="anchor" href="#treating-your-ensemble-like-a-tidymodel">#</a></h2>
+<p>Since <code>blend_predictions()</code> and <code>fit_members()</code> are essentially wrappers over a penalized linear regression within <code>{tidymodels}</code>, you can speed up how long it takes to run <code>blend_predictions()</code> or <code>fit_members()</code> by running in parallel using <code>doParallel::registerDoParallel()</code>. You can also control how these functions grid search for model parameters using <code>tune::control_grid()</code>.</p>
+<pre><code class="language-r"># fit an ensemble in parallel
+doParallel::registerDoParallel()
+stacks() |&gt;
+  add_candidates(xgb_res) |&gt;
+  blend_predictions() |&gt;
+  fit_members() |&gt;
+doParallel::stopImplicitCluster()
+
+# print out results of fitting each ensemble
+stacks() |&gt;
+  add_candidates(xgb_res) |&gt;
+  blend_predictions(control = tune_grid(verbose = T)) |&gt;
+  fit_members(control = tune_grid(verbose = T))
+</code></pre>
+<h1 id="when-not-to-ensemble">When <em>not</em> to ensemble</h1>
+<p><code>{stacks}</code> seems so simple and arbitrary to implement (something I find myself saying about much of the <code>{tidymodels}</code> ecosystem, which is a credit to its developers) that it is fair to ask: why <em>wouldn&rsquo;t</em> you use <code>{stacks}</code>?</p>
+<ul>
+<li>
+<p><strong>You value interpretability.</strong> In some Kaggle competitions, the difference of a few points of log loss can be the difference between thousands of dollars or none at all. For a competition like that, improving your model&rsquo;s performance even marginally can be extremely impactful. In the real world, the impact of a machine learning model is more often measured by buy-in than by RMSE. It is difficult enough to explain on its own how XGBoost works and the impact of individual features, and it is even more difficult to explain the impact of an individual feature across multiple models in an ensemble. For circumstances where you are looking to learn about a system by exploring feature importance or when you are rolling out a new model in a situation where non-technical audiences need to understand how you are generating predictions, you may opt not to ensemble to preserve explainability and interpretability.</p>
+</li>
+<li>
+<p><strong>You have limited computing resources.</strong> Tuning is computationally expensive by itself. <code>{tidymodels}</code> by default claws back some of these resources by not saving the predictions and workflows for each candidate model, but in order for <code>{stacks}</code> to function we need to store those in memory. We also have to fit the ensemble model on top of the existing models. Depending on the size of your data, the number of candidate models you train, or the amount of computing resources you have at your disposal, this process can run very slowly or even become practically infeasible.</p>
+</li>
+<li>
+<p><strong>You do not have a large amount of data to work with.</strong> Much like random forests and gradient boosted trees, going with an ensemble when you do not have a lot of data to work with is generally overkill.</p>
+</li>
+</ul>
+<h1 id="wrapping-up">Wrapping up</h1>
+<p>That is <code>{stacks}</code> in a nutshell! I appreciate how easily this package integrates with my workflow and how reliable it is for getting a little bit of a boost on Kaggle leaderboards. Credit goes to Simon Couch, Max Kuhn, and the wonderful folks at Posit (previously RStudio) for developing <code>{stacks}</code>, with additional credit to the <code>{tidymodels}</code> developer team for their work in creating the framework that <code>{stacks}</code> operates in. You can read more about using <code>{stacks}</code> and <code>{tidymodels}</code> below. Happy tuning!</p>
+<ul>
+<li><a href="https://stacks.tidymodels.org/index.html" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>{stacks} documentation</a>
+</li>
+<li><a href="https://www.tidymodels.org/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>{tidymodels} documentation</a>
+</li>
+<li><a href="https://posit.co/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>posit website</a>
+</li>
+</ul>
+
+
+              
+                  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/r/">r</a>
+    </li>
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/tidymodels/">tidymodels</a>
+    </li></ul>
+
+  <div class="pagination">
+  
+    <a class="pagination__item" href="https://johnbedwards.io/blog/predicting-scrabble-point-values/">
+        <span class="pagination__label">Previous Post</span>
+        <span class="pagination__title">Using Flux.jl to model Scrabble turns</span>
+    </a>
+  
+
+  
+</div>
+ 
+	  
+          <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "johnbedwards" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+      <div class="toc-container">
+          
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#highly-correlated-predictions">Highly correlated predictions</a></li>
+    <li><a href="#telling-apart-overfit-candidates-from-predictive-candidates">Telling apart overfit candidates from predictive candidates</a></li>
+    <li><a href="#managing-multiple-models-easily">Managing multiple models easily</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#incorporating-different-kinds-of-models">Incorporating different <em>kinds</em> of models</a></li>
+    <li><a href="#sing-a-different-tune">Sing a different tune</a></li>
+    <li><a href="#tuning-your-ensemble">Tuning your ensemble</a></li>
+    <li><a href="#treating-your-ensemble-like-a-tidymodel">Treating your ensemble like a tidymodel</a></li>
+  </ul>
+</nav>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+    <script src="https://johnbedwards.io/js/table-of-contents.js"></script>
+  
+
+
+</body>
+
+</html>

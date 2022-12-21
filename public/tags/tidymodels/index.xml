@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tidymodels on John Edwards</title>
+    <link>https://johnbedwards.io/tags/tidymodels/</link>
+    <description>Recent content in tidymodels on John Edwards</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2021</copyright>
+    <lastBuildDate>Wed, 21 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/tidymodels/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hacking by stacking—how to get better {tidymodels} performance with {stacks}</title>
+      <link>https://johnbedwards.io/blog/stacks/</link>
+      <pubDate>Wed, 21 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/stacks/</guid>
+      <description>Introduction There is no more frustrating feeling than finishing just shy of a podium position in a Kaggle competition. Those precious competition points were right there! If only you had just a slightly better log loss! Alas, you exhausted every tool in your data science toolkit, and that was the best you could do. Unless&amp;hellip; there was another way to get even better performance out of your models. Something so absurdly simple to implement that it felt almost like hacking the leaderboard.</description>
+    </item>
+    
+  </channel>
+</rss>
