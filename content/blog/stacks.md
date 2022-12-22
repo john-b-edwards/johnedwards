@@ -16,13 +16,13 @@ toc: true
 
 ![social-image](https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png)
 
-# Introduction
+## Introduction
 
 There is no more frustrating feeling than finishing just shy of a podium position in a Kaggle competition. Those precious competition points were right there! If only you had just a slightly better log loss! Alas, you exhausted every tool in your data science toolkit, and that was the best you could do. Unless... there was another way to get even better performance out of your models. Something so absurdly simple to implement that it felt almost like hacking the leaderboard. Enter the `{stacks}` package.
 
 The `{stacks}` package is a part of the `{tidymodels}` ecosystem. It allows you to ensemble your models so quickly and so simply it can feel like cheating. Ensembling is a powerful machine learning technique that can boost model performance with additional resources, and it can help you squeeze a few extra points of log loss out of your predictions.
 
-# How does ensembling work?
+## How does ensembling work?
 
 The typical data science workflow goes something like this:
 
@@ -38,7 +38,7 @@ Ensembling can yield slightly better results than the best performing individual
 
 Ensembling can be tricky and daunting at first glance. How can you put all of these candidates together? With the `{stacks}` package, you can seamlessly integrate ensembling into your `{tidymodels}` workflow and get see better results readily!
 
-# How does {stacks} ensemble models?
+## How does {stacks} ensemble models?
 
 Imagine that you have a bunch of models that you have trained on the same dataset, where the only difference is that each model has been fed a different set of hyperparameters (so some models may be overfit, some may be underfit, some may be better at predicting outliers, and so on). How do you best combine those predictions to squeeze a little extra predictive power out of them? You have several obstacles in your way:
 
@@ -48,19 +48,19 @@ Imagine that you have a bunch of models that you have trained on the same datase
 
 `{stacks}` helps us address all of these problems while working seamlessly within the tidymodels ecosystem.
 
-## Highly correlated predictions
+### Highly correlated predictions
 
 When dealing with highly correlated features in data science, a common approach is [LASSO](https://en.wikipedia.org/wiki/Lasso_(statistics)) regression, where the coefficient for a given feature is assigned a shrinkage parameter. When fitting the model, the coefficient for the feature will tend towards zero unless it provides significant predictive power. In a dataset with many highly correlated features, LASSO will reduce how many features are ultimately included in the model by setting the coefficients for many features to zero, allowing only a few remaining features to drive the predictive power of the model. `{stacks}` by default uses LASSO to reduce the number of highly correlated candidate models included in the ensemble.
 
-## Telling apart overfit candidates from predictive candidates
+### Telling apart overfit candidates from predictive candidates
 
 Like training any other kind of model, when `{stacks}` trains an ensemble model, it checks on out-of-sample performance to ensure that the model is not being overfit. For this, `{stacks}` relies on [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)).  `{stacks}` will randomly sample rows from the training set, train off of predictions from those rows, then evaluate the ensemble on how it performed on the rows that were *not* sampled from the training dataset. This results in a more robust ensemble that filters out overfit models and leans more heavily on those that perform well out of sample.
 
-## Managing multiple models easily
+### Managing multiple models easily
 
 With `{stacks}`, the workflow to manage these models is absurdly simple. Simply make a few changes to your `{tidymodels}` workflow and you can easily integrate `{stacks}`. The wonderful thing is that a "stack" (what `{stacks}` calls an ensemble) looks and behaves just like any other model. How does this work? Let us dive into an example.
 
-# How to ensemble with {stacks}
+## How to ensemble with {stacks}
 
 To demonstrate how easy it is to ensemble with `{stacks}`, we can walk through an example of a typical data science workflow with `{tidymodels}`, then show how with a few lines of code we can modify our code to allow for ensembling. For this example, we will use the [BoardGameGeek dataset](https://www.kaggle.com/competitions/sliced-s01e01/data) from the first episode of Sliced on Kaggle.
 
@@ -287,11 +287,11 @@ By stacking our candidate models instead of discarding all but the single best-p
 
 With minimal effort, we were able to signficantly boost our model performance. That is the beauty of `{stacks}`!
 
-# Extending this example
+## Extending this example
 
 `{stacks}` has a fair bit more functionality than demonstrated in the above example. We can do a lot of different things with it! For example...
 
-## Incorporating different *kinds* of models
+### Incorporating different *kinds* of models
 
 We demonstrated how to ensemble using candidate XGBoost models. If we wanted to incorporate different model types, such as random forest or a support vector machine, all we would need to do is generate candidate models for them as well (in a similar manner to how we generated multiple candidate models for XGBoost using `tune_grid()`) then bake them in using `add_candidates()`. You can use largely any model type that is available in `{parsnip}` for this! 
 
@@ -302,7 +302,7 @@ full_stack <- stacks() |>
   add_candidates(svm_ref)
 ```
 
-## Sing a different tune
+### Sing a different tune
 
 Sometimes you may wish to generate candidates for your models not by grid searching, but through a [Gaussian process](https://towardsdatascience.com/gaussian-processes-smarter-tuning-for-your-ml-models-c72c7d4f5833). You can do this by using `tune_bayes()` functionality in `{tidymodels}`, and either pass in `stacks::control_stack_bayes()` or just ensure that `tune::control_bayes()` has `save_pred` and `save_workflow` set to true.
 
@@ -324,7 +324,7 @@ res <- wf |>
   )
 ```
 
-## Tuning your ensemble
+### Tuning your ensemble
 
 Sometimes you may wish to control *how* the ensemble creates predictions. The `mixture` argument in `blend_predictions()` is set to 1 (for LASSO) by default, but you can also pass in `mixture = 0` to fit a ridge regression, pass in a value between 0 and 1 for an elastic fit, or even tune the mixture penalty by passing in a range of values to search over (i.e. `mixture = seq(0,1,by=0.1)`). The penalty parameter is tuned by default in `blend_predictions()`, but you can pass in your own set of penalty values to tune over as well. You can also change the number of boostrap samples used by `blend_predictions()` with the `times` parameter.
 
@@ -338,7 +338,7 @@ stacks() |>
   )
 ```
 
-## Treating your ensemble like a tidymodel
+### Treating your ensemble like a tidymodel
 
 Since `blend_predictions()` and `fit_members()` are essentially wrappers over a penalized linear regression within `{tidymodels}`, you can speed up how long it takes to run `blend_predictions()` or `fit_members()` by running in parallel using `doParallel::registerDoParallel()`. You can also control how these functions grid search for model parameters using `tune::control_grid()`.
 
@@ -358,7 +358,7 @@ stacks() |>
   fit_members(control = tune_grid(verbose = T))
 ```
 
-# When *not* to ensemble
+## When *not* to ensemble
 
 `{stacks}` seems so simple and arbitrary to implement (something I find myself saying about much of the `{tidymodels}` ecosystem, which is a credit to its developers) that it is fair to ask: why *wouldn't* you use `{stacks}`?
 
@@ -368,7 +368,7 @@ stacks() |>
 
 * **You do not have a large amount of data to work with.** Much like random forests and gradient boosted trees, going with an ensemble when you do not have a lot of data to work with is generally overkill. 
 
-# Wrapping up
+## Wrapping up
 
 That is `{stacks}` in a nutshell! I appreciate how easily this package integrates with my workflow and how reliable it is for getting a little bit of a boost on Kaggle leaderboards. Credit goes to Simon Couch, Max Kuhn, and the wonderful folks at Posit (previously RStudio) for developing `{stacks}`, with additional credit to the `{tidymodels}` developer team for their work in creating the framework that `{stacks}` operates in. You can read more about using `{stacks}` and `{tidymodels}` below. Happy tuning!
 

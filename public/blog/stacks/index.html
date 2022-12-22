@@ -128,10 +128,10 @@
           <article class="post__content">
               
 <p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png" alt="social-image"></p>
-<h1 id="introduction">Introduction</h1>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction">#</a></h2>
 <p>There is no more frustrating feeling than finishing just shy of a podium position in a Kaggle competition. Those precious competition points were right there! If only you had just a slightly better log loss! Alas, you exhausted every tool in your data science toolkit, and that was the best you could do. Unless&hellip; there was another way to get even better performance out of your models. Something so absurdly simple to implement that it felt almost like hacking the leaderboard. Enter the <code>{stacks}</code> package.</p>
 <p>The <code>{stacks}</code> package is a part of the <code>{tidymodels}</code> ecosystem. It allows you to ensemble your models so quickly and so simply it can feel like cheating. Ensembling is a powerful machine learning technique that can boost model performance with additional resources, and it can help you squeeze a few extra points of log loss out of your predictions.</p>
-<h1 id="how-does-ensembling-work">How does ensembling work?</h1>
+<h2 id="how-does-ensembling-work">How does ensembling work?<a class="anchor" href="#how-does-ensembling-work">#</a></h2>
 <p>The typical data science workflow goes something like this:</p>
 <p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/typical_ds_workflow.png" alt="A flowchart showing a typical data science process. At the top is a box for &ldquo;exploratory data analysis&rdquo;", flowing down into a box saying &ldquo;Generating and evaluating candidate models&rdquo;, which flows into several boxes of individual model candidates titled &ldquo;Candidate A&rdquo;, &ldquo;Candidate B&rdquo;, and so on with the log loss of each model listed. The candidate with the lowest log loss flows down further into boxes titled &ldquo;Selected as best candidate&rdquo; and &ldquo;Predict on test set and submit&rdquo; in order, whereas all other candidates flow into red boxes with the label &ldquo;Rejected&rdquo;."></p>
 <p>We generate several candidate models (perhaps the same model types but with different hyperparameters, or a combination of different model types and different hyperparameters) then select the model that performs the best on out-of-sample data, and use that model to generate and submit our test predictions.</p>
@@ -143,7 +143,7 @@
 >wisdom of the crowd principle</a>
  in that several informed models will make a better decision than the single-best performing model.</p>
 <p>Ensembling can be tricky and daunting at first glance. How can you put all of these candidates together? With the <code>{stacks}</code> package, you can seamlessly integrate ensembling into your <code>{tidymodels}</code> workflow and get see better results readily!</p>
-<h1 id="how-does-stacks-ensemble-models">How does {stacks} ensemble models?</h1>
+<h2 id="how-does-stacks-ensemble-models">How does {stacks} ensemble models?<a class="anchor" href="#how-does-stacks-ensemble-models">#</a></h2>
 <p>Imagine that you have a bunch of models that you have trained on the same dataset, where the only difference is that each model has been fed a different set of hyperparameters (so some models may be overfit, some may be underfit, some may be better at predicting outliers, and so on). How do you best combine those predictions to squeeze a little extra predictive power out of them? You have several obstacles in your way:</p>
 <ul>
 <li><strong>How do you handle the fact that your model predictions are likely to be highly correlated?</strong> Even with the differences in hyperparameters, your models are all learning off the same set of data. If you fit a secondary model on top of your predictions, you are fitting a model on highly correlated features.</li>
@@ -151,21 +151,21 @@
 <li><strong>How do you properly predict on all of these models to create your final predictions?</strong> Say you make an ensemble with 10 models: those are 10 models that you have to store, load, predict, then ensemble those predictions together. That is a lot more complicated than just dealing with one model!</li>
 </ul>
 <p><code>{stacks}</code> helps us address all of these problems while working seamlessly within the tidymodels ecosystem.</p>
-<h2 id="highly-correlated-predictions">Highly correlated predictions<a class="anchor" href="#highly-correlated-predictions">#</a></h2>
+<h3 id="highly-correlated-predictions">Highly correlated predictions<a class="anchor" href="#highly-correlated-predictions">#</a></h3>
 <p>When dealing with highly correlated features in data science, a common approach is <a href="https://en.wikipedia.org/wiki/Lasso_%28statistics%29" 
   
    target="_blank" rel="noreferrer noopener" 
 >LASSO</a>
  regression, where the coefficient for a given feature is assigned a shrinkage parameter. When fitting the model, the coefficient for the feature will tend towards zero unless it provides significant predictive power. In a dataset with many highly correlated features, LASSO will reduce how many features are ultimately included in the model by setting the coefficients for many features to zero, allowing only a few remaining features to drive the predictive power of the model. <code>{stacks}</code> by default uses LASSO to reduce the number of highly correlated candidate models included in the ensemble.</p>
-<h2 id="telling-apart-overfit-candidates-from-predictive-candidates">Telling apart overfit candidates from predictive candidates<a class="anchor" href="#telling-apart-overfit-candidates-from-predictive-candidates">#</a></h2>
+<h3 id="telling-apart-overfit-candidates-from-predictive-candidates">Telling apart overfit candidates from predictive candidates<a class="anchor" href="#telling-apart-overfit-candidates-from-predictive-candidates">#</a></h3>
 <p>Like training any other kind of model, when <code>{stacks}</code> trains an ensemble model, it checks on out-of-sample performance to ensure that the model is not being overfit. For this, <code>{stacks}</code> relies on <a href="https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29" 
   
    target="_blank" rel="noreferrer noopener" 
 >bootstrapping</a>
 .  <code>{stacks}</code> will randomly sample rows from the training set, train off of predictions from those rows, then evaluate the ensemble on how it performed on the rows that were <em>not</em> sampled from the training dataset. This results in a more robust ensemble that filters out overfit models and leans more heavily on those that perform well out of sample.</p>
-<h2 id="managing-multiple-models-easily">Managing multiple models easily<a class="anchor" href="#managing-multiple-models-easily">#</a></h2>
+<h3 id="managing-multiple-models-easily">Managing multiple models easily<a class="anchor" href="#managing-multiple-models-easily">#</a></h3>
 <p>With <code>{stacks}</code>, the workflow to manage these models is absurdly simple. Simply make a few changes to your <code>{tidymodels}</code> workflow and you can easily integrate <code>{stacks}</code>. The wonderful thing is that a &ldquo;stack&rdquo; (what <code>{stacks}</code> calls an ensemble) looks and behaves just like any other model. How does this work? Let us dive into an example.</p>
-<h1 id="how-to-ensemble-with-stacks">How to ensemble with {stacks}</h1>
+<h2 id="how-to-ensemble-with-stacks">How to ensemble with {stacks}<a class="anchor" href="#how-to-ensemble-with-stacks">#</a></h2>
 <p>To demonstrate how easy it is to ensemble with <code>{stacks}</code>, we can walk through an example of a typical data science workflow with <code>{tidymodels}</code>, then show how with a few lines of code we can modify our code to allow for ensembling. For this example, we will use the <a href="https://www.kaggle.com/competitions/sliced-s01e01/data" 
   
    target="_blank" rel="noreferrer noopener" 
@@ -349,16 +349,16 @@ test |&gt;
 <li>We predicted on the ensemble instead of a single model</li>
 </ul>
 <p>With minimal effort, we were able to signficantly boost our model performance. That is the beauty of <code>{stacks}</code>!</p>
-<h1 id="extending-this-example">Extending this example</h1>
+<h2 id="extending-this-example">Extending this example<a class="anchor" href="#extending-this-example">#</a></h2>
 <p><code>{stacks}</code> has a fair bit more functionality than demonstrated in the above example. We can do a lot of different things with it! For example&hellip;</p>
-<h2 id="incorporating-different-kinds-of-models">Incorporating different <em>kinds</em> of models<a class="anchor" href="#incorporating-different-kinds-of-models">#</a></h2>
+<h3 id="incorporating-different-kinds-of-models">Incorporating different <em>kinds</em> of models<a class="anchor" href="#incorporating-different-kinds-of-models">#</a></h3>
 <p>We demonstrated how to ensemble using candidate XGBoost models. If we wanted to incorporate different model types, such as random forest or a support vector machine, all we would need to do is generate candidate models for them as well (in a similar manner to how we generated multiple candidate models for XGBoost using <code>tune_grid()</code>) then bake them in using <code>add_candidates()</code>. You can use largely any model type that is available in <code>{parsnip}</code> for this!</p>
 <pre><code class="language-r">full_stack &lt;- stacks() |&gt;
   add_candidates(xgb_res) |&gt;
   add_candidates(rf_ref) |&gt;
   add_candidates(svm_ref)
 </code></pre>
-<h2 id="sing-a-different-tune">Sing a different tune<a class="anchor" href="#sing-a-different-tune">#</a></h2>
+<h3 id="sing-a-different-tune">Sing a different tune<a class="anchor" href="#sing-a-different-tune">#</a></h3>
 <p>Sometimes you may wish to generate candidates for your models not by grid searching, but through a <a href="https://towardsdatascience.com/gaussian-processes-smarter-tuning-for-your-ml-models-c72c7d4f5833" 
   
    target="_blank" rel="noreferrer noopener" 
@@ -380,7 +380,7 @@ test |&gt;
     )
   )
 </code></pre>
-<h2 id="tuning-your-ensemble">Tuning your ensemble<a class="anchor" href="#tuning-your-ensemble">#</a></h2>
+<h3 id="tuning-your-ensemble">Tuning your ensemble<a class="anchor" href="#tuning-your-ensemble">#</a></h3>
 <p>Sometimes you may wish to control <em>how</em> the ensemble creates predictions. The <code>mixture</code> argument in <code>blend_predictions()</code> is set to 1 (for LASSO) by default, but you can also pass in <code>mixture = 0</code> to fit a ridge regression, pass in a value between 0 and 1 for an elastic fit, or even tune the mixture penalty by passing in a range of values to search over (i.e. <code>mixture = seq(0,1,by=0.1)</code>). The penalty parameter is tuned by default in <code>blend_predictions()</code>, but you can pass in your own set of penalty values to tune over as well. You can also change the number of boostrap samples used by <code>blend_predictions()</code> with the <code>times</code> parameter.</p>
 <pre><code class="language-r">stacks() |&gt;
   add_candidates(xgb_res) |&gt;
@@ -390,7 +390,7 @@ test |&gt;
     times = 50 # bootstrap 50 samples from the train set
   )
 </code></pre>
-<h2 id="treating-your-ensemble-like-a-tidymodel">Treating your ensemble like a tidymodel<a class="anchor" href="#treating-your-ensemble-like-a-tidymodel">#</a></h2>
+<h3 id="treating-your-ensemble-like-a-tidymodel">Treating your ensemble like a tidymodel<a class="anchor" href="#treating-your-ensemble-like-a-tidymodel">#</a></h3>
 <p>Since <code>blend_predictions()</code> and <code>fit_members()</code> are essentially wrappers over a penalized linear regression within <code>{tidymodels}</code>, you can speed up how long it takes to run <code>blend_predictions()</code> or <code>fit_members()</code> by running in parallel using <code>doParallel::registerDoParallel()</code>. You can also control how these functions grid search for model parameters using <code>tune::control_grid()</code>.</p>
 <pre><code class="language-r"># fit an ensemble in parallel
 doParallel::registerDoParallel()
@@ -406,7 +406,7 @@ stacks() |&gt;
   blend_predictions(control = tune_grid(verbose = T)) |&gt;
   fit_members(control = tune_grid(verbose = T))
 </code></pre>
-<h1 id="when-not-to-ensemble">When <em>not</em> to ensemble</h1>
+<h2 id="when-not-to-ensemble">When <em>not</em> to ensemble<a class="anchor" href="#when-not-to-ensemble">#</a></h2>
 <p><code>{stacks}</code> seems so simple and arbitrary to implement (something I find myself saying about much of the <code>{tidymodels}</code> ecosystem, which is a credit to its developers) that it is fair to ask: why <em>wouldn&rsquo;t</em> you use <code>{stacks}</code>?</p>
 <ul>
 <li>
@@ -419,7 +419,7 @@ stacks() |&gt;
 <p><strong>You do not have a large amount of data to work with.</strong> Much like random forests and gradient boosted trees, going with an ensemble when you do not have a lot of data to work with is generally overkill.</p>
 </li>
 </ul>
-<h1 id="wrapping-up">Wrapping up</h1>
+<h2 id="wrapping-up">Wrapping up<a class="anchor" href="#wrapping-up">#</a></h2>
 <p>That is <code>{stacks}</code> in a nutshell! I appreciate how easily this package integrates with my workflow and how reliable it is for getting a little bit of a boost on Kaggle leaderboards. Credit goes to Simon Couch, Max Kuhn, and the wonderful folks at Posit (previously RStudio) for developing <code>{stacks}</code>, with additional credit to the <code>{tidymodels}</code> developer team for their work in creating the framework that <code>{stacks}</code> operates in. You can read more about using <code>{stacks}</code> and <code>{tidymodels}</code> below. Happy tuning!</p>
 <ul>
 <li><a href="https://stacks.tidymodels.org/index.html" 
@@ -533,16 +533,26 @@ stacks() |&gt;
           
         <nav id="TableOfContents">
   <ul>
-    <li><a href="#highly-correlated-predictions">Highly correlated predictions</a></li>
-    <li><a href="#telling-apart-overfit-candidates-from-predictive-candidates">Telling apart overfit candidates from predictive candidates</a></li>
-    <li><a href="#managing-multiple-models-easily">Managing multiple models easily</a></li>
-  </ul>
-
-  <ul>
-    <li><a href="#incorporating-different-kinds-of-models">Incorporating different <em>kinds</em> of models</a></li>
-    <li><a href="#sing-a-different-tune">Sing a different tune</a></li>
-    <li><a href="#tuning-your-ensemble">Tuning your ensemble</a></li>
-    <li><a href="#treating-your-ensemble-like-a-tidymodel">Treating your ensemble like a tidymodel</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#how-does-ensembling-work">How does ensembling work?</a></li>
+    <li><a href="#how-does-stacks-ensemble-models">How does {stacks} ensemble models?</a>
+      <ul>
+        <li><a href="#highly-correlated-predictions">Highly correlated predictions</a></li>
+        <li><a href="#telling-apart-overfit-candidates-from-predictive-candidates">Telling apart overfit candidates from predictive candidates</a></li>
+        <li><a href="#managing-multiple-models-easily">Managing multiple models easily</a></li>
+      </ul>
+    </li>
+    <li><a href="#how-to-ensemble-with-stacks">How to ensemble with {stacks}</a></li>
+    <li><a href="#extending-this-example">Extending this example</a>
+      <ul>
+        <li><a href="#incorporating-different-kinds-of-models">Incorporating different <em>kinds</em> of models</a></li>
+        <li><a href="#sing-a-different-tune">Sing a different tune</a></li>
+        <li><a href="#tuning-your-ensemble">Tuning your ensemble</a></li>
+        <li><a href="#treating-your-ensemble-like-a-tidymodel">Treating your ensemble like a tidymodel</a></li>
+      </ul>
+    </li>
+    <li><a href="#when-not-to-ensemble">When <em>not</em> to ensemble</a></li>
+    <li><a href="#wrapping-up">Wrapping up</a></li>
   </ul>
 </nav>
       </div>
