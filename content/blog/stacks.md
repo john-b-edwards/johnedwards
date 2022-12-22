@@ -7,14 +7,16 @@ keywords:
 math: true
 slug: stacks
 pagination: true
+twitterImg: https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png
 tags:
 - r
 - tidymodels
 title: Hacking by stacking—how to get better {tidymodels} performance with {stacks}
 toc: true
+header:
+  caption: ''
+  image: 'https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png'
 ---
-
-![social-image](https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png)
 
 ## Introduction
 
