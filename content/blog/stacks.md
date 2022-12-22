@@ -18,6 +18,8 @@ header:
   image: 'https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png'
 ---
 
+![social-image](https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png)
+
 ## Introduction
 
 There is no more frustrating feeling than finishing just shy of a podium position in a Kaggle competition. Those precious competition points were right there! If only you had just a slightly better log loss! Alas, you exhausted every tool in your data science toolkit, and that was the best you could do. Unless... there was another way to get even better performance out of your models. Something so absurdly simple to implement that it felt almost like hacking the leaderboard. Enter the `{stacks}` package.
