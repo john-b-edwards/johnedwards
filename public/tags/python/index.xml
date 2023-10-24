@@ -24,7 +24,7 @@ import sys!{sys.executable} -m pip install pandas sklearn numpy rpy2 trueskill 
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/lrmc_pt_2/</guid>
-      <description>The following was originally published on the CFBD Blogand has been reproduced here with edits for clarity.
+      <description>The following was originally published on the CFBD Blog and has been reproduced here with edits for clarity.
 This is the second and final part of a series on implementing LRMC rankings for CFB! This entry presupposes you are familiar with the mathematical concepts behind LRMC. To view part one, which covers these concepts, click here.
 When we last left off, we covered how LRMC works and how to implement it mathematically.</description>
     </item>
