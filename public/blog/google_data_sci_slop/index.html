@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Google&#39;s Data Science Agent is just a Kaggle slop generator | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="Google&#39;s new LLM-powered data science agent doesn&#39;t do anything except arm Kaggle spammers with another bullshit generator.">
+  <meta name="keywords" content="machine_learning">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Google&#39;s Data Science Agent is just a Kaggle slop generator" />
+  <meta name="twitter:description" content="Google&amp;#39;s new LLM-powered data science agent doesn&amp;#39;t do anything except arm Kaggle spammers with another bullshit generator."/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "Google\u0027s Data Science Agent is just a Kaggle slop generator",
+      "headline" : "Google\u0027s Data Science Agent is just a Kaggle slop generator",
+      "description" : "Google\u0027s new LLM-powered data science agent doesn\u0027t do anything except arm Kaggle spammers with another bullshit generator.",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2024",
+      "datePublished": "2024-05-18 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2024-05-18 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/google_data_sci_slop\/",
+      "wordCount" : "1962",
+      "keywords" : ["machine_learning", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">Google&#39;s Data Science Agent is just a Kaggle slop generator</h1>
+            <time datetime="2024-05-18 00:00:00 &#43;0000 UTC" class="post__date">May 18 2024</time> 
+          </header>
+          <article class="post__content">
+              
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Google_I-O_2019.jpg/800px-Google_I-O_2019.jpg" alt="Google I/O 2019"></p>
+<p><em>Google I/O 2019; Alexander Shcherbakov, <a href="https://creativecommons.org/licenses/by-sa/3.0" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>CC BY-SA 3.0</a>
+ via Wikimedia Commons</em></p>
+<p>Google I/O was this past week, and predictably, the focus was LLM-powered tools. Among the products Google rolled out was something that caught my eye&ndash;an LLM powered &ldquo;Data Science Agent&rdquo; that would take in data and with prompting, break down a dataset, develop a plan of attack for approaching a data science problem, and even generate Colab notebooks.</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Today we are launching Data Science Agent, a Google Labs experiment.<br><br>◆ Helps with complex tasks like planning, and error correction.<br>◆ Helps with data science tasks like predictive modeling.<br>◆ Outputs an AI-generated Colab notebook based on your prompt.<br><br>Try it at… <a href="https://t.co/ApDB5lNMcq">pic.twitter.com/ApDB5lNMcq</a></p>&mdash; Kath Korevec (@simpsoka) <a href="https://twitter.com/simpsoka/status/1790495455329321423?ref_src=twsrc%5Etfw">May 14, 2024</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>Gotta try this out, right? Even though this is merely an &ldquo;experiment&rdquo;, surely nothing about the fundamental nature of LLMs undermines the utility of this product, right? <em>Right?</em></p>
+<h1 id="methodology">Methodology</h1>
+<p>To take this tool to task, we will provide it with a dataset and run through a simple prompt. I&rsquo;ll borrow <a href="https://www.kaggle.com/competitions/formula-1-lap-time-prediction-nwvs-s00e02" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>this Formula 1 lap-time dataset from one of Nick Wan&rsquo;s community Kaggle competitions</a>
+, and ask the LLM to try to visualize the dataset. Pretty straightforward, right?</p>
+<h1 id="results">Results</h1>
+<p>I first fed the tool the <code>train.csv</code> file from the Kaggle competition, and gave it the following prompt:</p>
+<blockquote>
+<p>I would like you to visualize which factors contribute the most to the lap-time column in this dataset.</p>
+</blockquote>
+<p>The tool came up with this as its plan:</p>
+<blockquote>
+<p>Plan</p>
+<ol>
+<li><strong>data_loading</strong>: Load the data from &ldquo;/tmp/train.csv&rdquo; into a pandas DataFrame.</li>
+<li><strong>data_exploration</strong>: Check for missing values, outliers, and the distribution of the &lsquo;lap_time&rsquo; column.</li>
+<li><strong>feature_engineering</strong>: If necessary, create new features or transform existing ones to improve model performance.</li>
+<li><strong>model_training</strong>: Train a regression model (e.g., Linear Regression, Random Forest) to predict &lsquo;lap_time&rsquo; based on other features.</li>
+<li><strong>model_evaluation</strong>: Evaluate the model&rsquo;s performance using appropriate metrics (e.g., R-squared, RMSE).</li>
+<li><strong>data_visualization</strong>: Create visualizations (e.g., feature importance plot, partial dependence plots) to show the contribution of each feature to the &lsquo;lap_time&rsquo; prediction.</li>
+<li><strong>finish_task</strong>: Summarize the insights gained from the analysis, highlighting the most important factors influencing lap time.</li>
+</ol>
+</blockquote>
+<p>Woah woah woah! I&rsquo;m just looking to visualize the dataset. I didn&rsquo;t think that I needed to make a model first in order to visualize which features correlated most strongly with lap time. Still, the Agent thinks I should make a model, so I&rsquo;ll listen to it I guess&hellip; let&rsquo;s click the &ldquo;Generate Colab&rdquo; notebook button and see what we get.</p>
+<hr>
+<p>The Agent is able to read in the data set just fine, but things get a little weird once we get to step #2.</p>
+<blockquote>
+<p>To understand the data and identify potential issues, we need to check for missing values and examine the distribution of the &lsquo;lap_time&rsquo; column.</p>
+</blockquote>
+<pre><code class="language-py"># Check for missing values
+print(df.isnull().sum())
+
+# Examine the distribution of 'lap_time'
+print(df['lapTime_ms'].describe())
+df['lapTime_ms'].hist()
+df.boxplot(column='lapTime_ms')
+</code></pre>
+<p><img src="https://github.com/john-b-edwards/johnedwards/raw/main/public/images/data_sci_agent/data_sci_agent_1.png" alt="A confusing box plot. The y-axis numbers 0 to 2.0 and the x-axis has no labels. There is only a small blue bar in the bottom left corner."></p>
+<pre><code>STDOUT
+id                         0
+race                       0
+date                       0
+time                    7035
+circuit                    0
+latitude                   0
+longitude                  0
+altitude                   0
+driver                     0
+carNumber                  0
+constructor                0
+avgDriverFinish            0
+avgConstructorFinish       0
+lapNumber                  0
+lapPosition                0
+pitStop                    0
+pitCount                   0
+pitTime_ms                 0
+lapTime_ms                 0
+dtype: int64
+count    3.000000e+04
+mean     9.445979e+04
+std      6.375514e+04
+min      6.620000e+04
+25%      8.127850e+04
+50%      9.049250e+04
+75%      1.004710e+05
+max      2.253574e+06
+Name: lapTime_ms, dtype: float64
+&lt;AxesSubplot: &gt;
+</code></pre>
+<p>This kind of data visualization and exploration is essentially useless, and provides a reader with no actual understanding of the data and its features. The histogram it generated is essentially useless.</p>
+<p>Despite this, the agent then proceeds into the next steps. Using the 1.5xIQR method, it removes outlier target variables (which I think is defensible given how extreme the outliers are, even if we can predict the outliers with the data available). Then, inexplicably, it decides to create a new variable:</p>
+<blockquote>
+<p>The data is now cleaned and ready for feature engineering. I will create a new feature by combining &lsquo;avgDriverFinish&rsquo; and &lsquo;avgConstructorFinish&rsquo; to capture the overall performance of the driver and constructor.</p>
+</blockquote>
+<pre><code class="language-py"># Create a new feature 'avgOverallFinish'
+df_cleaned['avgOverallFinish'] = (df_cleaned['avgDriverFinish'] + df_cleaned['avgConstructorFinish']) / 2
+</code></pre>
+<p>This kind of feature engineering is quite perplexing&ndash;there is little reason to believe that a model wouldn&rsquo;t be able to isolate the impact of these features together. What&rsquo;s more, this feature is now correlated with both <code>avgDriverFinish</code> and <code>avgConstructorFinish</code>, so we have introduced correlated features to our model for reasons completely unbeknownst to me.</p>
+<p>With this strange, arbitrary feature engineering behind us, the model then decides that it is time to make a random forest model. Again, all I asked was that the agent visualize what contributed to the model!</p>
+<p>The agent produces the following code:</p>
+<pre><code class="language-py"># Import necessary libraries
+from sklearn.ensemble import RandomForestRegressor
+
+# Prepare features and target
+X = df_cleaned.drop('lapTime_ms', axis=1)
+y = df_cleaned['lapTime_ms']
+
+# Instantiate the model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+# Train the model
+model.fit(X, y)
+</code></pre>
+<blockquote>
+<p>The error message &ldquo;ValueError: could not convert string to float: &lsquo;British Grand Prix&rsquo;&rdquo; indicates that the Random Forest model is trying to process string data, which it cannot handle. This suggests that some of the features in the <code>X</code> DataFrame are categorical and need to be converted to numerical values before training the model.</p>
+</blockquote>
+<p>The agent decided to kitchen sink the model with some completely arbitrary parameters&ndash;but its failure to check if any of the features were categorical in the data exploration phase resulted in this error. At least it recognized the error, so it can fix it, right? <em>RIGHT?</em></p>
+<blockquote>
+<p>To train a Random Forest model, we need to handle categorical features in the DataFrame <code>df_cleaned</code> by using one-hot encoding.</p>
+</blockquote>
+<pre><code class="language-py"># Handle categorical features using one-hot encoding
+df_encoded = pd.get_dummies(df_cleaned, columns=['race', 'circuit', 'driver', 'constructor'])
+
+# Separate features and target variable
+X = df_encoded.drop('lap_time', axis=1)
+y = df_encoded['lap_time']
+
+# Train a Random Forest regression model
+model = RandomForestRegressor()
+model.fit(X, y)
+</code></pre>
+<blockquote>
+<p>The error message indicates that the &lsquo;lap_time&rsquo; column is not found in the DataFrame <code>df_encoded</code>. This suggests that the column might have been renamed or dropped during the one-hot encoding process. To fix this, we need to check the column names in <code>df_encoded</code> and use the correct column name for &lsquo;lap_time&rsquo; when separating features and target variable.</p>
+</blockquote>
+<p>The agent dummy encoded the categorical variables (okay, fine)&ndash;but then treated it as though the dataframe with just the dummy features (<code>df_encoded</code>) had all of the features. There&rsquo;s no <code>lap_time</code> variable to grab from that table. So having recognized the mistake, surely it&rsquo;s going to fix it. <em>RIGHT??????</em></p>
+<pre><code class="language-py"># Handle categorical features using one-hot encoding
+df_encoded = pd.get_dummies(df_cleaned, columns=['race', 'circuit', 'driver', 'constructor'])
+
+# Check the column names in df_encoded
+print(df_encoded.columns)
+
+# Separate features and target variable (assuming 'lap_time' is still the correct column name)
+X = df_encoded.drop('lap_time', axis=1)
+y = df_encoded['lap_time']
+
+# Train a Random Forest regression model
+model = RandomForestRegressor()
+model.fit(X, y)
+</code></pre>
+<blockquote>
+<p>The error persists, and the output shows that the &lsquo;lap_time&rsquo; column is not present in <code>df_encoded</code>. This means the column was likely dropped or renamed during a previous step. We need to investigate the previous steps to determine what happened to the &lsquo;lap_time&rsquo; column.</p>
+</blockquote>
+<p>Okay, it made the mistake again. But it&rsquo;s just a humble LLM. Surely we can expect it to make some mistakes every now and again? But surely it <em>recogizes</em> the mistakes, so surely it won&rsquo;t make the same mistake again, RIGHTDLFLKAJSDL;FKJA;LSKDFJA;LSDKFJLA</p>
+<pre><code class="language-py"># Perform one-hot encoding on categorical features
+df_encoded = pd.get_dummies(df, columns=['race', 'circuit', 'driver', 'constructor'])
+
+# Verify that 'lap_time' column is present
+if 'lap_time' in df_encoded.columns:
+    print(&quot;'lap_time' column is present in the encoded DataFrame.&quot;)
+else:
+    print(&quot;'lap_time' column is missing from the encoded DataFrame. Please check previous steps.&quot;)
+</code></pre>
+<blockquote>
+<p>The &lsquo;lap_time&rsquo; column is missing after one-hot encoding, likely due to being dropped during outlier handling in a previous step. We need to revisit the outlier handling process and ensure &lsquo;lap_time&rsquo; is preserved.</p>
+</blockquote>
+<p>The LLM suggests that the column was dropped during outlier handling&ndash;which is not what happened! And then, despite saying, &ldquo;This is what happened, let&rsquo;s revisit this step&rdquo;, the LLM proceeds to completely ignore what it just said, and proceeds to immediately try retraining!</p>
+<blockquote>
+<p>I will write a code block to train a Random Forest regression model on the <code>df_encoded</code> DataFrame.</p>
+</blockquote>
+<pre><code class="language-py"># Verify 'lap_time' column
+if 'lap_time' not in df_encoded.columns:
+    print(&quot;Error: 'lap_time' column is missing from df_encoded. Please revisit previous steps to restore it.&quot;)
+else:
+    # Separate features and target
+    X = df_encoded.drop('lap_time', axis=1)
+    y = df_encoded['lap_time']
+
+    # Instantiate Random Forest model
+    from sklearn.ensemble import RandomForestRegressor
+    model = RandomForestRegressor()
+
+    # Fit the model
+    model.fit(X, y)
+</code></pre>
+<pre><code>Error: 'lap_time' column is missing from df_encoded. Please revisit previous steps to restore it.
+</code></pre>
+<blockquote>
+<p>The &lsquo;lap_time&rsquo; column is missing from the <code>df_encoded</code> DataFrame, indicating an error in a previous step. I need to go back and identify where the column was dropped or modified.</p>
+</blockquote>
+<blockquote>
+<p>I will check the previous feature engineering steps to see where the &lsquo;lap_time&rsquo; column was dropped or renamed.</p>
+</blockquote>
+<p>At this point, the AI agent simply stopped issuing responses.</p>
+<h1 id="takeaways">Takeaways</h1>
+<p>So to recap, all I did was ask the following:</p>
+<blockquote>
+<p>I would like you to visualize which factors contribute the most to the lap-time column in this dataset.</p>
+</blockquote>
+<p>What the agent actually did was:</p>
+<ol>
+<li>Provide a single barebones, unreadable box-plot of the target variable distribution</li>
+<li>Clean outliers</li>
+<li>Construct an unhelpful, completely arbitrary feature</li>
+<li>Attempt to build a random forest model, fail</li>
+<li>Attempt to encode categorical variables, fail</li>
+<li>Repeat steps 4 and 5 until shutting off without explanation.</li>
+</ol>
+<p>Surely I&rsquo;m just cherry-picking a bad example for the LLM? I&rsquo;ve run through similar prompts of varying complexity with this tool a good bit over the past week with this dataset, and the same issues come up over and over again:</p>
+<ul>
+<li>The agent fails to understand the structure and nature of the dataset. Any kind of EDA is extremely minimal, and feature engineering is arbitrary.</li>
+<li>The agent makes a mistake in model building.</li>
+<li>The agent then either fails to identify what the mistake is, or identifies the mistake and then simply does not address it, repeating the same code that produced the mistake.</li>
+</ul>
+<h1 id="the-rant">The Rant</h1>
+<p>What&rsquo;s the issue? Even if this is an alpha or beta tool, the lack of utility with this product that Google has stamped their name on is astonishing. It&rsquo;s a complete and utter waste of time trying to get this produce any kind of insights, let alone a model&ndash;I was only once able to get it to produce a functioning model, and the model itself performed quite poorly thanks to the agent failing to understand both the dataset, proper data science practices, or how to even tune a model.</p>
+<p>The key word here is <em>understand</em>. An LLM does not understand anything. An LLM does not think. It merely parrots what it has seen before. LLMs lack the ability to debug themselves, because they parrot one thing, and if they&rsquo;re wrong, they parrot another thing regardless of whether or not it actually solves the problem. They&rsquo;re all parrots. For these reasons, they are deeply unsuited for a wide variety of tasks, among them data science problems.</p>
+<p>I can truly only anticipate one kind of use for this Data Science Agent. Kaggle has a significant problem with notebook spam, where users copy and spam low-quality, uninformative notebooks with the same boilerplate visualization code over and over again. <a href="https://www.kaggle.com/rankings?group=notebooks" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Two of Kaggle&rsquo;s top 10 notebook grandmasters</a>
+ have reached this status by publishing literal thousands of notebooks without providing anything of actual insight. If you wanted to churn out more &ldquo;Looks like it&rsquo;s insightful but actually reveals nothing&rdquo; spammy notebooks, this kind of tool is perfect, because LLMs are perfectly suited to generate content to occupy internet space without providing anything of value. Slop.</p>
+<p>That&rsquo;s all that these tools are good for&ndash;Google is embracing the steady waterfall of venture capital money associated with slapping &ldquo;GenAI&rdquo; to a product, regardless of its utility or quality, and are glad to ignore any associated downstream effects to their own products. <a href="https://www.theatlantic.com/technology/archive/2024/05/google-generative-ai-search-toilet-theory/678411/?utm_campaign=the-atlantic&amp;utm_content=true-anthem&amp;utm_medium=social&amp;utm_source=twitter" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>They&rsquo;re just here to kill the golden goose and get out.</a>
+</p>
+
+
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/python/">python</a>
+    </li></ul>
+
+  <div class="pagination">
+  
+    <a class="pagination__item" href="https://johnbedwards.io/blog/big-data-bowl-makie/">
+        <span class="pagination__label">Previous Post</span>
+        <span class="pagination__title">Animating Plays in Julia with Makie.jl</span>
+    </a>
+  
+
+  
+</div>
+ 
+	  
+          <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "johnbedwards" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+      <div class="toc-container">
+          
+        <nav id="TableOfContents"></nav>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+    <script src="https://johnbedwards.io/js/table-of-contents.js"></script>
+  
+
+
+</body>
+
+</html>

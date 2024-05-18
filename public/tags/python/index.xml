@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Wed, 02 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google&#39;s Data Science Agent is just a Kaggle slop generator</title>
+      <link>https://johnbedwards.io/blog/google_data_sci_slop/</link>
+      <pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/google_data_sci_slop/</guid>
+      <description>Google I/O 2019; Alexander Shcherbakov, CC BY-SA 3.0 via Wikimedia Commons
+Google I/O was this past week, and predictably, the focus was LLM-powered tools. Among the products Google rolled out was something that caught my eye&amp;ndash;an LLM powered &amp;ldquo;Data Science Agent&amp;rdquo; that would take in data and with prompting, break down a dataset, develop a plan of attack for approaching a data science problem, and even generate Colab notebooks.
+Today we are launching Data Science Agent, a Google Labs experiment.</description>
+    </item>
+    
     <item>
       <title>2021 March Madness Kaggle Solution</title>
       <link>https://johnbedwards.io/blog/march_madness_2021/</link>
