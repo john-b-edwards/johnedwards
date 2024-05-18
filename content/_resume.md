@@ -43,10 +43,17 @@ noComment: true
 
 ## Experiences
 
-### Analyst, Seattle Mariners
-#### 2020 - Present
+### Lead Data Scientist, Pitching, Seattle Mariners
+#### 2024-Present
 
-I work with the Mariners' pitching systems to improve our models, provide analysis to coaches and staff, and help continually refine our player development and acquisition pipelines.
+I lead the development of projects designed to help assist the Mariners in acquiring and developing
+pitchers, using Hawk-Eye and other data sources. I also assist with player evaluation and acquisiton,
+in the draft, trade discussions, and free agency.
+
+### Analyst, Seattle Mariners
+#### 2020-2023
+
+I worked with the Mariners' pitching systems to improve our models, provide analysis to coaches and staff, and helped continually refine our player development and acquisition pipelines.
 
 ### Baseball Projects Intern, Seattle Mariners
 #### 2020
