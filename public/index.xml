@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Sat, 18 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Predicting the Olympics</title>
+      <link>https://johnbedwards.io/blog/olympic_prediction_contest/</link>
+      <pubDate>Mon, 18 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/olympic_prediction_contest/</guid>
+      <description>Stade de France; Chabe01, CC BY-SA 4.0 , via Wikimedia Commons
+I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest . I also had the pleasure of winning! While I feel that my code is too messy to share at present, and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
+    </item>
+    
     <item>
       <title>Google&#39;s Data Science Agent is just a Kaggle slop generator</title>
       <link>https://johnbedwards.io/blog/google_data_sci_slop/</link>
@@ -93,7 +103,7 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/about/</guid>
-      <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my BS in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing in my current position as a lead data scientist of pitching for the Seattle Mariners.</description>
+      <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my BS in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing in my current position as manager of data science for the Seattle Mariners.</description>
     </item>
     
     <item>
@@ -102,8 +112,9 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/projects/</guid>
-      <description>nflverse Contributor to the open-source NFL data package family nflverse. Found obscure API endpoints and built scripts to hit these endpoints, download and clean the sourced data, and then make the data available via the {nflreadr} package. You can view the nflverse family of packages here .
-Predicting Scrabble Point Values Finished 1st overall in a Kaggle community competition to predict the point value of the 20th turn of a Scrabble game given only the 19 previous turns.</description>
+      <description>NFLData.jl Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package here .
+Royal Statistical Society 2024 Olympic Prediction Contest Finished 1st overall in the RSS&amp;rsquo;s 2024 Olympic Prediction contest. While my code is not available, I have done a high-level writeup of my solution and you can view it [here]((/blog/olympic_prediction_contest/).
+Kaggle 2024 March Mania Contest Finished 33rd overall in Kaggle&amp;rsquo;s 2024 March Mania contest using using team-strength methods and some minor gaming of the competition.</description>
     </item>
     
     <item>
@@ -112,7 +123,7 @@ Predicting Scrabble Point Values Finished 1st overall in a Kaggle community comp
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/resume/</guid>
-      <description>Proficiencies  R  caret catboost ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   Julia  Dataframes.jl Flux.jl Plots.jl MixedModels.jl   SQL HTML CSS Git  Experiences Lead Data Scientist, Pitching, Seattle Mariners 2024-Present I lead the development of projects designed to help assist the Mariners in acquiring and developing pitchers, using Hawk-Eye and other data sources.</description>
+      <description>Proficiencies  R  catboost data.table ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   Julia  Dataframes.jl Flux.jl Plots.jl StatsModels.jl MixedModels.jl XGBoost.jl   SQL HTML CSS Git  Experiences Manager of Data Science, Seattle Mariners 2024-Present I manage projects, mentor other data scientists, and develop machine learning models and tools for the Mariners baseball operations department.</description>
     </item>
     
   </channel>

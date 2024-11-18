@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>Predicting the Olympics | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="My writeup of my Royal Statistical Society Olmypic Prediction contest entry">
+  <meta name="keywords" content="machine_learning , olympics">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Predicting the Olympics" />
+  <meta name="twitter:description" content="My writeup of my Royal Statistical Society Olmypic Prediction contest entry"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "Predicting the Olympics",
+      "headline" : "Predicting the Olympics",
+      "description" : "My writeup of my Royal Statistical Society Olmypic Prediction contest entry",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2024",
+      "datePublished": "2024-11-18 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2024-11-18 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/olympic_prediction_contest\/",
+      "wordCount" : "2088",
+      "keywords" : ["machine_learning", "olympics", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">Predicting the Olympics</h1>
+            <time datetime="2024-11-18 00:00:00 &#43;0000 UTC" class="post__date">Nov 18 2024</time> 
+          </header>
+          <article class="post__content">
+              
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%C3%89preuve_Athl%C3%A9tisme_Jeux_Olympiques_2024_Stade_France_-_Saint-Denis_%28FR93%29_-_2024-08-02_-_138.jpg/1024px-%C3%89preuve_Athl%C3%A9tisme_Jeux_Olympiques_2024_Stade_France_-_Saint-Denis_%28FR93%29_-_2024-08-02_-_138.jpg" alt=""></p>
+<p><em>Stade de France; Chabe01, <a href="https://creativecommons.org/licenses/by-sa/4.0" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>CC BY-SA 4.0</a>
+, via Wikimedia Commons</em></p>
+<p>I had the pleasure of competing in the <a href="https://www-users.york.ac.uk/~bp787/RSS_pred_comp_2024.html" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Royal Statistical Society&rsquo;s 2024 Olympics prediction contest</a>
+. I also had the pleasure of winning! While I feel that my code is too messy to share at present, and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</p>
+<h1 id="contest-overview">Contest Overview</h1>
+<p>This contest involved predicting the medal table for the 2024 Olympics. If you watched the Olympics this year, at some point on the broadcast, you were likely to see a table that represented which country was leading the gold medal count, the total medal count, etc.&ndash;this is the medal table! The top of the final medal table for this year&rsquo;s Olympics looked something like this:</p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>NOC</th>
+<th>Gold</th>
+<th>Silver</th>
+<th>Bronze</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>🇺🇸 United States</td>
+<td>40</td>
+<td>44</td>
+<td>42</td>
+<td>126</td>
+</tr>
+<tr>
+<td>2</td>
+<td>🇨🇳 China</td>
+<td>40</td>
+<td>27</td>
+<td>24</td>
+<td>91</td>
+</tr>
+<tr>
+<td>3</td>
+<td>🇯🇵 Japan</td>
+<td>20</td>
+<td>12</td>
+<td>13</td>
+<td>45</td>
+</tr>
+<tr>
+<td>4</td>
+<td>🇦🇺 Australia</td>
+<td>18</td>
+<td>19</td>
+<td>16</td>
+<td>53</td>
+</tr>
+<tr>
+<td>5</td>
+<td>🇫🇷 France</td>
+<td>16</td>
+<td>26</td>
+<td>22</td>
+<td>64</td>
+</tr>
+</tbody>
+</table>
+<p>The goal of the contest was to predict the order of the &ldquo;NOC&quot;s (National Olympic Committees), graded based on <a href="https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Kendall&rsquo;s Tau</a>
+. To calculate Kendall&rsquo;s tau, you can perform a pairwise comparison of every item ranked:</p>
+<ul>
+<li>If you predict that Item 1 is higher than Item 2, you are correct, you get +1 for that comparison.</li>
+<li>If you predict that Item 1 is higher than Item 3 and you are wrong, you get -1 for that comparison.</li>
+<li>If you predict that Item 2 is higher than Item 3 and Item 2 and Item 3 are tied, you get 0 for that comparison.</li>
+</ul>
+<p>In the bulleted example above, our Kendall&rsquo;s tau is the average of our score, or 0 (1 - 1 + 0) / 3.</p>
+<p>For the RSS competition, the official ranking criteria was gold medals, with ties broken by silver medals, then bronze medals in that order. Any countries with the same number of gold, silver, and bronze medals were considered exactly tied.</p>
+<p>The final submission needed to be just a ranking of the NOCs in our predicted order. So a submission would have looked something like:</p>
+<ol>
+<li>United States</li>
+<li>China</li>
+<li>Japan</li>
+</ol>
+<p>&hellip;</p>
+<ol start="202">
+<li>Zimbabwe</li>
+<li>Belarus</li>
+<li>Russia</li>
+</ol>
+<h1 id="my-approach">My Approach</h1>
+<h2 id="modeling-the-structure-of-the-olympics">Modeling the structure of the Olympics<a class="anchor" href="#modeling-the-structure-of-the-olympics">#</a></h2>
+<p>I tried to tackle this as a threefold problem:</p>
+<ol>
+<li>I needed to capture data about what events were going on in the Olympics, who was competing in each event, and how medals were awarded for these events.</li>
+<li>I needed to model the probability of individuals or teams winning different events.</li>
+<li>I needed to use #2 to capture each country&rsquo;s expected gold, silver, and bronze medals, then rank countries based on this criteria.</li>
+</ol>
+<p>I realized that if I could do #1 effectively, that would take much of the predictive burden off #2, and yield the best estimate for #3. For example, suppose all I knew was what countries were competing in what events, and not what their odds of winning those respective events were: if I assumed even odds of each country winning each event, I would have achieved a solid Kendall&rsquo;s tau, as the countries that participated in the most events had the most opportunities to capture medals (something that played out in the actual final medal table).</p>
+<h2 id="web-scraping">Web scraping<a class="anchor" href="#web-scraping">#</a></h2>
+<p>To the end of accomplishing #1, I was able to find an <a href="https://sph-s-api.olympics.com/summer/schedules/api/ENG/schedule/day/2024-07-29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>API for the summer Olympics</a>
+ that reflected the complete schedule for the Olympics&ndash;what events were occurring, who was competing in them, what medal events there were, etc. After considerable wrangling, I was able to filter down to just the medal events and determine which countries were competing in each event, and how many entrants from each country were in each event.</p>
+<p>A few events required some special wrangling:</p>
+<ul>
+<li>For artistic gymnastics, gymnasts could earn individual medals in different events (such as the vault or floor routine), and then their scores in these events contributed to winning an <a href="https://en.wikipedia.org/wiki/Gymnastics_at_the_2024_Summer_Olympics_%E2%80%93_Women%27s_artistic_individual_all-around" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>&ldquo;Individual All-Around&rdquo;</a>
+ medal <em>and</em> a <a href="https://en.wikipedia.org/wiki/Gymnastics_at_the_2024_Summer_Olympics_%E2%80%93_Women%27s_artistic_team_all-around" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>&ldquo;Team All-Around&rdquo;</a>
+ medal. This structure is fairly unique to this event, and it creates opportunities for counties to earn two extra medals for the medal table beyond the individual events.</li>
+<li>The participants for the Mixed Doubles Tennis event <a href="https://www.itftennis.com/en/news-and-media/articles/mixed-doubles-entries-confirmed-for-paris-2024-olympic-tennis-event/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>were not announced until after the Olympics were underway</a>
+, so it was impossible to know which countries would be competing for a medal. I took an educated guess, based on which countries had sent at least a men&rsquo;s and women&rsquo;s tennis player to the Olympics.</li>
+<li>Some athletes were not competing under an individual country, but under either the <a href="https://olympics.com/ioc/paris-2024-individual-neutral-athletes" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Individual Netural Athletes NOC</a>
+ or the <a href="https://olympics.com/ioc/refugee-olympic-team" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>IOC Refugee Olympic Team</a>
+. These NOCs were not listed under the sample submission on the website, so I ended up omitting them.</li>
+</ul>
+<h2 id="modeling-individual-events">Modeling Individual Events<a class="anchor" href="#modeling-individual-events">#</a></h2>
+<p>Now that I had all of the events and which countries were competing, my next task was to model each of the individual events as best I could. I took a twofold approach to get high quality, well-calibrated estimates for the odds of winning events.</p>
+<h3 id="betting-odds">Betting Odds<a class="anchor" href="#betting-odds">#</a></h3>
+<p>There was a robust betting market <a href="https://www.entaingroup.com/news-insights/latest-news/2024/olympics-2024-record-interest-in-betting-on-the-olympics-for-entain/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>for the Olympics</a>
+. While some of these markets were skewed towards the United States or European countries where gambling is legal and popular (as bettors from these countries would tend to bet on their own countries to win), for smaller events with odds, these predictions were reasonably well calibrated (and in hindsight, the markets being skewed towards the United States turned out quite well for my Kendall&rsquo;s tau). For any events where there was betting information available (via FanDuel), I pulled in these odds and used them as my probabilistic estimates of a team or athlete winning.</p>
+<h3 id="ranking-with-xgboost">Ranking with XGBoost<a class="anchor" href="#ranking-with-xgboost">#</a></h3>
+<p>Only some events had betting information available, so I needed a fallback when that information was not available. For events that had previously occurred at the Olympics, I pulled in the events of these previous Olympic events and grouped them by discipline as intuitively as I could (for example, all of the Gymnastic events were rolled together).</p>
+<p>From there, I fit a simple XGBoost model to predict the &ldquo;Rank&rdquo; of each country in each event, <a href="https://xgboost.readthedocs.io/en/latest/tutorials/learning_to_rank.html" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>using the <code>rank:pairwise</code> objective</a>
+, given the country, the discipline of the event, and the number of competitors in each event, fit on the past 30 years of the Olympics (as a means of capturing each country&rsquo;s culture and investment in each discipline). For each event, this produced an abstract continuous value representing which country the XGBoost model felt was likely to win an individual event (so if the XGBoost model produced a value 10 for the United States and 5 for Japan, it felt that the United States was more likely to win the event than Japan).</p>
+<p>After getting these values, I ran the rankings through <a href="https://rdrr.io/cran/ohenery/man/ohenery.html" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>the Harville model for modeling ordinal outcomes</a>
+, which allowed me to get a scaled probabilistic estimate of which country was likely to win an event.</p>
+<h3 id="extracting-silver-and-bronze-odds">Extracting silver and bronze odds<a class="anchor" href="#extracting-silver-and-bronze-odds">#</a></h3>
+<p>After combining the betting odds and my own estimates, I had probabilities that a country would win gold, but not silver or bronze&ndash;these estimates would be quite useful for ranking purposes given the listed tiebreakers above. To pull in silver and bronze odds, I did some abominable math using conditional probabilities, the likes of which would probably cause Harville himself to spin in his grave.</p>
+<p>To walk through a quick example of how these conditional probabilities worked: suppose there&rsquo;s a 3 team event where:</p>
+<ul>
+<li>Team A has 70% odds of getting 1st place</li>
+<li>Team B has 20% odds of getting 1st place</li>
+<li>Team C has 10% odds of getting 1st place.</li>
+</ul>
+<p>For this example, what are the odds that Team B gets second place?</p>
+<ul>
+<li>If Team A gets 1st place, and if we assume that the odds of getting first place among the remaining teams (Team B and Team C) are proportional to their odds of beating their remaining opponents (e.g. Team B has 20% odds of getting 1st place amongst A, B, C, and 67% odds of getting first place amongst B, C), then the odds that Team B gets 2nd place given that Team A gets first place is 67%.</li>
+<li>With these same assumptions, the odds that Team B gets 2nd place given that Team C gets first place is 22%.</li>
+<li>So the odds that Team B gets 2nd place are <code>pr(Team A 1st) * pr(Team B beats Team C) + pr(Team C 1st) * pr(Team B beats Team A)</code> = 47% + 2% = 49%.</li>
+</ul>
+<p>I expended this logic for calculating the odds of getting a bronze medal as well.</p>
+<p>As I said above, this is almost certainly some bad math&ndash;specifically the assumption that if B&rsquo;s odds of getting 1st place among A,B,C are 20%, then B&rsquo;s odds of getting 1st place among B,C are 66%. However, it yields reasonable looking and well calibrated estimates for the odds of getting silver and bronze medals.</p>
+<h3 id="a-faulty-assumption">A faulty assumption!<a class="anchor" href="#a-faulty-assumption">#</a></h3>
+<p>I was so concerned with the bad math that I was doing above that I made a crucial error in my modeling process. In these probabilities, I assumed that if a country won a gold medal, they were excluded from winning silver and bronze. That is the case for team events, but it is certainly not the case for individual events! It is possible for a country to win multiple medals for the same event, and in rare cases, <a href="https://en.wikipedia.org/wiki/List_of_medal_sweeps_in_Olympic_athletics" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>they can win all three</a>
+!</p>
+<p>This mistake fortunately did not prove costly, for two reasons:</p>
+<ul>
+<li>The primary ranking criteria was gold medals, and my estimates of gold medals were well calibrated.</li>
+<li>For the first Olympics since the 2000 Olympics, no country recorded a podium sweep!</li>
+</ul>
+<p>I got rather lucky that my biggest mistake in this model process ultimately did not come back to haunt me.</p>
+<h2 id="putting-it-all-together">Putting it all together<a class="anchor" href="#putting-it-all-together">#</a></h2>
+<p>I now had all of the Olympic events and each country&rsquo;s odds of winning a particular medal. By summing up each country&rsquo;s odds of winning an event across the Olympics, I obtained their number of expected gold medals (and then silver, and bronze with the same logic).</p>
+<p>From there, I tried to get a little tricky with my methodology given the tiebreaker methodology. I first ordered countries by their number of expected gold medals. Then, I rounded each country&rsquo;s number of expected gold medals, and grouped them by these rounded figures&ndash;within these groups, I ordered them by their number of silver medals. Finally, I repeated this round-group-sort process for silver -&gt; bronze medals. This resulted in some countries being ranked below above other countries with higher numbers of projected gold medals&ndash;for example, I projected Hungary for 5.4 gold medals and 5.3 silver medals, but I ranked Poland over them with 5.3 gold medals and 5.9 silver medals. The logic behind this is that these countries were likely to tie in terms of total gold medals, and given that there were likely to be tied, I wanted to rank the country with more silver medals higher.</p>
+<h1 id="final-results">Final Results</h1>
+<p>After watching the medal tables with baited breath, I managed to come out on top with the best Kendall&rsquo;s tau!</p>
+<table>
+<thead>
+<tr>
+<th>Forecaster</th>
+<th>Rank</th>
+<th>Tau</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>John Edwards</td>
+<td>1</td>
+<td>0.599</td>
+</tr>
+<tr>
+<td>mohamed</td>
+<td>2</td>
+<td>0.564</td>
+</tr>
+<tr>
+<td>OlymPicks</td>
+<td>3</td>
+<td>0.548</td>
+</tr>
+<tr>
+<td>Hammers_O’Callaghan</td>
+<td>4</td>
+<td>0.542</td>
+</tr>
+<tr>
+<td>ALEC</td>
+<td>5</td>
+<td>0.538</td>
+</tr>
+<tr>
+<td>fa2410</td>
+<td>6</td>
+<td>0.536</td>
+</tr>
+<tr>
+<td>AJM</td>
+<td>7</td>
+<td>0.533</td>
+</tr>
+<tr>
+<td>ChristopherWharton</td>
+<td>8</td>
+<td>0.531</td>
+</tr>
+<tr>
+<td>JKH</td>
+<td>9</td>
+<td>0.512</td>
+</tr>
+<tr>
+<td>Orla_S</td>
+<td>10</td>
+<td>0.510</td>
+</tr>
+<tr>
+<td>KaitoGoto</td>
+<td>11</td>
+<td>0.508</td>
+</tr>
+<tr>
+<td>JoePenn</td>
+<td>13</td>
+<td>0.507</td>
+</tr>
+<tr>
+<td>JohnDSouza</td>
+<td>13</td>
+<td>0.507</td>
+</tr>
+<tr>
+<td>JPN2020</td>
+<td>14</td>
+<td>0.506</td>
+</tr>
+<tr>
+<td>HarrySnart</td>
+<td>15</td>
+<td>0.499</td>
+</tr>
+<tr>
+<td>WilliamBowers</td>
+<td>16</td>
+<td>0.494</td>
+</tr>
+<tr>
+<td>LexieB</td>
+<td>17</td>
+<td>0.493</td>
+</tr>
+<tr>
+<td>ANIK</td>
+<td>18</td>
+<td>0.485</td>
+</tr>
+<tr>
+<td>Rank_Deficient</td>
+<td>19</td>
+<td>0.479</td>
+</tr>
+<tr>
+<td>WeatherQuant</td>
+<td>20</td>
+<td>0.458</td>
+</tr>
+<tr>
+<td>Kizmet24</td>
+<td>21</td>
+<td>0.426</td>
+</tr>
+<tr>
+<td>tghaynes</td>
+<td>22</td>
+<td>0.395</td>
+</tr>
+<tr>
+<td>Everyone_is_(equally)_awesome</td>
+<td>23</td>
+<td>0.000</td>
+</tr>
+</tbody>
+</table>
+<p>I suspect that the differentiating factor here for my submission was my work structuring the contest and navigating the tiebreaker logic. As I mentioned before, I made some mistakes with my modeling work, and I suspect that the event-level predictions were somewhat underfit.</p>
+<p>Still, I was pretty pleased with my predictions. I felt like my biggest takeaway was the impact of the work I did to ensure my predictions were well-calibrated and captured the structure of Olympic events&ndash;doing a good amount of research and pulling in the individual events and participants I felt yielded better results than if I had simply taken past Olympic medal tables and fed them into a model.</p>
+<p>A big thank you to Ben Powell for running this competition! I&rsquo;m looking forward to the next Olympics and perhaps another go-round where I remember that a country can take home more than one medal at some events!</p>
+
+
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/r/">r</a>
+    </li></ul>
+
+ 
+	  
+          <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "johnbedwards" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+
+
+</body>
+
+</html>

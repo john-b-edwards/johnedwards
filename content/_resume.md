@@ -11,8 +11,8 @@ noComment: true
 ## Proficiencies
 
 * R
-  * `caret`
   * `catboost`
+  * `data.table`
   * `ggplot`
   * `shiny`
   * `lme4`
@@ -35,7 +35,9 @@ noComment: true
   * `Dataframes.jl`
   * `Flux.jl`
   * `Plots.jl`
+  * `StatsModels.jl`
   * `MixedModels.jl`
+  * `XGBoost.jl`
 * SQL
 * HTML
 * CSS
@@ -43,12 +45,18 @@ noComment: true
 
 ## Experiences
 
-### Lead Data Scientist, Pitching, Seattle Mariners
+### Manager of Data Science, Seattle Mariners
 #### 2024-Present
 
-I lead the development of projects designed to help assist the Mariners in acquiring and developing
-pitchers, using Hawk-Eye and other data sources. I also assist with player evaluation and acquisiton,
+I manage projects, mentor other data scientists, and develop machine learning models and tools
+for the Mariners baseball operations department. I also assist with player evaluation and acquisition,
 in the draft, trade discussions, and free agency.
+
+### Lead Data Scientist, Pitching, Seattle Mariners
+#### 2024
+
+I led the development of projects designed to help assist the Mariners in acquiring and developing
+pitchers, using Hawk-Eye and other data sources. 
 
 ### Analyst, Seattle Mariners
 #### 2020-2023

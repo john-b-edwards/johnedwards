@@ -8,6 +8,18 @@ toc: false
 noComment: true
 ---
 
+### NFLData.jl
+
+Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package [here](https://julia.nflverse.com/stable/).
+
+### Royal Statistical Society 2024 Olympic Prediction Contest
+
+Finished 1st overall in the RSS's 2024 Olympic Prediction contest. While my code is not available, I have done a high-level writeup of my solution and you can view it [here]((/blog/olympic_prediction_contest/).
+
+### Kaggle 2024 March Mania Contest
+
+Finished 33rd overall in Kaggle's 2024 March Mania contest using using team-strength methods and some minor gaming of the competition.
+
 ### nflverse
 
 Contributor to the open-source NFL data package family `nflverse`. Found obscure API endpoints and built scripts to hit these endpoints, download and clean the sourced data, and then make the data available via the `{nflreadr}` package. You can view the `nflverse` family of packages [here](https://github.com/nflverse).
