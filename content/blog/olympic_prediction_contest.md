@@ -18,7 +18,7 @@ toc: true
 
 I had the pleasure of competing in the [Royal Statistical Society's 2024 Olympics prediction contest.](https://www-users.york.ac.uk/~bp787/RSS_pred_comp_2024.html) I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.
 
-# Contest Overview
+## Contest Overview
 
 This contest involved predicting the medal table for the 2024 Olympics. If you watched the Olympics this year, at some point on the broadcast, you were likely to see a table that represented which country was leading the gold medal count, the total medal count, and so on: this is the medal table! The top of the final medal table for this year's Olympics looked something like this:
 
@@ -51,9 +51,9 @@ The final submission needed to be just a ranking of the NOCs in our predicted or
 203. Belarus
 204. Russia
 
-# My Approach
+## My Approach
 
-## Modeling the structure of the Olympics
+### Modeling the structure of the Olympics
 
 I tried to tackle this as a threefold problem:
 1. I needed to capture data about what events were going on in the Olympics, who was competing in each event, and how medals were awarded for these events.
@@ -62,7 +62,7 @@ I tried to tackle this as a threefold problem:
 
 I realized that if I could do #1 effectively, that would take much of the predictive burden off #2 and yield the best estimate for #3. For example, suppose all I knew was what countries were competing in what events and not what their odds of winning those respective events were. If I assumed even odds of each country winning each event, I would have achieved a solid Kendall's tau, as the countries that participated in the most events had the most opportunities to capture medals (something that played out in the actual final medal table).
 
-## Web scraping
+### Web scraping
 
 To pull down the events, I was able to find an [API for the summer Olympics](https://sph-s-api.olympics.com/summer/schedules/api/ENG/schedule/day/2024-07-29) that reflected the complete schedule for the games: what events were occurring, who was competing in them, what medal events there were, etc. After considerable wrangling, I was able to filter down to just the medal events and determine which countries were competing in each event.
 
@@ -71,15 +71,15 @@ A few events required some special wrangling:
 * The participants for the Mixed Doubles Tennis event [were not announced until after the Olympics were underway,](https://www.itftennis.com/en/news-and-media/articles/mixed-doubles-entries-confirmed-for-paris-2024-olympic-tennis-event/) so at the time I compiled my submission, it was impossible to know which countries would be competing for a medal. I took an educated guess based on which countries had sent at least a men's and women's tennis player to the Olympics.
 * Some athletes were not competing under an individual country but under either the [Individual Netural Athletes NOC](https://olympics.com/ioc/paris-2024-individual-neutral-athletes) or the [IOC Refugee Olympic Team.](https://olympics.com/ioc/refugee-olympic-team) These NOCs were not listed under the sample submission on the website, so I ended up omitting them. 
 
-## Modeling Individual Events
+### Modeling Individual Events
 
 Now that I had all of the events and which countries were competing, my next task was to model the outcomes of each of the events as best I could. I took a twofold approach to get high-quality, well-calibrated estimates.
 
-### Betting Odds
+#### Betting Odds
 
 There was a robust betting market [for the Olympics.](https://www.entaingroup.com/news-insights/latest-news/2024/olympics-2024-record-interest-in-betting-on-the-olympics-for-entain/) While some of these markets were skewed towards the United States or European countries where gambling is legal and popular (as bettors from these countries would tend to bet on their own countries to win), for smaller events with odds, these predictions were reasonably well calibrated (and in hindsight, the markets being skewed towards the United States turned out quite well for my Kendall's tau). For any events where there was betting information available (via FanDuel), I pulled in these odds and used them as my probabilistic estimates of a team or athlete winning.
 
-### Ranking with XGBoost
+#### Ranking with XGBoost
 
 Only some events had betting information available, so I needed a fallback when it was missing. I pulled in the outcomes of previous Olympic events and grouped them by discipline as intuitively as I could (for example, all of the gymnastic events were pooled together). 
 
@@ -87,7 +87,7 @@ From there, I fit a simple XGBoost model to predict the "rank" of each country i
 
 After getting these values, I ran the rankings through [the Harville model for modeling ordinal outcomes](https://rdrr.io/cran/ohenery/man/ohenery.html) which allowed me to get a scaled probabilistic estimate of which country was likely to win an event. 
 
-### Extracting silver and bronze odds
+#### Extracting silver and bronze odds
 
 After combining the betting odds and my own estimates, I had probabilities that a country would win gold but not silver or bronze. To grab these, I did some abominable math using conditional probabilities, the likes of which would probably cause Harville himself to spin in his grave.
 
@@ -106,7 +106,7 @@ I expanded this logic for calculating the odds of getting a bronze medal as well
 
 As I said above, this is almost certainly some bad math: specifically the assumption that if B's odds of getting 1st place among A, B, and C are 20%, then B's odds of getting 1st place among B and C are 66%. However, it yields reasonable-looking and well-calibrated estimates for the odds of getting silver and bronze medals.
 
-### A faulty assumption!
+#### A faulty assumption!
 
 I was so concerned with the bad math that I was doing above that I made a crucial error in my modeling process. In these probabilities, I assumed that if a country won a gold medal, they were excluded from winning silver and bronze. That is the case for team events, but it is certainly not the case for individual events! It is possible for a country to win multiple medals for the same event, and in rare cases, [they can win all three!](https://en.wikipedia.org/wiki/List_of_medal_sweeps_in_Olympic_athletics)
 
@@ -116,7 +116,7 @@ Fortunately, this mistake did not prove costly, for two reasons:
 
 I got rather lucky that my biggest mistake in this process ultimately did not come back to haunt me.
 
-## Putting it all together
+### Putting it all together
 
 I now had all of the Olympic events and each country's odds of winning a particular medal. By summing up each country's odds of winning an event across the Olympics, I obtained their number of expected gold medals (and then silver and bronze with the same logic). From there, I tried to get a little tricky with my methodology given the tiebreaker methodology. 
 
@@ -127,7 +127,7 @@ I now had all of the Olympic events and each country's odds of winning a particu
 
 This resulted in some countries being ranked above other countries with higher numbers of projected gold medals. For example, I projected Hungary for 5.4 gold medals and 5.3 silver medals, but I ranked Poland over them with 5.3 gold medals and 5.9 silver medals. The logic behind this is that these countries were likely to tie in terms of total gold medals, and given that they were likely to be tied, I wanted to rank the country with more silver medals higher.
 
-# Final Results
+## Final Results
 
 After watching the medal tables with baited breath, I managed to come out on top with the best Kendall's tau!
 
