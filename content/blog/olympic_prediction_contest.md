@@ -9,7 +9,7 @@ slug: olympic_prediction_contest
 tags:
 - r
 title: Predicting the Olympics
-toc: false
+toc: true
 ---
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%C3%89preuve_Athl%C3%A9tisme_Jeux_Olympiques_2024_Stade_France_-_Saint-Denis_%28FR93%29_-_2024-08-02_-_138.jpg/1024px-%C3%89preuve_Athl%C3%A9tisme_Jeux_Olympiques_2024_Stade_France_-_Saint-Denis_%28FR93%29_-_2024-08-02_-_138.jpg)
@@ -35,7 +35,7 @@ The goal of the contest was to predict the order of the "NOC"s (National Olympic
 * If you predict that Item 1 is higher than Item 3 and you are wrong, you get -1 for that comparison. 
 * If you predict that Item 2 is higher than Item 3 and Item 2 and Item 3 are tied, you get 0 for that comparison.
 
-In the bulleted example above, our Kendall's tau is the average of our score, or (1 - 1 + 0) / 3 = 3.
+In the bulleted example above, our Kendall's tau is the average of our score, or (1 - 1 + 0) / 3 = 0.
 
 For the RSS competition, the official ranking criteria was gold medals, with ties broken by silver medals, then bronze medals in that order. Any countries with the same number of gold, silver, and bronze medals were considered exactly tied.
 

@@ -204,7 +204,7 @@
 <li>If you predict that Item 1 is higher than Item 3 and you are wrong, you get -1 for that comparison.</li>
 <li>If you predict that Item 2 is higher than Item 3 and Item 2 and Item 3 are tied, you get 0 for that comparison.</li>
 </ul>
-<p>In the bulleted example above, our Kendall&rsquo;s tau is the average of our score, or (1 - 1 + 0) / 3 = 3.</p>
+<p>In the bulleted example above, our Kendall&rsquo;s tau is the average of our score, or (1 - 1 + 0) / 3 = 0.</p>
 <p>For the RSS competition, the official ranking criteria was gold medals, with ties broken by silver medals, then bronze medals in that order. Any countries with the same number of gold, silver, and bronze medals were considered exactly tied.</p>
 <p>The final submission needed to be just a ranking of the NOCs in our predicted order. So a submission would have looked something like:</p>
 <ol>
@@ -513,6 +513,25 @@
           </div>
       </div>
       
+      <div class="toc-container">
+          
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#modeling-the-structure-of-the-olympics">Modeling the structure of the Olympics</a></li>
+    <li><a href="#web-scraping">Web scraping</a></li>
+    <li><a href="#modeling-individual-events">Modeling Individual Events</a>
+      <ul>
+        <li><a href="#betting-odds">Betting Odds</a></li>
+        <li><a href="#ranking-with-xgboost">Ranking with XGBoost</a></li>
+        <li><a href="#extracting-silver-and-bronze-odds">Extracting silver and bronze odds</a></li>
+        <li><a href="#a-faulty-assumption">A faulty assumption!</a></li>
+      </ul>
+    </li>
+    <li><a href="#putting-it-all-together">Putting it all together</a></li>
+  </ul>
+</nav>
+      </div>
+      
     </div>
     
 
@@ -530,6 +549,8 @@
   <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
     data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
 
+  
+    <script src="https://johnbedwards.io/js/table-of-contents.js"></script>
   
 
 
