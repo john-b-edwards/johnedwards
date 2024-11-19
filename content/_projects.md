@@ -10,7 +10,7 @@ noComment: true
 
 ### NFLData.jl
 
-Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package [here](https://julia.nflverse.com/stable/).
+Developed and released an open source Julia package allowing users to easily work with `nflverse` data. You can view the documentation for the package [here](https://julia.nflverse.com/stable/).
 
 ### Royal Statistical Society 2024 Olympic Prediction Contest
 
