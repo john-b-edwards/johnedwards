@@ -14,8 +14,6 @@ params:
   showPageTitleInTOC: no
   twitter: https://twitter.com/John_B_Edwards
   bluesky: https://bsky.app/profile/johnbedwards.io
-  article:
-    bluesky: johnbedwards.io
 markup:
   goldmark:
     renderer:

@@ -20,7 +20,7 @@
           </article>
 	  {{ partial "tags.html" .}} {{ if .Params.pagination }} {{ partial "post-pagination.html" .}} {{ end }}
 	  {{ if not .Params.noComment }}
-          {{ partial "comments.html" . }}
+          {{ template "_internal/disqus.html" . }}
           {{ end }}
           <footer class="post__footer">
             {{ partial "social-icons.html" .}}
