@@ -22,7 +22,7 @@
 	  {{- if .Params.bsky_thread }}
   <h5 style="margin: 2em 0em 1em 0em;">Reply to <a style="text-decoration: underline;" href="{{.Params.bsky_thread}}">this post on Bluesky</a> to leave a comment</h5>
   <div id="comments" data-uri="{{.Params.bsky_thread}}" style="width: 600px; margin-bottom: 2em;"></div>
-  <script src="js/bsky-comments.js"></script>
+  <script src="https://johnbedwards.io/js/bsky-comments.js"></script>
   {{ end }}
           <footer class="post__footer">
             {{ partial "social-icons.html" .}}
