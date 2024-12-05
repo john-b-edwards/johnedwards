@@ -4,7 +4,6 @@ languageCode: en-us
 baseURL: https://johnbedwards.io
 copyright: © 2021
 canonifyURLs: true
-disqusShortname: "johnbedwards"
 params:
   dateFormat: Jan 2 2006
   github: https://github.com/john-b-edwards
