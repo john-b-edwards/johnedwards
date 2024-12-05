@@ -16,6 +16,7 @@ toc: true
 header:
   caption: ''
   image: 'https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png'
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoy2xu2l
 ---
 
 ![social-image](https://github.com/john-b-edwards/johnedwards/raw/main/public/images/stacks/social.png)

@@ -13,6 +13,7 @@ tags:
 - julia
 title: Using Flux.jl to model Scrabble turns
 toc: true
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoy2xt2l
 ---
 
 ![](https://i.imgur.com/pL1MNW7.png)

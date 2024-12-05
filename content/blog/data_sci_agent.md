@@ -11,6 +11,7 @@ tags:
 - python
 title: Google's Data Science Agent is just a Kaggle slop generator
 toc: true
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoy3x52l
 ---
 
 ![Google I/O 2019](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Google_I-O_2019.jpg/800px-Google_I-O_2019.jpg)

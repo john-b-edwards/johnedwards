@@ -18,6 +18,7 @@ tags:
 - old-posts
 title: Applying LRMC Rankings to College Football, Part Two
 toc: false
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoxyzc2l
 ---
 
 _The following [was originally published on the CFBD Blog](https://blog.collegefootballdata.com/talking-tech-applying-lrmc-rankings-to-college-football-part-two/) and has been reproduced here with edits for clarity._

@@ -13,6 +13,7 @@ tags:
 - misc
 title: Lessons from picking the 2022 CFB Season
 toc: false
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoxzyl2l
 ---
 
 ![social-image](https://github.com/john-b-edwards/johnedwards/raw/f724922b0d89b87c1253a9f6974ff2098281216f/themes/hugo-theme-codex/static/football.jpg)

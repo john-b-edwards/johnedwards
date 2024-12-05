@@ -13,6 +13,7 @@ tags:
 - julia
 title: Animating Plays in Julia with Makie.jl
 toc: true
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoy2xv2l
 ---
 
 ![](https://raw.githubusercontent.com/john-b-edwards/random_notebooks/main/Makie_Visualization_files/thumb_play.gif)

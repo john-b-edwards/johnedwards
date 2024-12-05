@@ -14,6 +14,7 @@ tags:
 - r
 title: 2021 March Madness Kaggle Solution
 toc: false
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcjtzoxzyk2l
 ---
 
 Our approach is ensemble the shit out of everything. We will hold out the 2015-2019 games for validation purposes. We will prepare and optimize two sets of models - one, an ensemble of general team strength features trained on 1985-2014 games, and two - an ensemble of general team strength features + adjusted ratings based on box-score data trained on 2002-2014 games. Let's prepare the first approach.
