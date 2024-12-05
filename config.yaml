@@ -8,10 +8,12 @@ params:
   dateFormat: Jan 2 2006
   github: https://github.com/john-b-edwards
   iconOrder:
-    - Twitter
+    - Bluesky
     - GitHub
+    - Twitter
   showPageTitleInTOC: no
   twitter: https://twitter.com/John_B_Edwards
+  bluesky: https://bsky.app/profile/johnbedwards.io
 markup:
   goldmark:
     renderer:
