@@ -10,6 +10,8 @@ tags:
 - r
 title: Predicting the Olympics
 toc: true
+comments:
+  id: "3lbcvotzmec2x"
 ---
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%C3%89preuve_Athl%C3%A9tisme_Jeux_Olympiques_2024_Stade_France_-_Saint-Denis_%28FR93%29_-_2024-08-02_-_138.jpg/1024px-%C3%89preuve_Athl%C3%A9tisme_Jeux_Olympiques_2024_Stade_France_-_Saint-Denis_%28FR93%29_-_2024-08-02_-_138.jpg)
