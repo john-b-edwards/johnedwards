@@ -35,8 +35,6 @@
     <link type="text/css" rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}"/>
   {{ end }}
   
-  <link rel="stylesheet" href="https://unpkg.com/bluesky-comments@0.5.1/dist/bluesky-comments.css">
-  
   {{ range .AlternativeOutputFormats }} 
   {{ printf `<link rel="%s" type="%s+%s" href="%s" title="%s" />` .Rel .MediaType.Type .MediaType.FirstSuffix.Suffix  .Permalink $.Site.Title | safeHTML }} 
   {{ end }} 
