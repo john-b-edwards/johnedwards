@@ -19,9 +19,11 @@
               {{ end }}
           </article>
 	  {{ partial "tags.html" .}} {{ if .Params.pagination }} {{ partial "post-pagination.html" .}} {{ end }}
-	  {{ if not .Params.noComment }}
-          {{ template "_internal/disqus.html" . }}
-          {{ end }}
+	  {{- if .Params.bsky_thread }}
+  <h5 style="margin: 2em 0em 1em 0em;">Reply to <a style="text-decoration: underline;" href="{{.Params.bsky_thread}}">this post on Bluesky</a> to leave a comment</h5>
+  <div id="comments" data-uri="{{.Params.bsky_thread}}" style="width: 600px; margin-bottom: 2em;"></div>
+  <script src="/bsky-comments.js"></script>
+  {{ end }}
           <footer class="post__footer">
             {{ partial "social-icons.html" .}}
             <p>{{ replace .Site.Copyright "{year}" now.Year }}</p>
