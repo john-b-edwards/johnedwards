@@ -840,6 +840,27 @@ print(rating_df.sort_values(by=['lrmc_rating'], ascending=False).iloc[0:25])
   
 </div>
  
+	  
+          <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18",
+    "react-dom": "https://esm.sh/react-dom@18"
+  }
+}
+</script>
+<script type="module">
+  import BlueskyComments from 'https://unpkg.com/bluesky-comments@0.5.1/dist/bluesky-comments.es.js';
+  document.addEventListener('DOMContentLoaded', function() {
+    const author = 'johnbedwards.io';
+    BlueskyComments.init('bluesky-comments', {
+      uri,
+      author,
+      commentFilters: [BlueskyComments.Filters.NoPins],
+    });
+  });
+</script>
+          
           <footer class="post__footer">
             
 
@@ -898,26 +919,6 @@ print(rating_df.sort_values(by=['lrmc_rating'], ascending=False).iloc[0:25])
     data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
 
   
-  
-            <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18",
-    "react-dom": "https://esm.sh/react-dom@18"
-  }
-}
-</script>
-<script type="module">
-  import BlueskyComments from 'https://unpkg.com/bluesky-comments@0.5.1/dist/bluesky-comments.es.js';
-  document.addEventListener('DOMContentLoaded', function() {
-    const author = 'johnbedwards.io';
-    BlueskyComments.init('bluesky-comments', {
-      uri,
-      author,
-      commentFilters: [BlueskyComments.Filters.NoPins],
-    });
-  });
-</script>
 
 
 </body>

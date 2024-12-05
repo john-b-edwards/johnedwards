@@ -19,6 +19,27 @@
               {{ end }}
           </article>
 	  {{ partial "tags.html" .}} {{ if .Params.pagination }} {{ partial "post-pagination.html" .}} {{ end }}
+	  {{ if not .Params.noComment }}
+          <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18",
+    "react-dom": "https://esm.sh/react-dom@18"
+  }
+}
+</script>
+<script type="module">
+  import BlueskyComments from 'https://unpkg.com/bluesky-comments@0.5.1/dist/bluesky-comments.es.js';
+  document.addEventListener('DOMContentLoaded', function() {
+    const author = 'johnbedwards.io';
+    BlueskyComments.init('bluesky-comments', {
+      uri,
+      author,
+      commentFilters: [BlueskyComments.Filters.NoPins],
+    });
+  });
+</script>
+          {{ end }}
           <footer class="post__footer">
             {{ partial "social-icons.html" .}}
             <p>{{ replace .Site.Copyright "{year}" now.Year }}</p>
@@ -46,25 +67,5 @@
   {{ if .Params.toc }}
     <script src="/js/table-of-contents.js"></script>
   {{ end }}
-  
-            <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18",
-    "react-dom": "https://esm.sh/react-dom@18"
-  }
-}
-</script>
-<script type="module">
-  import BlueskyComments from 'https://unpkg.com/bluesky-comments@0.5.1/dist/bluesky-comments.es.js';
-  document.addEventListener('DOMContentLoaded', function() {
-    const author = 'johnbedwards.io';
-    BlueskyComments.init('bluesky-comments', {
-      uri,
-      author,
-      commentFilters: [BlueskyComments.Filters.NoPins],
-    });
-  });
-</script>
 
 {{ end }}
