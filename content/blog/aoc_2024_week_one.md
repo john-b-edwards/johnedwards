@@ -9,7 +9,7 @@ tags:
 - julia
 title: Advent of Code Week 1
 toc: true
-bsky_thread: 
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcr3aqnnhc2y
 ---
 
 ## Introduction
