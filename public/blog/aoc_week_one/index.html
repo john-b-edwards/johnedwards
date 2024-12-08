@@ -141,10 +141,10 @@
 >module</a>
  to grab the example and the input. Pulling in the example was a little tricky, I had to do some intelligent parsing of the problem description to figure out where the example might live. Pulling in the actual input was much easier, as it lives as a raw .txt file at an easy to query URL (adventofcode.com/{year}/day/{day}/input).</p>
 <p>I used the <code>HTTP.jl</code> package to query each resource, then used some string splitting utilities to parse inputs. I return the inputs as a nested vector, where each element of the first-level vector is each line of the input, and the second-level vector is each element in each line. This makes it pretty easy to iterate through both structured inputs (say, the input represents a matrix of numbers or characters) or unstructured inputs (say, the input represents a series of instructions of various lengths). I also tried to include some logic to do sensible type parsing (so if all of the values <em>could</em> be converted to integers, the module will perform this conversion automatically).</p>
-<h2 id="day-1-historian-hysteriahttpsadventofcodecom2024day1"><a href="https://adventofcode.com/2024/day/1" 
+<h2 id="day-one-historian-hysteriahttpsadventofcodecom2024day1"><a href="https://adventofcode.com/2024/day/1" 
   
    target="_blank" rel="noreferrer noopener" 
->Day 1: Historian Hysteria</a>
+>Day One: Historian Hysteria</a>
 </h2>
 <pre><code class="language-julia"># input
 include(&quot;Utils.jl&quot;)
@@ -605,7 +605,7 @@ println(sum(test_line.(input, [[&quot;+&quot;,&quot;*&quot;,&quot;||&quot;]])))
   <ul>
     <li><a href="#introduction">Introduction</a></li>
     <li><a href="#data-input">Data input</a></li>
-    <li><a href="#day-1-historian-hysteriahttpsadventofcodecom2024day1"><a href="https://adventofcode.com/2024/day/1">Day 1: Historian Hysteria</a></a>
+    <li><a href="#day-one-historian-hysteriahttpsadventofcodecom2024day1"><a href="https://adventofcode.com/2024/day/1">Day One: Historian Hysteria</a></a>
       <ul>
         <li><a href="#part-one">Part One</a></li>
         <li><a href="#part-two">Part Two</a></li>

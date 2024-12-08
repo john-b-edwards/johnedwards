@@ -24,7 +24,7 @@ To make this a little easier on myself, I put together a [module](https://github
 
 I used the `HTTP.jl` package to query each resource, then used some string splitting utilities to parse inputs. I return the inputs as a nested vector, where each element of the first-level vector is each line of the input, and the second-level vector is each element in each line. This makes it pretty easy to iterate through both structured inputs (say, the input represents a matrix of numbers or characters) or unstructured inputs (say, the input represents a series of instructions of various lengths). I also tried to include some logic to do sensible type parsing (so if all of the values *could* be converted to integers, the module will perform this conversion automatically).
 
-## [Day 1: Historian Hysteria](https://adventofcode.com/2024/day/1)
+## [Day One: Historian Hysteria](https://adventofcode.com/2024/day/1)
 
 ``` julia
 # input
