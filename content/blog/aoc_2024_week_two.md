@@ -9,7 +9,7 @@ tags:
 - julia
 title: 2024 Advent of Code Week 2
 toc: false
-bsky_thread: 
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3ldchqy467k2f 
 ---
 
 ## Introduction
