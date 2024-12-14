@@ -1,13 +1,13 @@
 ---
 date: "2024-12-07"
-description: My write up of the first week of Advent of Code problems
+description: My write-up of the first week of Advent of Code problems
 draft: false
 keywords:
 - julia
-slug: aoc_week_one
+slug: aoc_2024_week_one
 tags:
 - julia
-title: Advent of Code Week 1
+title: 2024 Advent of Code Week 1
 toc: false
 bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lcr3aqnnhc2y
 ---

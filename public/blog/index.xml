@@ -7,13 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Sat, 07 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 14 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Advent of Code Week 1</title>
-      <link>https://johnbedwards.io/blog/aoc_week_one/</link>
+      <title>2024 Advent of Code Week 2</title>
+      <link>https://johnbedwards.io/blog/aoc_2024_week_two/</link>
+      <pubDate>Sat, 14 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/aoc_2024_week_two/</guid>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here . Let&amp;rsquo;s dive in!</description>
+    </item>
+    
+    <item>
+      <title>2024 Advent of Code Week 1</title>
+      <link>https://johnbedwards.io/blog/aoc_2024_week_one/</link>
       <pubDate>Sat, 07 Dec 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://johnbedwards.io/blog/aoc_week_one/</guid>
+      <guid>https://johnbedwards.io/blog/aoc_2024_week_one/</guid>
       <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! This is my write-up of the first week of AOC problems that I completed&amp;ndash;as these problems progressively get more difficult, I anticipate splitting these posts into chunks that cover fewer days but are more comprehensive.</description>
     </item>
     

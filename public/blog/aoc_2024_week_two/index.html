@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>2024 Advent of Code Week 2 | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="My write-up of the second week of Advent of Code problems">
+  <meta name="keywords" content="julia">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2024 Advent of Code Week 2" />
+  <meta name="twitter:description" content="My write-up of the second week of Advent of Code problems"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "2024 Advent of Code Week 2",
+      "headline" : "2024 Advent of Code Week 2",
+      "description" : "My write-up of the second week of Advent of Code problems",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2024",
+      "datePublished": "2024-12-14 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2024-12-14 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/aoc_2024_week_two\/",
+      "wordCount" : "4260",
+      "keywords" : ["julia", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">2024 Advent of Code Week 2</h1>
+            <time datetime="2024-12-14 00:00:00 &#43;0000 UTC" class="post__date">Dec 14 2024</time> 
+          </header>
+          <article class="post__content">
+              
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction">#</a></h2>
+<p>The <a href="https://adventofcode.com/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Advent of Code</a>
+ (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&rsquo;d like to see my work in completing the first week of AOC problems, click <a href="https://johnbedwards.io/blog/aoc_2024_week_one/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>here</a>
+. Let&rsquo;s dive in!</p>
+<h2 id="day-eight-resonant-collinearityhttpsadventofcodecom2024day8"><a href="https://adventofcode.com/2024/day/8" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Eight: Resonant Collinearity</a>
+</h2>
+<pre><code class="language-julia"># input
+include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,8)
+input = split.(input,&quot;&quot;)
+input = mapreduce(permutedims, vcat, input)
+</code></pre>
+<pre><code>12×12 Matrix{SubString{String}}:
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;0&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;0&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;0&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;0&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;A&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;A&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;A&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+</code></pre>
+<h3 id="part-one">Part One<a class="anchor" href="#part-one">#</a></h3>
+<p>The premise of part one is that there are a series of antennae broadcasting signals&ndash;each non-dot character reflects an antennae, and each character corresponds to the frequency broadcast by each antenna. For every pair of antennae broadcasting on the same frequency, there are two &ldquo;antinodes&rdquo; created that are along the straight line running through the antennae, a distance from each antenna corresponding to how far apart the two antennae are, in the opposite direction. See the example below, where <code>a</code> is an antenna broadcasting along the <code>a</code> frequency, and <code>#</code> is the location of an antinode. Note that antinodes can overlap with other antinodes.</p>
+<pre><code>..........
+...#......
+..........
+....a.....
+..........
+.....a....
+..........
+......#...
+..........
+..........
+</code></pre>
+<p>The task is to find how many unique locations within the bounds of the map contain antinodes.</p>
+<p>For this, I wrote a quick helper function to test if a value is inbounds of a matrix. I should probably add this to <code>Utils.jl</code>, it seems like I use this logic a lot.</p>
+<pre><code class="language-julia">inbounds_test(node, rows, cols) = (node[1] &lt;= rows) &amp; (node[1] &gt; 0) &amp; (node[2] &lt;= cols) &amp; (node[2] &gt; 0)
+</code></pre>
+<p>I then grabbed all the different frequencies from the input matrix.</p>
+<pre><code class="language-julia">chars = [string(char) for char in unique(Iterators.flatten(input)) if char != '.']
+</code></pre>
+<p>Next, I made an empty string matrix the same size as the input matrix for tracking antinode locations.</p>
+<pre><code class="language-julia">rows,cols = size(input)
+refmat = fill(&quot;.&quot;,(rows,cols))
+</code></pre>
+<p>Finally, I iterated over all antennae operating with the same frequency&ndash;for each antenna, I iterated over all other antenna on that frequency, calculated, and plotted an antinode. After that, I just found how many spots had at least one antinode to find my solution.</p>
+<pre><code class="language-julia">for char in chars
+    for pair in Iterators.product(findall(x-&gt;x == char, input),findall(x-&gt;x == char, input))
+        if pair[1] != pair[2]
+            antinode_one, antinode_two = pair[1] + (pair[1] - pair[2]), pair[2] + (pair[2] - pair[1])
+            if inbounds_test(antinode_one, rows, cols) refmat[antinode_one] = &quot;#&quot; end
+            if inbounds_test(antinode_two, rows, cols) refmat[antinode_two] = &quot;#&quot; end
+        end
+    end
+end
+println(length(findall(x-&gt;x == &quot;#&quot;, refmat)))
+</code></pre>
+<pre><code>14
+</code></pre>
+<h3 id="part-two">Part Two<a class="anchor" href="#part-two">#</a></h3>
+<p>The next part revealed that antinodes actually existed at any point exactly in line with any two antennae, extending across the matrix. In the example below, <code>T</code> represents antennae operating along the <code>T</code> frequency, and <code>#</code> represents the new location of antinodes. Of note, antennae themselves <em>are now also considered antinodes</em>.</p>
+<pre><code>T....#....
+...T......
+.T....#...
+.........#
+..#.......
+..........
+...#......
+..........
+....#.....
+..........
+</code></pre>
+<p>Our task was to again find all unique antinode locations.</p>
+<p>This required a slight modification to the loop we used before&ndash;rather than plot one antinode from each antenna pair, we needed to plot all these resonant antinodes. To do this, I created a &ldquo;vector&rdquo; that reflected the spatial difference between two antennae, then from each antenna, I updated the grid to reflect an antinode. From that new antinode, I treated that as an antenna, and moved along the same vector, updating the value again, until we reached the boundaries of the map.</p>
+<pre><code class="language-julia">refmat = fill(&quot;.&quot;,(rows,cols))
+for char in chars
+    for pair in Iterators.product(findall(x-&gt;x == char, input),findall(x-&gt;x == char, input))
+        if pair[1] != pair[2]
+            antinode_one, antinode_two = pair[1] + (pair[1] - pair[2]), pair[2] + (pair[2] - pair[1])
+            while inbounds_test(antinode_one, rows, cols) 
+                refmat[antinode_one] = &quot;#&quot; 
+                antinode_one = antinode_one + (pair[1] - pair[2])
+            end
+            while inbounds_test(antinode_two, rows, cols) 
+                refmat[antinode_two] = &quot;#&quot; 
+                antinode_two = antinode_two + (pair[2] - pair[1])
+            end
+        end
+    end
+end
+println(length(unique(cat(findall(x-&gt;x != &quot;.&quot;, refmat),findall(x-&gt;x != &quot;.&quot;,input),dims=1))))
+</code></pre>
+<pre><code>34
+</code></pre>
+<h2 id="day-nine-disk-fragmenterhttpsadventofcodecom2024day9"><a href="https://adventofcode.com/2024/day/9" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Nine: Disk Fragmenter</a>
+</h2>
+<pre><code class="language-julia"># input
+include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,9)
+input = split(string(input[1]),&quot;&quot;)
+</code></pre>
+<pre><code>19-element Vector{SubString{String}}:
+ &quot;2&quot;
+ &quot;3&quot;
+ &quot;3&quot;
+ &quot;3&quot;
+ &quot;1&quot;
+ &quot;3&quot;
+ &quot;3&quot;
+ &quot;1&quot;
+ &quot;2&quot;
+ &quot;1&quot;
+ &quot;4&quot;
+ &quot;1&quot;
+ &quot;4&quot;
+ &quot;1&quot;
+ &quot;3&quot;
+ &quot;1&quot;
+ &quot;4&quot;
+ &quot;0&quot;
+ &quot;2&quot;
+</code></pre>
+<p>We&rsquo;re provided with a dense file format which reflects where files are stored on a disk and how much free space is on the disk. The first number in the file format reflects the space allocated to file id <code>0</code>. The second number reflects the size of empty space stored after file id <code>0</code>. Then the third number reflects the space allocated to file id <code>1</code>, then the fourth reflects empty space stored after <code>1</code>, and so on. For disk map <code>12345</code>, the file space allocated to each file and the empty space available can be represented as:</p>
+<pre><code>0..111....22222
+</code></pre>
+<p>Where <code>0</code> is the ID of the first file (which takes up one block), <code>1</code> is the ID of the second file (which takes up three blocks), and <code>2</code> is the id of the third file (which takes up five blocks).</p>
+<p>Our task is to move files one block at a time from the right to the left to fill in the empty spaces, such that there are no remaining gaps between files. For the example above, this process would look like:</p>
+<pre><code>0..111....22222
+02.111....2222.
+022111....222..
+0221112...22...
+02211122..2....
+022111222......
+</code></pre>
+<p>From there, we need to calculate the filesystem checksum, which involves multiplying the position of each block (0 indexed) by its file ID number and then summing those values.</p>
+<h3 id="part-one-1">Part One<a class="anchor" href="#part-one-1">#</a></h3>
+<p>I first converted my input to the full-sized representation of the file format, then found the location of all of the empty and full spaces.</p>
+<pre><code class="language-julia">my_vec = collect(Base.Iterators.flatten([ifelse(i % 2 == 1,
+    collect(Base.Iterators.repeated(floor(i / 2), parse(Int64, input[i]))),
+    repeat([&quot;.&quot;], parse(Int64, input[i])))
+    for i in eachindex(input)
+]))
+empty = findall(x -&gt; x == &quot;.&quot;,my_vec)
+full = findall(x -&gt; x!= &quot;.&quot;,my_vec)
+</code></pre>
+<p>From there, I reversed the original vector and took a slice equivalent in length to all of the empty spaces, then reversed that. I then assigned that slice to all of the empty spaces, then sliced from left-to-right the first occurrence through the length of the all full values, then finally calculated the checksum.</p>
+<pre><code class="language-julia">my_vec[empty] = reverse(my_vec[full])[1:length(empty)]
+my_vec = my_vec[1:length(full)]
+println(Int(calc_checksum(my_vec)))
+</code></pre>
+<pre><code>1928
+</code></pre>
+<h3 id="part-two-1">Part Two<a class="anchor" href="#part-two-1">#</a></h3>
+<pre><code class="language-julia">my_vec = collect(Base.Iterators.flatten([ifelse(i % 2 == 1,
+    collect(Base.Iterators.repeated(floor(i / 2), parse(Int64, input[i]))),
+    repeat([&quot;.&quot;], parse(Int64, input[i])))
+    for i in eachindex(input)
+]))
+</code></pre>
+<p>For the second part, our challenge remained much the same, only now&ndash;we needed to move the files in <em>blocks</em> (and only moving them if there was adequate space). So for this example:</p>
+<pre><code>1..22..3..444
+</code></pre>
+<p>We would be unable to move the <code>444</code> file, because there is not empty space to fill it anywhere. However, we could move the <code>3</code> file, because there is empty space between <code>1</code> and <code>22</code>.</p>
+<pre><code>13.22.....444
+</code></pre>
+<p>To solve part two, I first grabbed all unique file ids.</p>
+<pre><code class="language-julia">file_types = reverse([file for file in unique(my_vec) if (file != &quot;.&quot;) &amp; (file != 0)])
+</code></pre>
+<p>From there, I iterated over each file type in reverse (so going from right to left), and grabbed the location and size of each file block. Then, I iterated left-to-right, trying to find an adequately-sized file space to hold the moving file. If such a space existed, I reallocated the file to the space. Finally, I recalculated the checksum.</p>
+<p>This took a little bit of time thanks to all the allocations I was making&ndash;using the <a href="https://docs.julialang.org/en/v1/base/arrays/#Views-%28SubArrays-and-other-view-types%29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>view</code> functionality in Julia</a>
+ helped speed things up a good bit. Still, this solution could be improved a lot.</p>
+<pre><code class="language-julia">for file_type in file_types
+    file_loc = findall(x-&gt;x == file_type,my_vec)
+    n_blocks = length(file_loc)
+    j = findfirst(x-&gt;x == collect(Base.Iterators.repeated(&quot;.&quot;,n_blocks)),
+        ((@view my_vec[i:i+n_blocks-1]) for i in 1:1:file_loc[1]))
+    if !isnothing(j)
+        my_vec[j:(j + n_blocks-1)] = my_vec[file_loc]
+        my_vec[file_loc] .= &quot;.&quot;
+    end
+end
+println(Int(calc_checksum(my_vec)))
+</code></pre>
+<pre><code>2858
+</code></pre>
+<h2 id="day-10-hoof-ithttpsadventofcodecom2024day10"><a href="https://adventofcode.com/2024/day/10" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day 10: Hoof It</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,10,false,override=&quot;89010123
+78121874
+87430965
+96549874
+45678903
+32019012
+01329801
+10456732&quot;)
+input = split.(input,&quot;&quot;)
+input = [parse.(Int64, x) for x in input]
+input = mapreduce(permutedims, vcat, input)
+</code></pre>
+<pre><code>8×8 Matrix{Int64}:
+ 8  9  0  1  0  1  2  3
+ 7  8  1  2  1  8  7  4
+ 8  7  4  3  0  9  6  5
+ 9  6  5  4  9  8  7  4
+ 4  5  6  7  8  9  0  3
+ 3  2  0  1  9  0  1  2
+ 0  1  3  2  9  8  0  1
+ 1  0  4  5  6  7  3  2
+</code></pre>
+<h3 id="part-one-2">Part One<a class="anchor" href="#part-one-2">#</a></h3>
+<p>Day 10 provided us a map with a list of levels. Starting at the &ldquo;trailhead&rdquo; <code>0</code>, we can only proceed to a new square if moving to a square with a number that is exactly one more than our originating square, and our hiking path terminates when we reach a &ldquo;summit&rdquo; (a value of <code>9</code>.</p>
+<p>Each trailhead has a score corresponding to the number of summits it can reach. Our task is to find the sum of the scores of all trailheads.</p>
+<p>To begin, I found the locations of all trailheads.</p>
+<pre><code class="language-julia">trailheads = findall(x-&gt;x == 0, input)
+</code></pre>
+<p>After that, I wrote a function to perform a <a href="https://en.wikipedia.org/wiki/Depth-first_search" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>depth-first search</a>
+ through the matrix. The depth-first search provides all feasible paths to reach a summit, so to calculate the score for part one, I provided an argument to filter to just unique summits, rather than unique paths. Finally, I broadcast this function to each trailhead and summed the returned number of unique trailheads.</p>
+<pre><code class="language-julia">function find_path(trailhead, input, unique_paths)
+    found, queue = [], [trailhead]
+    while queue != []
+        v = pop!(queue)
+        if input[v] == 9
+            push!(found, v)
+        else
+            for i in -1:1, j in -1:1
+                if (abs(i) != abs(j)) &amp;&amp; 
+                    (v[1] + i &gt; 0) &amp; 
+                    (v[1] + i &lt;= size(input)[1]) &amp; 
+                    (v[2] + j &gt; 0) &amp; 
+                    (v[2] + j &lt;= size(input)[2]) &amp;&amp; 
+                    (input[v[1] + i, v[2] + j] == input[v] + 1)
+                    push!(queue, CartesianIndex(v[1] + i, v[2] + j))
+                end
+            end
+        end
+    end
+    return ifelse(unique_paths, length(unique(found)), length(found))
+end
+println(sum(find_path.(trailheads, [input], [true])))
+</code></pre>
+<pre><code>36
+</code></pre>
+<h3 id="part-two-2">Part Two<a class="anchor" href="#part-two-2">#</a></h3>
+<p>The wrinkle for part two was that we needed to find the number of distinct feasible trails-to-summits that originated from each trailhead (as multiple paths to the same summit are possible).</p>
+<p>This proved a cinch, as all I needed to do was simply return the number of distinct paths rather than the number of distinct summits.</p>
+<pre><code class="language-julia">println(sum(find_path.(trailheads, [input], [false])))
+</code></pre>
+<pre><code>81
+</code></pre>
+<h2 id="day-11-plutonian-pebbleshttpsadventofcodecom2024day11"><a href="https://adventofcode.com/2024/day/11" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day 11: Plutonian Pebbles</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = [125, 17]
+</code></pre>
+<pre><code>2-element Vector{Int64}:
+ 125
+  17
+</code></pre>
+<h3 id="part-one-3">Part One<a class="anchor" href="#part-one-3">#</a></h3>
+<p>For this problem, we are presented with a series of strange, magic stones, each engraved with a number. While staring at the stones, every time we blink, the stones change according to the following rules:</p>
+<ul>
+<li>
+<p>If the stone is engraved with the number 0, the stone is replaced with a stone engraved with the number 1.</p>
+</li>
+<li>
+<p>If the stone is engraved with a number with an even number of digits, the stone is replaced with two stones, the first stone with the first half of digits, the second stone with the second half of digits. So a stone engraved with 101001 becomes two stones, one engraved with 101 and the other engraved with 1.</p>
+</li>
+<li>
+<p>If none of the above rules apply, the number on the stone is multiplied by 2024. So a stone engraved with 2 is replaced by a stone engraved with 4048.</p>
+</li>
+</ul>
+<p>Our task is to find how many stones we have after 25 blinks.</p>
+<p>This was a tricky problem, deliberately designed to force users to rely on efficient memory storage. Writing a <code>for</code> loop and keeping track of all of the stones in a vector would result in the vector and operations involving the vector becoming too unwieldy after many iterations.</p>
+<p>The trick here came from keeping track not of individual vector elements, rather, keeping track of the numbers engraved on the stone. For example, five stones each engraved with <code>2</code> after one step will follow identical cycles in the above rules, so rather than storing them in a vector like this: <code>[2 2 2 2 2]</code>, it was more efficient to store them in a dictionary like this: <code>Dict(2 =&gt; 5)</code>.</p>
+<p>I first wrote a function that applies the rules of the loop to a given number.</p>
+<pre><code class="language-julia">function process_loop(x)
+    dig = length(digits(x))
+    if x == 0
+        return [1]
+    elseif dig % 2 == 0
+        return [Int(floor(x / 10 ^ (dig/2))), Int(x - floor(x / 10 ^ (dig/2)) * 10 ^ (dig/2))]
+    else
+        return [x * 2024]
+    end
+end
+</code></pre>
+<p>Then, I wrote a function that would take in an input an apply the looping rules n-times, keeping track of the stones as value =&gt; count pairs in a dictionary, and updating the counts with the rules, rather than individual elements. At the conclusion of blinking a number of times, I return the total number of counts we tracked in the dictionary.</p>
+<pre><code class="language-julia">function my_loop(input, times)
+    loop_counts = Dict(i =&gt; sum(input .== i) for i in unique(input))
+    for n in 1:times
+        new_dict = Dict()
+        for x in keys(loop_counts)
+            count = loop_counts[x]
+            vals = process_loop(x)
+            for val in vals
+                new_dict[val] = get(new_dict, val, 0) + count
+            end
+        end
+        loop_counts = new_dict
+    end
+    return sum([loop_counts[x] for x in keys(loop_counts)])
+end
+println(my_loop(input, 25))
+</code></pre>
+<pre><code>55312
+</code></pre>
+<h3 id="part-two-3">Part Two<a class="anchor" href="#part-two-3">#</a></h3>
+<p>The second part was identical to the first, only we needed to find the number of stones after 75 blinks. This rendered essentially any other memory allocation scheme other than the above impossible (which I learned the hard way)!</p>
+<pre><code class="language-julia">println(my_loop(input, 75))
+</code></pre>
+<pre><code>65601038650482
+</code></pre>
+<h2 id="day-12-garden-groupshttpsadventofcodecom2024day12"><a href="https://adventofcode.com/2024/day/12" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day 12: Garden Groups</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,12)
+input = split.(input,&quot;&quot;)
+input = mapreduce(permutedims, vcat, input)
+input = [string(x) for x in input]
+</code></pre>
+<pre><code>4×4 Matrix{String}:
+ &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;
+ &quot;B&quot;  &quot;B&quot;  &quot;C&quot;  &quot;D&quot;
+ &quot;B&quot;  &quot;B&quot;  &quot;C&quot;  &quot;C&quot;
+ &quot;E&quot;  &quot;E&quot;  &quot;E&quot;  &quot;C&quot;
+</code></pre>
+<h3 id="part-one-4">Part One<a class="anchor" href="#part-one-4">#</a></h3>
+<p>This problem involves plots of vegetables&ndash;each vegetable represented by a letter like <code>A</code> and stored in a grid. Each plot of connected vegetables needs a fence around it, and the cost of the fence is equivalent to the number of fence piences needed to surround a fence times the number of plants within the fence. In the example input, the fences around each group of plants look like this:</p>
+<pre><code>+-+-+-+-+
+|A A A A|
++-+-+-+-+     +-+
+              |D|
++-+-+   +-+   +-+
+|B B|   |C|
++   +   + +-+
+|B B|   |C C|
++-+-+   +-+ +
+          |C|
++-+-+-+   +-+
+|E E E|
++-+-+-+
+</code></pre>
+<p>So <code>A</code> has 10 fence pieces and contains 4 plants, so the cost of the fence around <code>A</code> is 40. <code>E</code> has 8 fence pieces and contains 3 plants, so its fence costs 24. For the first part, we need to calculate the cost of fencing for all plants.</p>
+<p>For the first part, I went through each space and, with a <a href="https://en.wikipedia.org/wiki/Breadth-first_search" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>breadth-first search</a>
+, identified each unique grouping of plants and the locations of each.</p>
+<pre><code class="language-julia">inbounds(G, v) = (v[1] &gt; 0) &amp; (v[1] &lt;= size(G)[1]) &amp; (v[2] &gt; 0) &amp; (v[2] &lt;= size(G)[2])
+function find_all_in_group(G, root)
+    Q = [root]
+    explored = [root]
+    valid = [root]
+    while Q != []
+        v = pop!(Q)
+        for (i,j) in [(-1,0),(1,0),(0,-1,),(0,1)]
+            if inbounds(G, (v[1] + i,v[2] + j)) &amp;&amp; 
+                G[CartesianIndex(v[1] + i, v[2] + j)] == G[root] &amp;&amp; 
+                !in(CartesianIndex(v[1] + i, v[2] + j), explored)
+                push!.([Q,valid,explored], [CartesianIndex(v[1] + i, v[2] + j)])
+            end
+        end
+    end
+    return valid
+end
+groups = unique(collect(Iterators.flatten([[sort(find_all_in_group(input, CartesianIndex(i,j))) 
+for i in 1:size(input)[1]] for j in 1:size(input)[2]])))
+</code></pre>
+<p>From there, I needed to calculate the number of fence units needed to surround each square. I did this with some simple logic&ndash;for each plant within the group, if any of the adjacent squares to that plant (up, down, left, and right) were <em>not</em> in the group, then the plant required a fence unit.</p>
+<pre><code class="language-julia">function calc_value_1(group)
+    return sum([(4 - sum(in.(CartesianIndex.(
+            [(g[1] + 1, g[2]),(g[1] - 1, g[2]),(g[1], g[2] + 1),(g[1], g[2] - 1)]
+        ),[group]))) for g in group]) * length(group)
+end
+println(sum(calc_value_1.(groups)))
+</code></pre>
+<pre><code>140
+</code></pre>
+<h3 id="part-two-4">Part Two<a class="anchor" href="#part-two-4">#</a></h3>
+<p>For the second part, rather than determine the price based on the number of fence units, we just needed to determine the price based on the total number of <strong>sides</strong> needed to fence in each unit. So for the example above, <code>A</code> has just 4 sides, but <code>C</code> has 8 sides, so the cost of <code>A</code> is 16 and the cost of <code>C</code> is 32.</p>
+<p>This problem got much easier when I stopped looking for sides and started looking for corners&ndash;a basic rule of geometry is that a closed shape must have as many corners as it does sides. This here looks quite messy, but at a high level, it creates a 2x2 window and iterates over the matrix, looking for instances where just one element of the group exists within the window (which must be a corner, by definition) or instances where two elements of the group exist diagonal to each other with the other two elements are not a part of the group (which is <em>two</em> corners).</p>
+<pre><code class="language-julia">function calc_value_2(group)
+    return length(group) * 
+    sum(sum([[
+        ifelse(sum(in.(CartesianIndex.([(i,j),(i,j+1),(i+1,j),(i+1,j+1)]), [group])) in [1,3],1,
+        ifelse(((CartesianIndex(i,j) in group) &amp; (CartesianIndex(i+1,j+1) in group) &amp; !(CartesianIndex(i,j+1) in group) &amp; !(CartesianIndex(i+1,j) in group)) | 
+        ((CartesianIndex(i,j+1) in group) &amp; (CartesianIndex(i+1,j) in group) &amp; !(CartesianIndex(i+1,j+1) in group) &amp; !(CartesianIndex(i,j) in group)),2,0)) 
+        for i in 1:size(new_input)[1]-1] 
+            for j in 1:size(new_input)[2]-1]))
+end
+sum(calc_value_2.(groups))
+</code></pre>
+<pre><code>80
+</code></pre>
+<h2 id="day-13-claw-contraptionhttpsadventofcodecom2024day13"><a href="https://adventofcode.com/2024/day/13" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day 13: Claw Contraption</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,13)
+input = [Dict(&quot;button_a&quot; =&gt; (parse(Int64,input[x-2][3][2:end-1]),parse(Int64,input[x-2][4][2:end])),
+              &quot;button_b&quot; =&gt; (parse(Int64,input[x-1][3][2:end-1]),parse(Int64,input[x-1][4][2:end])),
+              &quot;prize&quot; =&gt; (parse(Int64,input[x][2][3:end-1]),parse(Int64,input[x][3][3:end]))) 
+        for x in 3:3:length(input)]
+</code></pre>
+<pre><code>4-element Vector{Dict{String, Tuple{Int64, Int64}}}:
+ Dict(&quot;button_a&quot; =&gt; (94, 34), &quot;button_b&quot; =&gt; (22, 67), &quot;prize&quot; =&gt; (8400, 5400))
+ Dict(&quot;button_a&quot; =&gt; (26, 66), &quot;button_b&quot; =&gt; (67, 21), &quot;prize&quot; =&gt; (12748, 12176))
+ Dict(&quot;button_a&quot; =&gt; (17, 86), &quot;button_b&quot; =&gt; (84, 37), &quot;prize&quot; =&gt; (7870, 6450))
+ Dict(&quot;button_a&quot; =&gt; (69, 23), &quot;button_b&quot; =&gt; (27, 71), &quot;prize&quot; =&gt; (18641, 10279))
+</code></pre>
+<p>This problem involves a series of claw machines. Each machine has two buttons, <code>A</code> and <code>B</code>. Pushing button <code>A</code> costs 3 tokens, pushing button <code>B</code> costs 1 token. For the first claw machine above, pushing button <code>A</code> will move the claw from the <code>x,y</code> coordinates of <code>0,0</code> to <code>94,34</code>, and pushing it again will move the claw unit another 94 units over and another 34 units up to <code>188,68</code>. Pushing button <code>B</code> will move the claw 22 units over and 67 units up. Eventually, you want to combine <code>A</code> pushes and <code>B</code> pushes to reach the location of the <code>prize</code>, <code>8400,5400</code>, exactly.</p>
+<p>Not every machine is feasible&ndash;for the first machine, pushing button <code>A</code> 80 times and pushing button <code>B</code> 40 times gets you to exactly <code>8400,5400</code>, but there is not combination of pushes for the second machine that will allow you to reach <code>12748,12176</code>.</p>
+<p>For part one, we need to find the minimum number of tokens to spend to get all feasible prizes from every machine, given that we can only push <code>A</code> and <code>B</code> at most 100 times each.</p>
+<p>I recognized this as a <a href="https://www.mathworks.com/help/optim/ug/mixed-integer-linear-programming-algorithms.html" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Mixed-Integer Linear Programming</a>
+ problem. Beyond simply solving each matrix for a solution, we specifically need to find <code>3 * button A presses + 1 * button B presses</code>, and <code>A</code> and <code>B</code> presses can only be integers. Additionally, because we need to know the <em>fewest</em> tokens we can spend, we have a cost function that we must seek to optimize. Suppose the <code>prize</code> was at <code>90,90</code> and <code>A</code> moved <code>10,10</code> and <code>B</code> moved <code>9,9</code>. We could press button <code>A</code> nine times as a feasible solution, but because it costs 3 times as much to push button <code>A</code> as it does <code>B</code>, it&rsquo;s cheaper to push button <code>B</code> 10 times (27 tokens for pushing <code>A</code> compared to 10 tokens for pushing <code>B</code>).</p>
+<p>I opted to use the <a href="https://jump.dev/JuMP.jl/stable/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>JuMP.jl</code> library</a>
+ for specifying this problem, and the <a href="https://github.com/COPT-Public/COPT.jl" 
+  
+   target="_blank" rel="noreferrer noopener" 
+><code>COPT.jl</code> library</a>
+ for optimization. I chose the <code>COPT</code> optimizer because it handles large values for MILP well.</p>
+<p>I defined <code>A</code> and <code>B</code> as integers, bounded by 0 (inclusive) and an upper bound <code>100</code> (inclusive). I defined the objective as minimizing <code>3A + B</code>, then constrained <code>A</code> times the x-movement of <code>A</code> plus <code>B</code> times the x-movement of <code>B</code> to be equal to the x-coordinate of the <code>prize</code> (then added the same constraint in the y-dimension as well).</p>
+<p>After that, I asked the optimizer to find a solution. If no solution could be found, then I returned <code>0</code>, otherwise I returned <code>3A + B</code>.</p>
+<pre><code class="language-julia">using JuMP
+using COPT
+function solve_machine(machine, upper_bound = 100, value_offset = 0)
+    model = Model(COPT.Optimizer)
+    if !ismissing(upper_bound)
+        @variable(model, upper_bound &gt;= A &gt;= 0, Int)
+        @variable(model, upper_bound &gt;= B &gt;= 0, Int)
+    else
+        @variable(model, A &gt;= 0, Int)
+        @variable(model, B &gt;= 0, Int)
+    end
+    @objective(model, Min, 3A + B)
+    @constraint(model, A * machine[&quot;button_a&quot;][1] + 
+                       B * machine[&quot;button_b&quot;][1] == BigInt(machine[&quot;prize&quot;][1] + value_offset))
+    @constraint(model, A * machine[&quot;button_a&quot;][2] + 
+                       B * machine[&quot;button_b&quot;][2] == BigInt(machine[&quot;prize&quot;][2] + value_offset))
+    optimize!(model);
+    if !is_solved_and_feasible(model) 
+        return 0
+    else 
+        return 3 * Int(value(A)) + Int(value(B))
+    end
+end
+println(Int(sum(solve_machine.(input))))
+</code></pre>
+<pre><code>480
+</code></pre>
+<h3 id="part-two-5">Part Two<a class="anchor" href="#part-two-5">#</a></h3>
+<p>The second part threw a monkey wrench&ndash;the locations of all of the prizes were off by <code>10000000000000</code> (so the new prize location in the first machine above was <strong>actually</strong> <code>10000000008400,10000000005400</code>) though the buttons still only moved you a small amount. There was, however, no longer a 100 button-press limit.</p>
+<p>I modified the above function (whose modifications are already reflected above) to handle both the removal of the upper boundaries of button pushing and the new offset. <code>COPT.jl</code> was able to handle the large constraints easily, though other optimizers like <code>HiGHS.jl</code> struggled to keep the values as actual integers.</p>
+<pre><code class="language-julia">println(Int(sum(solve_machine.(input, missing, 10000000000000))))
+</code></pre>
+<pre><code>875318608908
+</code></pre>
+<h2 id="day-14-restroom-redoubthttpsadventofcodecom2024day14"><a href="https://adventofcode.com/2024/day/14" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day 14: Restroom Redoubt</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,14)
+dims = (7,11)
+input = [Dict(&quot;p&quot; =&gt; reverse(parse.(Int64,split(split(i[1],&quot;=&quot;)[2],&quot;,&quot;))),
+              &quot;v&quot; =&gt; reverse(parse.(Int64,split(split(i[2],&quot;=&quot;)[2],&quot;,&quot;))))
+        for i in input]
+</code></pre>
+<pre><code>12-element Vector{Dict{String, Vector{Int64}}}:
+ Dict(&quot;v&quot; =&gt; [-3, 3], &quot;p&quot; =&gt; [4, 0])
+ Dict(&quot;v&quot; =&gt; [-3, -1], &quot;p&quot; =&gt; [3, 6])
+ Dict(&quot;v&quot; =&gt; [2, -1], &quot;p&quot; =&gt; [3, 10])
+ Dict(&quot;v&quot; =&gt; [-1, 2], &quot;p&quot; =&gt; [0, 2])
+ Dict(&quot;v&quot; =&gt; [3, 1], &quot;p&quot; =&gt; [0, 0])
+ Dict(&quot;v&quot; =&gt; [-2, -2], &quot;p&quot; =&gt; [0, 3])
+ Dict(&quot;v&quot; =&gt; [-3, -1], &quot;p&quot; =&gt; [6, 7])
+ Dict(&quot;v&quot; =&gt; [-2, -1], &quot;p&quot; =&gt; [0, 3])
+ Dict(&quot;v&quot; =&gt; [3, 2], &quot;p&quot; =&gt; [3, 9])
+ Dict(&quot;v&quot; =&gt; [2, -1], &quot;p&quot; =&gt; [3, 7])
+ Dict(&quot;v&quot; =&gt; [-3, 2], &quot;p&quot; =&gt; [4, 2])
+ Dict(&quot;v&quot; =&gt; [-3, -3], &quot;p&quot; =&gt; [5, 9])
+</code></pre>
+<p>This problem concerns a series of robots cleaning a bathroom. Each robot (represented above as unique dictionaries) has a starting position <code>p</code> and a velocity <code>v</code> that reflects how many tiles it moves in the bathroom each second. The bathroom has some dimensions (in this example, 11 columns and 7 rows)&ndash;if a robot were to travel into a wall, it would teleport to the other side of the bathroom. Stealing another example from the website, this robot with <code>p=2,4 and v=2,-3</code> travels through the top wall in the first two seconds, and emerges from the bottom.</p>
+<pre><code>Initial state:
+...........
+...........
+...........
+...........
+..1........
+...........
+...........
+
+After 1 second:
+...........
+....1......
+...........
+...........
+...........
+...........
+...........
+
+After 2 seconds:
+...........
+...........
+...........
+...........
+...........
+......1....
+...........
+</code></pre>
+<p>For the first part of the problem, we need to find how many robots are in each quadrant (the upper-left tiles, the upper-right tiles, the bottom-left tiles, and the bottom-right tiles, excluding any robots in exactly the middle row or middle column), and multiply those four numbers together.</p>
+<p>For this problem, I created a function that would find the coordinates of a robot after a given number of seconds and plotted it onto our grid. I was able to handle the robots teleporting through walls using modular division. Then, I split up the matrix into quadrants and found the number of robots in each.</p>
+<pre><code class="language-julia">using Statistics
+function plot_grid(dims, steps, input)
+    grid = zeros(dims...)
+    for robot in input
+        new_cords = [(1 + robot[&quot;p&quot;][x] + robot[&quot;v&quot;][x] * steps) % dims[x] for x in 1:2]
+        if (new_cords[1] &lt; 1) new_cords[1] = dims[1] + new_cords[1] end
+        if (new_cords[2] &lt; 1) new_cords[2] = dims[2] + new_cords[2] end
+        grid[new_cords...] = grid[new_cords...] + 1
+    end
+    return grid
+end
+p1_grid = plot_grid(dims, 100, input)
+println(Int(
+    sum(p1_grid[Int.(1:median(1:dims[1])-1), Int.(1:median(1:dims[2])-1)]) *
+    sum(p1_grid[Int.(median(1:dims[1])+1:dims[1]), Int.(1:median(1:dims[2])-1)]) *
+    sum(p1_grid[Int.(1:median(1:dims[1])-1), Int.(median(1:dims[2])+1:dims[2])]) *
+    sum(p1_grid[Int.(median(1:dims[1])+1:dims[1]), Int.(median(1:dims[2])+1:dims[2])])
+))
+</code></pre>
+<pre><code>12
+</code></pre>
+<h3 id="part-two-6">Part Two<a class="anchor" href="#part-two-6">#</a></h3>
+<p>Part two was quite cryptic&ndash;it suggested that after a number of seconds, the robots would align themselves into the picture of a Christmas tree on the tile grid.</p>
+<p>I took a wild guess (which turned out to be correct!) that this would only be possible if all of the robots were each on their own tile, with no robots overlapping. I simply iterated with the grid until I reached a point where all robots had their own space.</p>
+<pre><code class="language-julia">input = get_input(2024,14) # we need the input, not the example here!
+dims = (103,101)
+global counter = 1
+while any(plot_grid(dims, counter, input) .&gt; 1)
+    global counter = counter + 1
+end
+println(counter)
+</code></pre>
+<pre><code>7709
+</code></pre>
+<h2 id="looking-ahead">Looking ahead<a class="anchor" href="#looking-ahead">#</a></h2>
+<p>This concludes two weeks of Advent of Code problems! I have been moving through them a little more slowly thanks to work + life + travel than I was able to in week one, but I&rsquo;m feeling good being all caught up. I&rsquo;m excited to tackle the next week (and hopefully reclaim my top spot on my work leaderboard... coming for you Jeff)!</p>
+
+
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/julia/">julia</a>
+    </li></ul>
+
+ 
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Bluesky"
+         href="https://bsky.app/profile/johnbedwards.io"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/bluesky.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+
+
+</body>
+
+</html>
