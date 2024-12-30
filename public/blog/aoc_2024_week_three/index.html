@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>2024 Advent of Code Week 3 | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="My write-up of the third week of Advent of Code problems">
+  <meta name="keywords" content="julia">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2024 Advent of Code Week 3" />
+  <meta name="twitter:description" content="My write-up of the third week of Advent of Code problems"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "2024 Advent of Code Week 3",
+      "headline" : "2024 Advent of Code Week 3",
+      "description" : "My write-up of the third week of Advent of Code problems",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2024",
+      "datePublished": "2024-12-30 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2024-12-30 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/aoc_2024_week_three\/",
+      "wordCount" : "4801",
+      "keywords" : ["julia", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">2024 Advent of Code Week 3</h1>
+            <time datetime="2024-12-30 00:00:00 &#43;0000 UTC" class="post__date">Dec 30 2024</time> 
+          </header>
+          <article class="post__content">
+              
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction">#</a></h2>
+<p>The <a href="https://adventofcode.com/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Advent of Code</a>
+ (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&rsquo;d like to see my work in completing the first week of AOC problems, click <a href="https://johnbedwards.io/blog/aoc_2024_week_one/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>here</a>
+, and if you&rsquo;d like to see my second week, click <a href="https://johnbedwards.io/blog/aoc_2024_week_two/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>here</a>
+. Things get real tough this week, so let&rsquo;s dive in!</p>
+<h2 id="day-fifteen-warehouse-woeshttpsadventofcodecom2024day15"><a href="https://adventofcode.com/2024/day/15" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Fifteen: Warehouse Woes</a>
+</h2>
+<pre><code class="language-julia"># input
+include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,15)
+input_1 = [x for x in input if x[1] == '#']
+input_1 = split.(input_1,&quot;&quot;)
+input_1 = mapreduce(permutedims, vcat, input_1)
+input_1 = [string(i) for i in input_1]
+</code></pre>
+<pre><code>10×10 Matrix{String}:
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;O&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;O&quot;  &quot;O&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;O&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;@&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;O&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;O&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;O&quot;  &quot;O&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;O&quot;  &quot;O&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;O&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+</code></pre>
+<pre><code class="language-julia">input_1_stored = copy(input_1)
+input_2 = split(join([x for x in input if x[1] != '#']),&quot;&quot;)
+</code></pre>
+<pre><code>700-element Vector{SubString{String}}:
+ &quot;&lt;&quot;
+ &quot;v&quot;
+ &quot;v&quot;
+ ⋮
+ &quot;&lt;&quot;
+ &quot;&lt;&quot;
+ &quot;^&quot;
+</code></pre>
+<h3 id="part-one">Part One<a class="anchor" href="#part-one">#</a></h3>
+<p>The first part of our input represents the layout of a warehouse as seen from above. Boxes in the warehouse are represented with an <code>O</code>, walls represented with a <code>#</code>, and a robot for moving the boxes represented with a <code>@</code>.</p>
+<p>The second part of our input represents a series of instructions passed to the robot. The robot will move around according to the instructions, moving any boxes it runs into, but it will skip instructions that would cause it to run into a wall (or cause boxes to run into walls).</p>
+<p>Our task is to determine the position of all of the boxes after the robot follows all of the instructions. From there, we take the coordinates of each of the boxes and sum them together to find our answer.</p>
+<p>My initial pass at part one involved moving slices of the array defined in part one around&ndash;from the position of the robot, I checked along the direction that the robot was supposed to move. For example, if the robot was supposed to move up, I checked the space directly above the robot. If it was an empty space, I moved the robot. If there was a wall, I did not move the robot. If there was a box, I continued moving up until I encountered either an empty space or a wall.</p>
+<p>This approach turned out to not be scaleable for part two however (as you&rsquo;ll see shortly!) so I wound up re-writing it to form a breadth-first search&ndash;it accomplished the same task, but allowed me greater flexibility in solving part two.</p>
+<pre><code class="language-julia">move_dict = Dict(&quot;^&quot;=&gt;CartesianIndex(-1,0),&quot;&gt;&quot;=&gt;CartesianIndex(0,1),&quot;v&quot;=&gt;CartesianIndex(1,0),&quot;&lt;&quot;=&gt;CartesianIndex(0,-1))
+function process_move(mat, point, direction)
+    to_move, to_check, checked = [point], [point + move_dict[direction]], []
+    new_mat = copy(mat)
+    while to_check != []
+        v = pop!(to_check)
+        if mat[v] == &quot;#&quot;
+            return mat
+        elseif (mat[v] == &quot;]&quot;) &amp; !in(v, checked)
+            push!.([to_move], [v, v + CartesianIndex(0,-1)])
+            push!.([to_check], [v, v + CartesianIndex(0,-1), v + move_dict[direction]])
+        elseif (mat[v] == &quot;[&quot;) &amp; !in(v, checked)
+            push!.([to_move], [v, v + CartesianIndex(0,1)])
+            push!.([to_check], [v, v + CartesianIndex(0,1), v + move_dict[direction]])
+        elseif (mat[v] != &quot;.&quot;) &amp; !in(v, checked)
+            push!(to_move, v)
+            push!(to_check, v + move_dict[direction])
+        end
+        push!(checked, v)
+    end
+    for p in unique(to_move)
+        new_mat[p + move_dict[direction]] = mat[p]
+        if !in(p - move_dict[direction], to_move) new_mat[p] = &quot;.&quot; end
+    end
+    new_mat[point] = &quot;.&quot;
+    return new_mat
+end
+</code></pre>
+<p>Then I wrote a quick function to calculate the &ldquo;GPS score&rdquo; from the position of the boxes.</p>
+<pre><code class="language-julia">function calc_gps_score(mat)
+    return sum([100 * (x[1]-1) + (x[2]-1) for x in findall(x-&gt;x in [&quot;O&quot;,&quot;[&quot;], mat)])
+end
+</code></pre>
+<p>From there, I went through and iterated over all of the second part of the input until the robot was done moving, and calculated the GPS score.</p>
+<pre><code class="language-julia">robot = findfirst(x-&gt;x==&quot;@&quot;, input_1)
+for move in input_2
+    global input_1 = process_move(input_1, robot, move)
+    global robot = findfirst(x-&gt;x==&quot;@&quot;, input_1)
+end
+println(calc_gps_score(input_1))
+</code></pre>
+<pre><code>10092
+</code></pre>
+<h3 id="part-two">Part Two<a class="anchor" href="#part-two">#</a></h3>
+<p>The second part was almost identical to the first, except now the boxes and walls of the warehouse were twice as large (though the robot was still the same size). The example map above from part one looked like this for part two:</p>
+<pre><code>####################
+##....[]....[]..[]##
+##............[]..##
+##..[][]....[]..[]##
+##....[]@.....[]..##
+##[]##....[]......##
+##[]....[]....[]..##
+##..[][]..[]..[][]##
+##........[]......##
+####################
+</code></pre>
+<p>You can see now the impact of the breadth-first search: rather than moving individual vectors, I would need to track the position of whole boxes that spanned multiple columns.</p>
+<p>The first step I took was adjusting the first part of the input to match the problem as defined in part two:</p>
+<pre><code class="language-julia">input_1 = copy(input_1_stored)
+newmat = fill(&quot; &quot;, size(input_1)[1], size(input_1)[2] .* 2)
+for i in 1:size(input_1)[2], j in 1:size(input_1)[1]
+    if input_1[i,j] == &quot;#&quot; newmat[i,(2j-1):(2j)] = [&quot;#&quot;,&quot;#&quot;]
+    elseif input_1[i,j] == &quot;O&quot; newmat[i,(2j-1):(2j)] = [&quot;[&quot;,&quot;]&quot;]
+    elseif input_1[i,j] == &quot;.&quot; newmat[i,(2j-1):(2j)] = [&quot;.&quot;,&quot;.&quot;]
+    elseif input_1[i,j] == &quot;@&quot; newmat[i,(2j-1):(2j)] = [&quot;@&quot;,&quot;.&quot;] end
+end
+</code></pre>
+<p>Then, I simply needed to re-run my processing of the input with the new map.</p>
+<pre><code class="language-julia">robot = findfirst(x-&gt;x==&quot;@&quot;, newmat)
+for move in input_2
+    global newmat = process_move(newmat, robot, move)
+    global robot = findfirst(x-&gt;x==&quot;@&quot;, newmat)
+end
+println(calc_gps_score(newmat))
+</code></pre>
+<pre><code>9021
+</code></pre>
+<h2 id="day-sixteen-reindeer-mazehttpsadventofcodecom2024day16"><a href="https://adventofcode.com/2024/day/16" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Sixteen: Reindeer Maze</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = [string(i) for i in mapreduce(permutedims, vcat, split.(get_example(2024,16),&quot;&quot;))]
+</code></pre>
+<pre><code>15×15 Matrix{String}:
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;E&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;S&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+</code></pre>
+<h3 id="part-one-1">Part One<a class="anchor" href="#part-one-1">#</a></h3>
+<p>Our input represents a maze that reindeer are attempting to navigate. A <code>#</code> indicates a wall, <code>S</code> indicates the start of the maze, and <code>E</code> represents the exit from the maze.</p>
+<p>Reindeer can take any path through the maze, but rotating clockwise or counter-clockwise 90 degrees will cost them 1000 points, and moving forward will cost them one point.</p>
+<p>Our task is to find the lowest possible score for our input.</p>
+<p>This turned out to be a job for Dijkstra&rsquo;s, annoying as it may have been. In previous examples, we have used Dijkstra&rsquo;s to find the shortest path through a maze, but it&rsquo;s important to remember that Dijkstra&rsquo;s doesn&rsquo;t necessarily seek to minimize distance, rather, it seeks to minimize a cost function. This function can be simply distance in some cases, but in this instance, we could use our own cost function (turns + movement) to find the lowest score path.</p>
+<p>I began with building our dictionary of available directions to move, as well as our start and end nodes.</p>
+<pre><code class="language-julia">directions = [(0,1),(-1,0),(0,-1),(1,0)]
+prev = Dict()
+start, target_node = (Tuple(findfirst(x-&gt;x==y, input)) for y in [&quot;S&quot;,&quot;E&quot;])
+vertices = Dict((x,y) =&gt; Inf for x in Tuple.(findall(x-&gt;x!=&quot;#&quot;, input)), y in directions)
+vertices[(start,(0,1))] = 0
+unvisited = copy(vertices)
+</code></pre>
+<p>From there, I went through and calculated the <em>score</em> required to visit each node using Dijkstra&rsquo;s. I included scores for all possible directions that one could enter a node from.</p>
+<pre><code class="language-julia">while length(unvisited) &gt; 0
+    current_node, current_direction = findmin(unvisited)[2]
+    neighbors = [(current_node .+ j,j) for j in directions
+        if (input[current_node[1] + j[1], current_node[2] + j[2]] != &quot;#&quot;) &amp; 
+            in((current_node .+ j,j), keys(unvisited))
+    ]
+    for n in neighbors
+        old_dist = vertices[n]
+        if current_direction == n[2]
+            new_dist = vertices[(current_node, current_direction)] + 1
+        else
+            new_dist = vertices[(current_node, current_direction)] + 1001
+        end
+        if old_dist &gt;= new_dist
+            vertices[n], unvisited[n] = new_dist, new_dist
+            if n in keys(prev)
+                push!(prev[n], (current_node, current_direction))
+            else
+                prev[n] = [(current_node, current_direction)]
+            end
+        end
+    end
+    delete!(unvisited, (current_node, current_direction))
+end
+</code></pre>
+<p>From there, I found the lowest score (for any direction) to enter the end node from.</p>
+<pre><code class="language-julia">println(minimum([vertices[(target_node,x)] for x in directions]))
+</code></pre>
+<pre><code>7036.0
+</code></pre>
+<h3 id="part-two-1">Part Two<a class="anchor" href="#part-two-1">#</a></h3>
+<p>For the second part, we want to watch the reindeer run the mazes. To see the reindeer, we want to find out how many different spaces along the map where we could sit and plausibly see a reindeer running the maze&ndash;to do this, we need to find <em>all possible paths</em> that have the lowest score possible.</p>
+<p>To do this, I used reverse iteration to find all possible paths that satisfied the lowest score condiiton&ndash;note above that in our Dijkstra&rsquo;s algorithm, for each node we check, we store any nodes that led us to that node in a dictionary. To find all paths, we simply iterate over that dictionary and store all nodes in a list, then find the length of the set of that list.</p>
+<pre><code class="language-julia">path = []
+target_dir = directions[argmin([vertices[(target_node,x)] for x in directions])]
+tocheck = [(target_node,target_dir)]
+while tocheck != []
+    u = pop!(tocheck)
+    if in(u, keys(prev))
+        push!(path, u)
+        append!(tocheck, prev[u])
+    end
+end
+println(length(unique([x[1] for x in path])) + 1)
+</code></pre>
+<pre><code>45
+</code></pre>
+<h2 id="day-seventeen-chronospatial-computerhttpsadventofcodecom2024day17"><a href="https://adventofcode.com/2024/day/17" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Seventeen: Chronospatial Computer</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,17)
+</code></pre>
+<pre><code>4-element Vector{Vector{String}}:
+ [&quot;Register&quot;, &quot;A:&quot;, &quot;729&quot;]
+ [&quot;Register&quot;, &quot;B:&quot;, &quot;0&quot;]
+ [&quot;Register&quot;, &quot;C:&quot;, &quot;0&quot;]
+ [&quot;Program:&quot;, &quot;0,1,5,4,3,0&quot;]
+</code></pre>
+<pre><code class="language-julia">A = parse(Int64, input[1][3])
+B = parse(Int64, input[2][3])
+C = parse(Int64, input[3][3])
+prog = parse.(Int64, split(input[4][2],&quot;,&quot;))
+</code></pre>
+<h3 id="part-one-2">Part One<a class="anchor" href="#part-one-2">#</a></h3>
+<p>This one was positively devilish! Here, we were provided with a computer of sorts. The computer knows eight &ldquo;instructions&rdquo;, defined as a function that takes in an argument. The argument can refer to either one of the values stored in the register or it can refer to the literal value of the argument itself. Our input consists of initial values to the register as well as a &ldquo;program&rdquo; consisting of instructions for executing certain functions in order with these arguments.</p>
+<p>The first part simply asked us to determine the output of the program. For this, I simply converted the written instructions into a Julia function and ran it with the inputs provided.</p>
+<pre><code class="language-julia">function computer(A, prog)
+    combo = Dict(0=&gt;0,1=&gt;1,2=&gt;2,3=&gt;3,4=&gt;A,5=&gt;B,6=&gt;C)
+    pointer = 0
+    vals = []
+    while true
+        if pointer + 1 &gt; length(prog) break end
+        jump_pointer = true
+        opcode,operand = prog[pointer+1:pointer+2]
+        if opcode == 0 combo[4] = Int(floor(combo[4] / 2 ^ combo[operand]))
+        elseif opcode == 1 combo[5] = combo[5] ⊻ operand
+        elseif opcode == 2 combo[5] = combo[operand] % 8
+        elseif (opcode == 3) &amp;&amp; (combo[4] != 0)
+            pointer = operand
+            jump_pointer = false
+        elseif opcode == 4 combo[5] = combo[5] ⊻ combo[6]
+        elseif opcode == 5 append!(vals,combo[operand] % 8)
+        elseif opcode == 6 combo[5] = Int(floor(combo[4] / 2 ^ combo[operand]))
+        elseif opcode == 7 combo[6] = Int(floor(combo[4] / 2 ^ combo[operand])) end
+        pointer = pointer + 2 * jump_pointer
+    end
+    return vals
+end
+println(computer(A, prog))
+</code></pre>
+<pre><code>Any[4, 6, 3, 5, 6, 3, 5, 2, 1, 0]
+</code></pre>
+<h3 id="part-two-2">Part Two<a class="anchor" href="#part-two-2">#</a></h3>
+<p>This is where the problem got <em>exceptionally</em> tricky. We had to find a value for register &ldquo;A&rdquo; that would cause our program to return <em>itself</em> (something akin to a <a href="https://en.wikipedia.org/wiki/Quine_%28computing%29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Quine</a>
+).</p>
+<p>I first tried brute forcing, starting with my initial value of A and going up. I quickly realized that it would be impossible. For my actual input, the program I had was 16 digits long, and for a given value of A of length n, the output would typically be around n digits long&ndash;so I would need to iterate through roughly all possible ten-quadrillion digit numbers to brute force my value!</p>
+<p>I tried inspecting my output closer, poking and prodding at how the program worked. I realized that for smaller digit numbers, I could get the output to replicate a small part of the program, and as I went up in terms of the number of digits for my input, I could produce more and more of the output. I also realized that the value stored in the <code>A</code> register was subject to some big changes in value&ndash;specifically, it was repeatedly divided by <code>8</code>. Finally, I realized that the program would only terminate when the value of <code>A</code> was <code>0</code>. I set <code>A</code> to <code>1</code> and my input to <code>0</code>. From there, I added <code>1</code> to my input until I was able to replicate part of the program as my output. Once I did that, I multiplied by input by <code>8</code>, and repeated searching until I replicated a longer section of the program as my output. I did this until the entire output matched the program.</p>
+<p>This wasn&rsquo;t my most elegant solution! It ended up working just fine for me and resolved quite quickly (much more quickly than a <em>raw</em> brute force search), but I didn&rsquo;t test my solution with other inputs. Still, my main takeaway was the importance of poking and prodding at the program to understand it, which was required for me to solve it.</p>
+<pre><code class="language-julia">function find_quine(prog)
+    combo = Dict(0=&gt;0,1=&gt;1,2=&gt;2,3=&gt;3,4=&gt;A,5=&gt;B,6=&gt;C)
+    adv_ndx = findfirst(x-&gt;(prog[x]==0) &amp; (x % 2 == 1), eachindex(prog))
+    multiplier = 2 ^ combo[prog[adv_ndx + 1]]
+    counter, prog_counter = 0,0
+    while prog_counter &lt; length(prog)
+        if computer(counter, prog) == prog break
+        elseif computer(counter, prog) == prog[end-prog_counter:end]
+            counter = counter * multiplier
+            prog_counter = prog_counter + 1
+        else counter = counter + 1 end
+    end
+    return counter
+end
+println(find_quine(prog))
+# not shown as this is kind of a hard-coded solution!
+</code></pre>
+<h2 id="day-eighteen-ram-runhttpsadventofcodecom2024day18"><a href="https://adventofcode.com/2024/day/18" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Eighteen: RAM Run</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,18,override= &quot;&quot;)
+input_parsed = [CartesianIndex(parse(Int64, x[2]) + 1, parse(Int64,x[1]) + 1) 
+                for x in split.(input,&quot;,&quot;)]
+</code></pre>
+<pre><code>25-element Vector{CartesianIndex{2}}:
+ CartesianIndex(5, 6)
+ CartesianIndex(3, 5)
+ CartesianIndex(6, 5)
+ ⋮
+ CartesianIndex(6, 1)
+ CartesianIndex(7, 2)
+ CartesianIndex(1, 3)
+</code></pre>
+<h3 id="part-one-3">Part One<a class="anchor" href="#part-one-3">#</a></h3>
+<p>For this problem, we are in an <code>NxN</code> grid (<code>N=7</code> for the example, but for the actual input, <code>N=71</code>), beginning at the top-left corner of the grid. Our goal is to reach the bottom-right corner of the grid. Obstructing us, however, are a series of &ldquo;bits&rdquo; that sequentially fall into the grid and obstruct our path (effectively becoming walls). Each second, a new &ldquo;bit&rdquo; appears on our grid, its position indicated by our input.</p>
+<p>For part one, we first need to simulate the first 1024 bits (in the example, 12 bits) falling into the grid, then find the length of the shortest path to escape.</p>
+<p>This was fairly straightforward&ndash;we just needed to process the coordinates we were given into a grid-space, then run a Dijkstra&rsquo;s algorithm to find the shortest path.</p>
+<pre><code class="language-julia">DIMS = 7
+S = CartesianIndex(1,1)
+E = CartesianIndex(DIMS, DIMS)
+DIRECTIONS = CartesianIndex.([(0,1),(-1,0),(0,-1),(1,0)])
+# part one
+inbounds(G, v) = (v[1] &gt; 0) &amp; (v[1] &lt;= size(G)[1]) &amp; (v[2] &gt; 0) &amp; (v[2] &lt;= size(G)[2])
+function plot_input(input, n_bytes)
+    mat = fill(&quot;.&quot;,DIMS, DIMS)
+    for x in input[1:minimum([n_bytes,length(input)])] mat[x] = &quot;#&quot; end
+    return mat
+end
+function dist_to_exit(input, n)
+    mat = plot_input(input, n)
+    vertices = Dict(x =&gt; Inf for x in findall(x-&gt;x!=&quot;#&quot;, mat))
+    vertices[S] = 0
+    unvisited = copy(vertices)
+    while unvisited != Dict()
+        u = findmin(unvisited)[2]
+        delete!(unvisited, u)
+        neighbors = [u + d for d in DIRECTIONS 
+                     if inbounds(mat, u+d) &amp;&amp; 
+                     in(u+d, keys(unvisited)) &amp; 
+                     (mat[u + d] != &quot;#&quot;)]
+        for n in neighbors
+            vertices[n] = minimum([1 + vertices[u], vertices[n]])
+            unvisited[n] = minimum([1 + vertices[u], vertices[n]])
+        end
+    end
+    return vertices[E]
+end
+println(Int(dist_to_exit(input_parsed, 12)))
+</code></pre>
+<pre><code>22
+</code></pre>
+<h3 id="part-two-3">Part Two<a class="anchor" href="#part-two-3">#</a></h3>
+<p>The second part was not much trickier. We are provided with well more than 1024 bits&ndash;our task is to determine at which point the bits completely block the exit and make escaping impossible. Our answer is the position of the block that finally sealed the exit.</p>
+<p>For this, the function I wrote to simulate the bits falling into place as well as my Dijkstra&rsquo;s algorithm were fast enough that I could simply continue to simulate over the coordinates provided and check at which point the distance to the exit became <code>Inf</code>.</p>
+<pre><code class="language-julia">global counter = 12
+while !isinf(dist_to_exit(input_parsed, counter)) counter = counter + 1 end
+println(input[counter])
+</code></pre>
+<pre><code>6,1
+</code></pre>
+<p>I was curious if there was a faster way to solve this problem (this technically counts as brute forcing, I think!) and put out a quiet call on Bluesky if anyone else had thoughts&ndash;and got a great response!</p>
+<blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:3xxpcqzw7hnm7cwgpmxcntkg/app.bsky.feed.post/3ldmvoz2bqc2e" data-bluesky-cid="bafyreicn7obsbn3pzaiwbgvcubl553lfdd6uturjekhgp7ugigw5t33t5e"><p lang="en">In Part 2 you can check if the next coordinate is on your current best path. If not, skip ahead. If so, recalculate the new best path, if any.</p>&mdash; Jeff Standen (<a href="https://bsky.app/profile/did:plc:3xxpcqzw7hnm7cwgpmxcntkg?ref_src=embed">@jstanden.bsky.social</a>) <a href="https://bsky.app/profile/did:plc:3xxpcqzw7hnm7cwgpmxcntkg/post/3ldmvoz2bqc2e?ref_src=embed">December 18, 2024 at 10:13 PM</a></blockquote>
+<script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+<p>This would have required some significant re-factoring on my part that I opted out of, but I agree that it would be significantly faster!</p>
+<h2 id="day-nineteen-linen-layouthttpsadventofcodecom2024day19"><a href="https://adventofcode.com/2024/day/19" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Nineteen: Linen Layout</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,19)
+</code></pre>
+<pre><code>9-element Vector{Vector{String}}:
+ [&quot;r,&quot;, &quot;wr,&quot;, &quot;b,&quot;, &quot;g,&quot;, &quot;bwu,&quot;, &quot;rb,&quot;, &quot;gb,&quot;, &quot;br&quot;]
+ [&quot;brwrr&quot;]
+ [&quot;bggr&quot;]
+ [&quot;gbbr&quot;]
+ [&quot;rrbgbr&quot;]
+ [&quot;ubwu&quot;]
+ [&quot;bwurrg&quot;]
+ [&quot;brgr&quot;]
+ [&quot;bbrgwb&quot;]
+</code></pre>
+<h3 id="part-one-4">Part One<a class="anchor" href="#part-one-4">#</a></h3>
+<p>For this problem, we are provided with a series of towels with different striped patterns (the first line of our input). Each letter corresponds to a particular color (r for red, b for blue, etc.). Our task is to determine if a pattern provided in the second part of our input is possible with the towels we&rsquo;re provided. For example, <code>brwrr</code> is possible by lining up <code>br</code>, <code>wr</code>, and <code>r</code> towels, but there is no combination of towels that would allow us to create the lineup <code>ubwu</code>.</p>
+<p>This required a recursive approach. After parsing the input, I wrote a function that took a string representing a sequence of colors and checked if any of the valid patterns from the first part of the input appeared in the start of the string. If the answer was yes, then I removed that from the start of the string and called the function again on the new string. If the answer was no, I returned <code>0</code>. If I passed in an empty string (indicating that each sequence could have been formed from the towels in the first part of the input), then I returned a value of 1. This function returned how many different ways one could combine the towels to form the desired pattern. I then ran this on the input and returned how many times this value was greater than one to find the number of possible combinations.</p>
+<p>I sped up this function using <a href="https://en.wikipedia.org/wiki/Memoization" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>memoization</a>
+&ndash;I used a dictionary to store all calls to the <code>is_valid()</code> function, so if I had previously called <code>is_valid()</code> with an exact argument before, rather than go through every pattern and do some <code>Regex</code>ing, I just returned what the dictionary had.</p>
+<pre><code class="language-julia">patterns = [string(x) for x in split(join(input[1]),&quot;,&quot;)]
+designs = [x[1] for x in input[2:end]]
+stored = Dict()
+function is_valid(s)
+    if s in keys(stored) return stored[s] end
+    ans = 0
+    if s == &quot;&quot; ans = 1 end
+    for p in patterns
+        if occursin(Regex(&quot;^&quot; * p), s)
+            ans = ans + is_valid(replace(s, p=&gt;&quot;&quot;,count=1))
+        end
+    end
+    stored[s] = ans
+    return ans
+end
+println(sum(is_valid.(designs) .&gt; 0))
+</code></pre>
+<pre><code>6
+</code></pre>
+<h3 id="part-two-4">Part Two<a class="anchor" href="#part-two-4">#</a></h3>
+<p>For the second part, we needed to determine how many possible ways we could construct the patterns using the towels. For this, I re-ran the function, but rather than count how many times the function returned a value greater than one, I simply returned the output of the function and summed those values.</p>
+<pre><code class="language-julia">println(sum(is_valid.(designs)))
+</code></pre>
+<pre><code>16
+</code></pre>
+<h2 id="day-twenty-race-conditionhttpsadventofcodecom2024day20"><a href="https://adventofcode.com/2024/day/20" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Twenty: Race Condition</a>
+</h2>
+<pre><code class="language-julia"># input
+include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,20)
+mat = [string(i) for i in mapreduce(permutedims, vcat, split.(input,&quot;&quot;))]
+</code></pre>
+<pre><code>15×15 Matrix{String}:
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;S&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;E&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+</code></pre>
+<h3 id="part-one-5">Part One<a class="anchor" href="#part-one-5">#</a></h3>
+<p>This is another maze problem, where <code>#</code> represent walls, <code>S</code> represents the start of the maze, and <code>E</code> represents the end of the maze. However, we have a twist&ndash;we can cheat at the maze! Moving a space takes one picosecond, but we can enable a cheat that allows us to move into walls for up to two picoseconds. At the end of two picoseconds, we have to be back within the bounds of the maze. Our task is to identify how many cheats could save us at least 100 picoseconds.</p>
+<p>I first started by running a simple Dijkstra&rsquo;s to determine the distance between the start and end of the maze, along with all of the nodes along the way.</p>
+<pre><code class="language-julia">DIRECTIONS = CartesianIndex.([(0,1),(-1,0),(0,-1),(1,0)])
+inbounds(G, v) = (v[1] &gt; 0) &amp; (v[1] &lt;= size(G)[1]) &amp; (v[2] &gt; 0) &amp; (v[2] &lt;= size(G)[2])
+calc_dist(x, y) = abs(y[1]-x[1]) + abs(y[2]-x[2])
+S = findfirst(x-&gt;x==&quot;S&quot;,mat)
+E = findfirst(x-&gt;x==&quot;E&quot;,mat)
+vertices = Dict(x =&gt; Inf for x in findall(x-&gt;x!=&quot;#&quot;, mat))
+vertices[S] = 0
+unvisited = copy(vertices)
+while unvisited != Dict()
+    u = findmin(unvisited)[2]
+    delete!(unvisited, u)
+    neighbors = [u + d for d in DIRECTIONS 
+                 if inbounds(mat, u+d) &amp;&amp; 
+                 in(u+d, keys(unvisited)) &amp; 
+                 (mat[u + d] != &quot;#&quot;)]
+    for n in neighbors
+        vertices[n] = minimum([1 + vertices[u], vertices[n]])
+        unvisited[n] = minimum([1 + vertices[u], vertices[n]])
+    end
+end
+</code></pre>
+<p>From there, I used a <em>second</em> Dijkstra&rsquo;s to identify any possible cheats by comparing the time taken to reach a node versus how much time it would take to reach the node with a possible cheat. For a given amount of time <code>n</code> that we&rsquo;re allowed to cheat for, the function returns a dictionary of every cheat and how much time it saves. From there, I simply <code>filter</code>ed to cheats that would save 100 or more seconds.</p>
+<pre><code class="language-julia">function find_cheats(max_length)
+    cheats = Dict()
+    possible_cheat_starts, possible_cheat_ends = keys(vertices), keys(vertices)
+    for c in possible_cheat_starts
+        cheat_ends = [i for i in possible_cheat_ends if 
+                      (calc_dist(i, c) &lt;= max_length) &amp;&amp;
+                      ((vertices[i] - vertices[c] - calc_dist(i,c)) &gt;= calc_dist(i,c))]
+        for d in cheat_ends
+            cheats[(c,d)] = vertices[d] - vertices[c] - calc_dist(d,c)
+        end
+    end
+    return cheats
+end
+my_cheats = find_cheats(2)
+println(length(filter(((k,v),) -&gt; v &gt;= 100, my_cheats))) # doesn't work for the example maze!
+</code></pre>
+<h3 id="part-two-5">Part Two<a class="anchor" href="#part-two-5">#</a></h3>
+<p>The second example was identical to the first, only now, we could cheat for 20 seconds. The part one solution can be seamlessly modified to solve part two:</p>
+<pre><code class="language-julia">my_cheats = find_cheats(20)
+println(length(filter(((k,v),) -&gt; v &gt;= 100, my_cheats))) # again, doesn't really work for the example maze!
+</code></pre>
+<h2 id="day-twenty-one-keypad-conundrumhttpsadventofcodecom2024day21"><a href="https://adventofcode.com/2024/day/21" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Twenty-One: Keypad Conundrum</a>
+</h2>
+<pre><code class="language-julia"># input
+include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,21)
+</code></pre>
+<pre><code>5-element Vector{String}:
+ &quot;029A&quot;
+ &quot;980A&quot;
+ &quot;179A&quot;
+ &quot;456A&quot;
+ &quot;379A&quot;
+</code></pre>
+<h3 id="part-one-6">Part One<a class="anchor" href="#part-one-6">#</a></h3>
+<p>I <strong>hated</strong> this problem! We were given a series of inputs representing numbers to be input on a numerical keypad with this layout:</p>
+<pre><code>+---+---+---+
+| 7 | 8 | 9 |
++---+---+---+
+| 4 | 5 | 6 |
++---+---+---+
+| 1 | 2 | 3 |
++---+---+---+
+    | 0 | A |
+    +---+---+
+</code></pre>
+<p>However, we cannot input these numbers ourselves&ndash;we have to control a robot to do it for us, using a directional keypad with this layout:</p>
+<pre><code>    +---+---+
+    | ^ | A |
++---+---+---+
+| &lt; | v | &gt; |
++---+---+---+
+</code></pre>
+<p>Starting on the numerical keypad at the <code>A</code> key, we can direct a pointer to move up, down, left or right, then press <code>A</code> on the directional keypad to cause the pointer to input the number it is hovering over.</p>
+<p>However, we cannot even directly control this robot&ndash;we have to use this same keypad to control a robot <em>who in turn uses this keypad to control a second robot</em> to put the inputs on the numerical keypad. Our task is to determine the length of the shortest path to input a given numerical command, then multiply that by the numerical part of the command (so <code>780</code> in the first input above), then sum these values for each command.</p>
+<p>This was a PITA, specifically because the problem stipulates that the pointer must remain in the bounds of the keypad: so in order to move from the <code>&lt;</code> key to the <code>A</code> key, we cannot move <code>up</code> then <code>right</code>, but we <em><strong>must</strong></em> move <code>right</code> then <code>up</code>.</p>
+<p>My initial solution involved generating all possible paths to visit each needed key in order at each level, then calculating the keys needed to input those keys at the level directly above it, and so on, growing out with each successive level. This was feasible for the first part of the problem, but infeasible for the second part. For that, I had to develop a consistent set of rules for manipulating the keypad to have both the shortest possible path <em>and</em> one that stayed within the boundaries of the path&ndash;testing for some annoying and hard to replicate edge cases. That became my function <code>find_paths()</code>, which determined the shortest possible optimal path from one part of a keypad to another part of a keypad.</p>
+<pre><code class="language-julia">NUM_KEYPAD = ['7' '8' '9';'4' '5' '6';'1' '2' '3';' ' '0' 'A']
+DIR_KEYPAD = [' ' '^' 'A';'&lt;' 'v' '&gt;']
+DIRECTIONS = CartesianIndex.([(0,1),(-1,0),(0,-1),(1,0)])
+inbounds(G, v) = (v[1] &gt; 0) &amp; (v[1] &lt;= size(G)[1]) &amp; (v[2] &gt; 0) &amp; (v[2] &lt;= size(G)[2])
+# part one
+function find_paths(d1, d2, pad)
+    d1_ndx, d2_ndx = findfirst(x-&gt;x==d1,pad),findfirst(x-&gt;x==d2,pad)
+    dist = d2_ndx - d1_ndx
+    x, y = dist[2], dist[1]
+    horz = cat(repeat('&gt;',abs(x) * (x &gt; 0)),repeat('&lt;',abs(x) * (x &lt; 0)),dims = 1)
+    vert = cat(repeat('^',abs(y) * (y &lt; 0)),repeat('v',abs(y) * (y &gt; 0)),dims = 1)
+    if (x &gt; 0) &amp; (pad[CartesianIndex(d2_ndx[1],d1_ndx[2])] != ' ')
+        return [join(vert) * join(horz) * &quot;A&quot;]
+    elseif pad[CartesianIndex(d1_ndx[1],d2_ndx[2])] != ' '
+        return [join(horz) * join(vert) * &quot;A&quot;]
+    else
+        return [join(vert) * join(horz) * &quot;A&quot;]
+    end
+end
+</code></pre>
+<p>Next, I needed to find the path required to visit all parts of a given input. I used memoization again to keep my memory down (a necessity for part two).</p>
+<pre><code class="language-julia">function tally_paths(path, pad)
+    routes = Dict()
+    start = 'A'
+    for x in path
+        for y in find_paths(start, x, pad)
+            routes[y] = get(routes, y, 0) + 1
+        end
+        start = x
+    end
+    return routes
+end
+</code></pre>
+<p>Finally, I wrote a function that found the length of a path for a given number of robots operating on all levels and multiplied it by the numerical value of the input.</p>
+<pre><code class="language-julia">function find_complexity(key, robots = 3)
+    paths = tally_paths(key,NUM_KEYPAD)
+    for n in 1:(robots-1)
+        new_routes = Dict()
+        for (x, y) in paths
+            for (w, z) in tally_paths(x, DIR_KEYPAD)
+                new_routes[w] = get(new_routes, w, 0) + z * y
+            end
+        end
+        paths = new_routes
+    end
+    return parse(Int64,join(filter(!isnothing, tryparse.(Int64, split(key,&quot;&quot;))))) * 
+        sum([length(x) * y for (x,y) in paths])
+end
+println(sum(find_complexity.(input, [3])))
+</code></pre>
+<pre><code>126384
+</code></pre>
+<h3 id="part-two-6">Part Two<a class="anchor" href="#part-two-6">#</a></h3>
+<p>The second part of this problem was almost the same as the first, the only difference being that instead of needing to direct three robots in sequence, we now needed to direct <strong>twenty six</strong> robots in sequence! Fortunately the memoization helped a good bit for this solution:</p>
+<pre><code class="language-julia">println(sum(find_complexity.(input, [26])))
+</code></pre>
+<pre><code>154115708116294
+</code></pre>
+<h2 id="looking-ahead">Looking ahead<a class="anchor" href="#looking-ahead">#</a></h2>
+<p>That&rsquo;s three weeks of the Advent of Code down! I&rsquo;ve actually <a href="https://bsky.app/profile/johnbedwards.io/post/3leg3fp3kbc2o" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>already finished the AOC</a>
+, so I know how difficult the final week will be (spoiler alert&ndash;really tough!) but I&rsquo;m in the process of writing it up now. I&rsquo;ve been really wearing out Dijkstra&rsquo;s here, and noticing that I&rsquo;m using a lot of the same functions and definitions&ndash;things I could probably have baked into my <code>Utils.jl</code> module. For example, there are a lot of mazes, so some kind of generic 2D Dijkstra&rsquo;s function would probably be useful. I&rsquo;d also consider it useful to store the <code>inbounds()</code> function I wrote in the module, along with the <code>DIRECTIONS</code> dictionary I use a lot of. Lessons to be learned for next year I suppose!</p>
+
+
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/julia/">julia</a>
+    </li></ul>
+
+ 
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Bluesky"
+         href="https://bsky.app/profile/johnbedwards.io"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/bluesky.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+
+
+</body>
+
+</html>

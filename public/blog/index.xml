@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Sat, 14 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2024 Advent of Code Week 3</title>
+      <link>https://johnbedwards.io/blog/aoc_2024_week_three/</link>
+      <pubDate>Mon, 30 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/aoc_2024_week_three/</guid>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here , and if you&amp;rsquo;d like to see my second week, click here .</description>
+    </item>
+    
     <item>
       <title>2024 Advent of Code Week 2</title>
       <link>https://johnbedwards.io/blog/aoc_2024_week_two/</link>

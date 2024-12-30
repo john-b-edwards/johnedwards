@@ -206,9 +206,9 @@ Reindeer can take any path through the maze, but rotating clockwise or counter-c
 
 Our task is to find the lowest possible score for our input.
 
-This turned out to be a job for Dijkstra's, annoying as it may have been. In previous examples, we have used Dijkstra's to find the shortest path through a maze, but it's important to remember that Dijkstra's doesn't neccesarily seek to minimize distance, rather, it seeks to minimize a cost function. This function canbe flat distance in some cases, but in this instance, we could use our own cost function (turns + movement) to find the lowest score path.
+This turned out to be a job for Dijkstra's, annoying as it may have been. In previous examples, we have used Dijkstra's to find the shortest path through a maze, but it's important to remember that Dijkstra's doesn't necessarily seek to minimize distance, rather, it seeks to minimize a cost function. This function can be simply distance in some cases, but in this instance, we could use our own cost function (turns + movement) to find the lowest score path.
 
-I began with building our dictionary of available paths, as well as our start and end nodes.
+I began with building our dictionary of available directions to move, as well as our start and end nodes.
 
 ``` julia
 directions = [(0,1),(-1,0),(0,-1),(1,0)]
@@ -307,9 +307,9 @@ prog = parse.(Int64, split(input[4][2],","))
 
 ### Part One
 
-This one was positively devilish! Here, we were provided with a computer of sorts. The computer knows eight instructions--a function that takes in an argument. The argument can refer to either one of the values stored in the register or it can refer to the value itself. Our input consists of initial values to the register as well as a "program" consisting of instructions for executing certain functions in order with these arguments.
+This one was positively devilish! Here, we were provided with a computer of sorts. The computer knows eight "instructions", defined as a function that takes in an argument. The argument can refer to either one of the values stored in the register or it can refer to the literal value of the argument itself. Our input consists of initial values to the register as well as a "program" consisting of instructions for executing certain functions in order with these arguments.
 
-The first part simply asked us to determine the output of the program. For this, I wrote a function that reflected literally the functions and modified the values stored in the register.
+The first part simply asked us to determine the output of the program. For this, I simply converted the written instructions into a Julia function and ran it with the inputs provided.
 
 ``` julia
 function computer(A, prog)
@@ -343,11 +343,11 @@ Any[4, 6, 3, 5, 6, 3, 5, 2, 1, 0]
 
 ### Part Two
 
-This is where the program got *exceptionally* tricky. We had to find a value for register "A" that would cause our program to return *itself* (something akin to a [Quine](https://en.wikipedia.org/wiki/Quine_(computing))).
+This is where the problem got *exceptionally* tricky. We had to find a value for register "A" that would cause our program to return *itself* (something akin to a [Quine](https://en.wikipedia.org/wiki/Quine_(computing))).
 
-I first tried brute forcing, starting with my initial value of A and going up. I quickly realized that it would be impossible. For my actual input, the program I had was 16 digits long, and for a given value of A of length n, the output would typically be around n digits long--so I would need to iterate through roughly all possible 16 digit numbers to brute force my value!
+I first tried brute forcing, starting with my initial value of A and going up. I quickly realized that it would be impossible. For my actual input, the program I had was 16 digits long, and for a given value of A of length n, the output would typically be around n digits long--so I would need to iterate through roughly all possible ten-quadrillion digit numbers to brute force my value!
 
-I tried inspecting my output closer, poking and prodding at how the program worked. I realized that for smaller digit numbers, I could get the output to replicate a small part of the program, and as I went up in terms of the number of digits for my input, I could produce more and more of the output. I also realized that the value stored in the `A` register was subject to some big changes in value--specifically, it was repeatedly divided by `2^3`, or `8`. Finally, I realized that the program would only terminate when the value of `A` was `0`. I set `A` to `1` and my input to `0`. From there, I added `1` to my input until I was able to replicate part of the program as my output. Once I did that, I multiplied by input by `8`, and repeated searching until I replicated a longer section of the program as my output. I did this until the entire output matched the program.
+I tried inspecting my output closer, poking and prodding at how the program worked. I realized that for smaller digit numbers, I could get the output to replicate a small part of the program, and as I went up in terms of the number of digits for my input, I could produce more and more of the output. I also realized that the value stored in the `A` register was subject to some big changes in value--specifically, it was repeatedly divided by `8`. Finally, I realized that the program would only terminate when the value of `A` was `0`. I set `A` to `1` and my input to `0`. From there, I added `1` to my input until I was able to replicate part of the program as my output. Once I did that, I multiplied by input by `8`, and repeated searching until I replicated a longer section of the program as my output. I did this until the entire output matched the program.
 
 This wasn't my most elegant solution! It ended up working just fine for me and resolved quite quickly (much more quickly than a *raw* brute force search), but I didn't test my solution with other inputs. Still, my main takeaway was the importance of poking and prodding at the program to understand it, which was required for me to solve it.
 
@@ -439,7 +439,7 @@ println(Int(dist_to_exit(input_parsed, 12)))
 
 ### Part Two
 
-The second part was not much trickier. We are provided with well more than 1024 bits (or 12 bits for the example)\--our task is to determine at which point the bits completely block the exit and make escaping impossible, and find the position of the block that made our escape impossible.
+The second part was not much trickier. We are provided with well more than 1024 bits--our task is to determine at which point the bits completely block the exit and make escaping impossible. Our answer is the position of the block that finally sealed the exit.
 
 For this, the function I wrote to simulate the bits falling into place as well as my Dijkstra's algorithm were fast enough that I could simply continue to simulate over the coordinates provided and check at which point the distance to the exit became `Inf`.
 
@@ -486,7 +486,7 @@ input = get_example(2024,19)
 
 For this problem, we are provided with a series of towels with different striped patterns (the first line of our input). Each letter corresponds to a particular color (r for red, b for blue, etc.). Our task is to determine if a pattern provided in the second part of our input is possible with the towels we're provided. For example, `brwrr` is possible by lining up `br`, `wr`, and `r` towels, but there is no combination of towels that would allow us to create the lineup `ubwu`.
 
-This required a recursive approach. After parsing the input, I wrote a function that took a string representing a sequence of towels and checked if any of the valid patterns from the first part of the input appeared in the start of the string. If the answer was yes, then I removed that from the start of the string and called the function again on the new string. If the answer was no, I returned `0`. If I passed in an empty string (indicating that each sequence could have been formed from the towels in the first part of the input), then I returned a value of 1. This function returned how many different ways one could combine the towels to form the desired pattern. I then ran this on the input and returned how many times this value was greater than one to find the number of possible combinations.
+This required a recursive approach. After parsing the input, I wrote a function that took a string representing a sequence of colors and checked if any of the valid patterns from the first part of the input appeared in the start of the string. If the answer was yes, then I removed that from the start of the string and called the function again on the new string. If the answer was no, I returned `0`. If I passed in an empty string (indicating that each sequence could have been formed from the towels in the first part of the input), then I returned a value of 1. This function returned how many different ways one could combine the towels to form the desired pattern. I then ran this on the input and returned how many times this value was greater than one to find the number of possible combinations.
 
 I sped up this function using [memoization](https://en.wikipedia.org/wiki/Memoization)--I used a dictionary to store all calls to the `is_valid()` function, so if I had previously called `is_valid()` with an exact argument before, rather than go through every pattern and do some `Regex`ing, I just returned what the dictionary had.
 
@@ -658,7 +658,7 @@ However, we cannot input these numbers ourselves--we have to control a robot to 
 
 Starting on the numerical keypad at the `A` key, we can direct a pointer to move up, down, left or right, then press `A` on the directional keypad to cause the pointer to input the number it is hovering over.
 
-However, we cannot even directly control this robot--we have to use this same keypad to control a robot *who in turn uses this keypad to control a second robot* to put the inputs on the numerical keypad. Our task is to determine the length of the shortest path to input a given numerical command, then multiply that by the numerical part of the input (so `780` in the first input above), then sum these values for each command.
+However, we cannot even directly control this robot--we have to use this same keypad to control a robot *who in turn uses this keypad to control a second robot* to put the inputs on the numerical keypad. Our task is to determine the length of the shortest path to input a given numerical command, then multiply that by the numerical part of the command (so `780` in the first input above), then sum these values for each command.
 
 This was a PITA, specifically because the problem stipulates that the pointer must remain in the bounds of the keypad: so in order to move from the `<` key to the `A` key, we cannot move `up` then `right`, but we ***must*** move `right` then `up`.
 
@@ -740,4 +740,4 @@ println(sum(find_complexity.(input, [26])))
 
 ## Looking ahead
 
-That's three weeks of the Advent of Code down! I've actually [already finished the AOC](https://bsky.app/profile/johnbedwards.io/post/3leg3fp3kbc2o), so I know how difficult the final week will be (spoiler alert--really tough!) but I'm in the process of writing it up now. I've been really wearing our Dijkstra's here, and noticing that I'm using a lot of the same functions and definitions--things I could probably have baked into my `Utils.jl` module. For example, there are a lot of mazes, so some kind of generic 2D Dijkstra's function would probably be useful. I'd also consider it useful to store the `inbounds()` function I wrote in the module, along with the `DIRECTIONS` dictionary I use a lot of. Lessons to be learned for next year I suppose!
+That's three weeks of the Advent of Code down! I've actually [already finished the AOC](https://bsky.app/profile/johnbedwards.io/post/3leg3fp3kbc2o), so I know how difficult the final week will be (spoiler alert--really tough!) but I'm in the process of writing it up now. I've been really wearing out Dijkstra's here, and noticing that I'm using a lot of the same functions and definitions--things I could probably have baked into my `Utils.jl` module. For example, there are a lot of mazes, so some kind of generic 2D Dijkstra's function would probably be useful. I'd also consider it useful to store the `inbounds()` function I wrote in the module, along with the `DIRECTIONS` dictionary I use a lot of. Lessons to be learned for next year I suppose!

@@ -1,7 +1,7 @@
 ---
-date: "2024-12-31"
+date: "2024-12-30"
 description: My write-up of the final week of Advent of Code problems
-draft: false
+draft: true
 keywords:
 - julia
 slug: aoc_2024_week_four
