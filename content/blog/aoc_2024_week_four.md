@@ -1,7 +1,7 @@
 ---
-date: "2024-12-30"
+date: "2024-12-31"
 description: My write-up of the final week of Advent of Code problems
-draft: true
+draft: false
 keywords:
 - julia
 slug: aoc_2024_week_four
@@ -14,7 +14,7 @@ bsky_thread:
 
 ## Introduction
 
-The [Advent of Code](https://adventofcode.com/) (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at this links: [Week One](https://johnbedwards.io/blog/aoc_2024_week_one/), [Week Two](https://johnbedwards.io/blog/aoc_2024_week_two/), and [Week Three](https://johnbedwards.io/blog/aoc_2024_week_three/). Let's finish strong with Week Four!
+The [Advent of Code](https://adventofcode.com/) (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at these links: [week one](https://johnbedwards.io/blog/aoc_2024_week_one/), [week two](https://johnbedwards.io/blog/aoc_2024_week_two/), and [week three](https://johnbedwards.io/blog/aoc_2024_week_three/). Let's finish strong with week four!
 
 ## [Day Twenty-Two: Monkey Market](https://adventofcode.com/2024/day/22)
 
@@ -56,7 +56,7 @@ println(sum(sim_secret.(input, [2000])))
 
 ### Part Two
 
-The second part was considerably more tricky. The price that each buyer purchases bananas at is the one digit of their secret number at a given iteration. We are employing a monkey to sell our bounty of bananas--however, the monkey only knows how to sell when it encounters a particular sequence of four consecutive changes in price from the buyer's side. So if a buyer had the following pseudorandom sequence:
+The second part was considerably more tricky. The price that each buyer purchases bananas at is the ones digit of their secret number at a given iteration. We are employing a monkey to sell our bounty of bananas--however, the monkey only knows how to sell when it encounters a particular sequence of four consecutive changes in price from the buyer's side. So if a buyer had the following pseudorandom sequence:
 
 ```         
      123: 3 
@@ -145,7 +145,7 @@ map((i) -> add_edge!(g, lookup[input_x[i]],
                      eachindex(input))
 ```
 
-From there, I thought it would be arbitrary to simply use the `triangles()` function from `Graphs.jl` to grab these values. Unfortunately, `triangles(g, v)` returns the **number** of triangles that `v` is a part of, but it doesn't tell us what these triangles are. So in the example input, there is a triangle `tc,td,wh` that contains two potential values that start with the letter `t`. Calling `triangles` on each node in the graph that starts with the letter `t` will double count this specific triangle, and I couldn't figure out a way to filter it out.
+From there, I thought it would be arbitrary to simply use the `triangles()` function from `Graphs.jl` to grab these values. Unfortunately, `triangles(g, v)` returns the **number** of triangles that `v` is a part of, but it doesn't tell us what these triangles are. So in the example input, there is a triangle `tc,td,wh` that contains two potential values that start with the letter `t`. Calling `triangles` on each node in the graph that starts with the letter `t` will double count this specific triangle, and I couldn't figure out a way to filter to each unique triangle with the function.
 
 I would up instead just looking at the immediate neighbors of each point that started with the letter `t`, then checking the immediate neighbors of those points to see if they were connected. I did this as a `Set()` to handle triangles with multiple `t` computers, as illustrated above.
 
@@ -207,7 +207,7 @@ Here, we are provided with a series of inputs (`x00,y00` and so on), then a seri
 
 Our task for part one was to first uncover what the output of these values produces, by converting the outcomes of `zXX` from binary to base-10 (where `z00` reflects the `2^0`th place in the binary representation of the figure, `z01` represents the `2^1`th place, and so on).
 
-For this, I wrote a function to simply parse the input and store these values in a dictionary. In the event that an operation referenced an intermediate value that wasn't defined already defined, I recursively searched for the line that defined it and executed that line. From there, I parsed the output of all of the z-values into a base-10 number.
+For this, I wrote a function to simply parse the input and store these values in a dictionary. In the event that an operation referenced an intermediate value that wasn't already defined, I recursively searched for the line that defined it and executed it. From there, I parsed the output of all of the z-values into a base-10 number.
 
 ``` julia
 input_1 = [x for x in input if length(x) == 2]
@@ -247,9 +247,9 @@ println(parse(Int64, join(parse_input_2.(z_sorted)), base=2)) # this doesn't wor
 
 ### Part Two
 
-The second part revealed that this program was designed to add two numbers together--much as the `zXX` numbers were the binary representation of some base-10 number, so did `xXX` and `yXX`. The program was supposed to add `xXX` and `yXX` together to produce `zXX`, but some of the output values had been swapped around--so I needed to find out which where the swapped values, and return those as my answer in alphabetical order.
+The second part revealed that this program was designed to add two numbers together--much as the `zXX` numbers were the binary representation of some base-10 number, so did `xXX` and `yXX`. The program was supposed to add `xXX` and `yXX` together to produce `zXX`, but some of the output values had been swapped around--so I needed to find out what the swapped values were, and return those as my answer in alphabetical order.
 
-This was really tricky! There was no possible way to go through all of the potential swaps (the puzzle revealed that eight outputs had been swapped, yielding a number of potential combinations far greater than my computer could reasonably handle). After digging around online (and getting spoiled mildly on social media\...) I learned that this was supposed to represent a [full adder](https://en.wikipedia.org/wiki/Adder_(electronics)) which is used in electronics to add numbers together using logic gates.
+This was really tricky! There was no possible way to go through all of the potential swaps (there were 222 inputs defined and eight swaps made, so there were 128,795,283,347,445 possible swapped values). After digging around online (and getting spoiled mildly on social media\...) I learned that this was supposed to represent a [full adder](https://en.wikipedia.org/wiki/Adder_(electronics)) which is used in electronics to add numbers together using logic gates.
 
 Knowing the schema of the adder, I was able to write some rules to check the inputs and outputs of the gates to determine if they were valid or not. From there, I didn't need to identify which gates had been swapped with which--since we just needed to return the swapped gates in alphabetical order, all that was needed was to identify that the gates were wrong.
 
@@ -346,7 +346,7 @@ and a lock may look like this:
 #####
 ```
 
-A lock can only fit into a key if none of the `#` values overlap when the matrix of the key is overlaid on the map of the lock. We have to determine the number of unique pairs of locks and keys that would fit each other.
+A lock can only fit into a key if none of the `#` values overlap when the matrix of the key is overlaid on the matrix of the lock. We have to determine the number of unique pairs of locks and keys that would fit each other.
 
 To solve this, I first split up my input into locks and keys:
 
@@ -356,7 +356,7 @@ my_keys = [x for x in keys_and_locks if all(x[1:1,1:5] .== "#")]
 my_locks = [x for x in keys_and_locks if all(x[7:7,1:5] .== "#")]
 ```
 
-Then, I wrote a function that would test if a key fit into a given lock, by calculating how many `#` symbols were in each column, and added those together for each lock and key. If any values summed to more than five, the combination was invalid!
+Then, I wrote a function that would test if a key fit into a given lock by calculating how many `#` symbols were in each column, and added those together for each lock and key. If any values summed to more than five, the combination was invalid!
 
 ``` julia
 function test_fit(my_key, my_lock)
@@ -390,4 +390,4 @@ There was no part two for this problem!
 
 ## Closing thoughts
 
-I had a wonderful time doing the Advent of Code this year (as opposed to 2022, when I became quite sick in early December and realized I was skipping out on desperately needed sleep just to try to score meaningless leaderboard points\...). I really struggled with some of these problems, but struggling with them was good--I learned a lot in the process (and I certainly learned more than the folks who just fed the problems into an LLM repeatedly until they got an answer)! I'm not sure I'll do it again next year--just having gone all the way through a full AoC was quite taxing, but thank you all for following along! Happy holidays!
+I had a wonderful time doing the Advent of Code this year (as opposed to 2022, when I became quite sick in early December and realized I was skipping out on desperately needed sleep just to try to score meaningless leaderboard points)! I really struggled with some of these problems, but struggling with them was good--I learned a lot in the process (and I certainly learned more than the folks who just fed the problems into an LLM repeatedly until they got an answer)! I'm not sure I'll do it again next year--just having gone all the way through a full AoC was quite taxing, but thank you all for following along! Happy holidays!

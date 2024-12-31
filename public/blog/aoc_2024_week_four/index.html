@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>2024 Advent of Code Week 4 | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="My write-up of the final week of Advent of Code problems">
+  <meta name="keywords" content="julia">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2024 Advent of Code Week 4" />
+  <meta name="twitter:description" content="My write-up of the final week of Advent of Code problems"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "2024 Advent of Code Week 4",
+      "headline" : "2024 Advent of Code Week 4",
+      "description" : "My write-up of the final week of Advent of Code problems",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2024",
+      "datePublished": "2024-12-31 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2024-12-31 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/aoc_2024_week_four\/",
+      "wordCount" : "2255",
+      "keywords" : ["julia", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">2024 Advent of Code Week 4</h1>
+            <time datetime="2024-12-31 00:00:00 &#43;0000 UTC" class="post__date">Dec 31 2024</time> 
+          </header>
+          <article class="post__content">
+              
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction">#</a></h2>
+<p>The <a href="https://adventofcode.com/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Advent of Code</a>
+ (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at these links: <a href="https://johnbedwards.io/blog/aoc_2024_week_one/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>week one</a>
+, <a href="https://johnbedwards.io/blog/aoc_2024_week_two/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>week two</a>
+, and <a href="https://johnbedwards.io/blog/aoc_2024_week_three/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>week three</a>
+. Let&rsquo;s finish strong with week four!</p>
+<h2 id="day-twenty-two-monkey-markethttpsadventofcodecom2024day22"><a href="https://adventofcode.com/2024/day/22" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Twenty-Two: Monkey Market</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,22)
+</code></pre>
+<pre><code>4-element Vector{Int64}:
+    1
+   10
+  100
+ 2024
+</code></pre>
+<h3 id="part-one">Part One<a class="anchor" href="#part-one">#</a></h3>
+<p>For this problem, we are at a market where we are selling bananas to monkeys. Each monkey has a secret number generated via a pseudorandom process. From their starting secret number (the puzzle input), the number is run through a function. Each iteration of the function on the secret number produces a new secret number. Our task for part one is to run through this process with each monkey and sum their secret numbers following 2000 iterations.</p>
+<p>This was quite simple to put together&ndash;I simply defined the pseudorandom rules in Julia, put it into a function, and ran the function on each secret number 2000 times.</p>
+<pre><code class="language-julia">function sim_secret(val, n)
+    for i in 1:n
+        val = ((val * 64) ⊻ val) % 16777216
+        val = (Int(floor(val / 32)) ⊻ val) % 16777216
+        val = ((val * 2048) ⊻ val) % 16777216
+    end
+    return val
+end
+println(sum(sim_secret.(input, [2000])))
+</code></pre>
+<pre><code>37327623
+</code></pre>
+<h3 id="part-two">Part Two<a class="anchor" href="#part-two">#</a></h3>
+<p>The second part was considerably more tricky. The price that each buyer purchases bananas at is the ones digit of their secret number at a given iteration. We are employing a monkey to sell our bounty of bananas&ndash;however, the monkey only knows how to sell when it encounters a particular sequence of four consecutive changes in price from the buyer&rsquo;s side. So if a buyer had the following pseudorandom sequence:</p>
+<pre><code>     123: 3 
+15887950: 0 (-3)
+16495136: 6 (6)
+  527345: 5 (-1)
+  704524: 4 (-1)
+ 1553684: 4 (0)
+12683156: 6 (2)
+11100544: 4 (-2)
+12249484: 4 (0)
+ 7753432: 2 (-2)
+</code></pre>
+<p>The best price to sell at (6 bananas) occurs only after the buyer&rsquo;s price changes by <code>-1, -1, 0, 2</code>. We need to find the four digit sequence that would generate the most money from selling bananas to <em>all of the buyers in our input</em>, and return how much money we would make.</p>
+<p>My solution turned out slower and less optimized than I liked, but it still ran in ~5 minutes on my dinky work laptop, so I didn&rsquo;t feel <strong>too</strong> bad about it. For each monkey, I simmed their secret number and stored all price change sequences in a dictionary. When I encountered a particular price sequence for the first time for a given monkey, I added the ones digit of their secret number to the value already stored for that sequence in the dictionary. From there, I found the maximum value stored in the dictionary.</p>
+<pre><code class="language-julia">changes = Dict()
+for secret in input
+    all_sequences, tmp_changes = [], []
+    for j in 1:2000
+        current_price = digits(secret)[1]
+        secret = sim_secret(secret, 1)
+        new_price = digits(secret)[1]
+        change = new_price - current_price
+        if j &gt;= 4
+            push!(tmp_changes, change)
+            if !in(tmp_changes,all_sequences) &amp;&amp; tmp_changes in keys(changes) 
+                changes[tmp_changes] = changes[tmp_changes] + new_price
+            elseif !in(tmp_changes,all_sequences)
+                changes[tmp_changes] = new_price
+            end
+            push!(all_sequences, tmp_changes)
+            tmp_changes = tmp_changes[2:end]
+        else push!(tmp_changes, change) end
+    end
+end
+</code></pre>
+<pre><code>24
+</code></pre>
+<h2 id="day-twenty-three-lan-partyhttpsadventofcodecom2024day23"><a href="https://adventofcode.com/2024/day/23" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Twenty-Three: LAN Party</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+using Graphs
+input = get_example(2024,23)
+input = split.(input,&quot;-&quot;)
+</code></pre>
+<pre><code>32-element Vector{Vector{SubString{String}}}:
+ [&quot;kh&quot;, &quot;tc&quot;]
+ [&quot;qp&quot;, &quot;kh&quot;]
+ [&quot;de&quot;, &quot;cg&quot;]
+ ⋮
+ [&quot;wh&quot;, &quot;qp&quot;]
+ [&quot;tb&quot;, &quot;vc&quot;]
+ [&quot;td&quot;, &quot;yn&quot;]
+</code></pre>
+<h3 id="part-one-1">Part One<a class="anchor" href="#part-one-1">#</a></h3>
+<p>We are provided with a list of computer connections&ndash;each two-letter string is a computer, and each pairing indicates that one computer is connected to another. For the first part of the problem, we need to find the number of connections that involve three computers (e.g. there is some connection from <code>&quot;aa&quot;</code> to <code>&quot;bb&quot;</code> and there is some connection from <code>&quot;bb&quot;</code> to <code>&quot;cc&quot;</code> and there is some connection from <code>&quot;cc&quot;</code> to <code>&quot;aa&quot;</code>) and contain a computer whose name begins with a <code>t</code>.</p>
+<p>First, I went through and parsed the input down into a couple useful pieces of data, including all computers listed in the input.</p>
+<pre><code class="language-julia">input_x = [i[1] for i in input]
+input_y = [i[2] for i in input]
+computers = unique(collect(Base.Iterators.flatten(input)))
+lookup = Dict(computers[x] =&gt; x for x in eachindex(computers))
+</code></pre>
+<p>From there, I relied on the <code>Graphs.jl</code> package, which came in super handy. I was able to construct a simple, undirected graph consisting of all the computers in the input and their connections.</p>
+<pre><code class="language-julia">g = SimpleGraph(length(computers),0)
+map((i) -&gt; add_edge!(g, lookup[input_x[i]], 
+                        lookup[input_y[i]]),
+                     eachindex(input))
+</code></pre>
+<p>From there, I thought it would be arbitrary to simply use the <code>triangles()</code> function from <code>Graphs.jl</code> to grab these values. Unfortunately, <code>triangles(g, v)</code> returns the <strong>number</strong> of triangles that <code>v</code> is a part of, but it doesn&rsquo;t tell us what these triangles are. So in the example input, there is a triangle <code>tc,td,wh</code> that contains two potential values that start with the letter <code>t</code>. Calling <code>triangles</code> on each node in the graph that starts with the letter <code>t</code> will double count this specific triangle, and I couldn&rsquo;t figure out a way to filter to each unique triangle with the function.</p>
+<p>I would up instead just looking at the immediate neighbors of each point that started with the letter <code>t</code>, then checking the immediate neighbors of those points to see if they were connected. I did this as a <code>Set()</code> to handle triangles with multiple <code>t</code> computers, as illustrated above.</p>
+<pre><code class="language-julia">ts = [lookup[x] for x in computers[occursin.(r&quot;^t&quot;, computers)]]
+println(length(unique(vcat(vcat(
+    [[[Set([t, n, x]) 
+        for x in intersect(neighbors(g, t), neighbors(g, n))] 
+        for n in neighbors(g, t)] 
+        for t in ts]...)...)
+)))
+</code></pre>
+<pre><code>7
+</code></pre>
+<h3 id="part-two-1">Part Two<a class="anchor" href="#part-two-1">#</a></h3>
+<p>The second part was actually <em>easier</em> than the first thanks to the <code>Graphs.jl</code> package, as if such a thing were possible this late in the Advent of Code. Our task was to find the largest set of computers that were all connected to each other&ndash;our solution is all of these computers arranged in alphabetical order.</p>
+<p>The problem is asking for the <a href="https://en.wikipedia.org/wiki/Clique_%28graph_theory%29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>maximal clique</a>
+ of the graph formed by these computers, and fortunately, there&rsquo;s a function in <code>Graphs.jl</code> that finds just that easy-peasy!</p>
+<pre><code class="language-julia">replace(join(sort(
+    computers[argmax(length, maximal_cliques(g))]
+) .* &quot;,&quot;),r&quot;,$&quot;=&gt;&quot;&quot;)
+</code></pre>
+<pre><code>&quot;co,de,ka,ta&quot;
+</code></pre>
+<h2 id="day-twenty-four-crossed-wireshttpsadventofcodecom2024day24"><a href="https://adventofcode.com/2024/day/24" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Twenty-Four: Crossed Wires</a>
+</h2>
+<pre><code class="language-julia"># input
+include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,24)
+</code></pre>
+<pre><code>9-element Vector{Vector{String}}:
+ [&quot;x00:&quot;, &quot;1&quot;]
+ [&quot;x01:&quot;, &quot;1&quot;]
+ [&quot;x02:&quot;, &quot;1&quot;]
+ [&quot;y00:&quot;, &quot;0&quot;]
+ [&quot;y01:&quot;, &quot;1&quot;]
+ [&quot;y02:&quot;, &quot;0&quot;]
+ [&quot;x00&quot;, &quot;AND&quot;, &quot;y00&quot;, &quot;-&gt;&quot;, &quot;z00&quot;]
+ [&quot;x01&quot;, &quot;XOR&quot;, &quot;y01&quot;, &quot;-&gt;&quot;, &quot;z01&quot;]
+ [&quot;x02&quot;, &quot;OR&quot;, &quot;y02&quot;, &quot;-&gt;&quot;, &quot;z02&quot;]
+</code></pre>
+<h3 id="part-one-2">Part One<a class="anchor" href="#part-one-2">#</a></h3>
+<p>Here, we are provided with a series of inputs (<code>x00,y00</code> and so on), then a series of logical operations conducted on these inputs that produce output values <code>z00</code>. Though not shown in the example, the assignments in the input will use and produce intermediate values (like <code>ntg XOR fgs -&gt; mjb</code>).</p>
+<p>Our task for part one was to first uncover what the output of these values produces, by converting the outcomes of <code>zXX</code> from binary to base-10 (where <code>z00</code> reflects the <code>2^0</code>th place in the binary representation of the figure, <code>z01</code> represents the <code>2^1</code>th place, and so on).</p>
+<p>For this, I wrote a function to simply parse the input and store these values in a dictionary. In the event that an operation referenced an intermediate value that wasn&rsquo;t already defined, I recursively searched for the line that defined it and executed it. From there, I parsed the output of all of the z-values into a base-10 number.</p>
+<pre><code class="language-julia">input_1 = [x for x in input if length(x) == 2]
+initial_keys = Dict(replace(i[1],&quot;:&quot;=&gt;&quot;&quot;) =&gt; parse(Int64, i[2]) for i in input_1)
+input_2 = [x for x in input if length(x) != 2]
+all_ins = collect(Base.Iterators.flatten([(x[1], x[3], x[5]) for x in input_2]))
+z_sorted = [i for i in input_2 if occursin(r&quot;^z&quot;,i[5])][sortperm([i[5] for i in input_2 if occursin(r&quot;^z&quot;,i[5])],rev=true)]
+# part one
+function parse_input_2(i)
+    if !in(i[1], keys(values))
+        if i[1] in keys(initial_keys)
+            values[i[1]] = initial_keys[i[1]]
+        else
+            new_line = [j for j in input_2 if j[5] == i[1]][1]
+            values[i[1]] = parse_input_2(new_line)
+        end
+    end
+    if !in(i[3], keys(values))
+        if i[3] in keys(initial_keys)
+            values[i[3]] = initial_keys[i[3]]
+        else
+            new_line = [j for j in input_2 if j[5] == i[3]][1]
+            values[i[3]] = parse_input_2(new_line)
+        end
+    end
+    if i[2] == &quot;AND&quot;
+        values[i[5]] = values[i[1]] &amp; values[i[3]]
+    elseif i[2] == &quot;OR&quot;
+        values[i[5]] = values[i[1]] | values[i[3]]
+    elseif i[2] == &quot;XOR&quot;
+        values[i[5]] = values[i[1]] ⊻ values[i[3]]
+    end
+end
+values = Dict()
+println(parse(Int64, join(parse_input_2.(z_sorted)), base=2)) # this doesn't work well with the example, sorry!
+</code></pre>
+<h3 id="part-two-2">Part Two<a class="anchor" href="#part-two-2">#</a></h3>
+<p>The second part revealed that this program was designed to add two numbers together&ndash;much as the <code>zXX</code> numbers were the binary representation of some base-10 number, so did <code>xXX</code> and <code>yXX</code>. The program was supposed to add <code>xXX</code> and <code>yXX</code> together to produce <code>zXX</code>, but some of the output values had been swapped around&ndash;so I needed to find out what the swapped values were, and return those as my answer in alphabetical order.</p>
+<p>This was really tricky! There was no possible way to go through all of the potential swaps (there were 222 inputs defined and eight swaps made, so there were 128,795,283,347,445 possible swapped values). After digging around online (and getting spoiled mildly on social media...) I learned that this was supposed to represent a <a href="https://en.wikipedia.org/wiki/Adder_%28electronics%29" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>full adder</a>
+ which is used in electronics to add numbers together using logic gates.</p>
+<p>Knowing the schema of the adder, I was able to write some rules to check the inputs and outputs of the gates to determine if they were valid or not. From there, I didn&rsquo;t need to identify which gates had been swapped with which&ndash;since we just needed to return the swapped gates in alphabetical order, all that was needed was to identify that the gates were wrong.</p>
+<pre><code class="language-julia">my_vec = ['x','y','z']
+println(join(sort(unique([i[5] for i in input_2 if 
+    (
+        (i[2] == &quot;XOR&quot;) &amp; 
+        !in(i[1][1],my_vec) &amp; 
+        !in(i[3][1],my_vec) &amp; 
+        !in(i[5][1],my_vec)
+    ) |
+    (
+        (i[2] == &quot;XOR&quot;) &amp;&amp; 
+            length([j for j in input_2 if (i[5] in [j[1],j[3]]) &amp; 
+                    (j[2] == &quot;OR&quot;)]) &gt; 0
+    ) |
+    (
+        (i[2] == &quot;AND&quot;) &amp; 
+        !in(&quot;x00&quot;,[i[1],i[3]]) &amp;&amp; 
+            length([j for j in input_2 if (i[5] in [j[1],j[3]]) &amp; 
+                    (j[2] != &quot;OR&quot;)]) &gt; 0
+    ) |
+    (
+        (i[5][1] == 'z') &amp; 
+        (i[2] != &quot;XOR&quot;) &amp; 
+        (i[5] != &quot;z45&quot;)
+    )
+])) .* &quot;,&quot;)[1:end-1]) # again, doesn't really work for the example!
+</code></pre>
+<h2 id="day-twenty-five-code-chroniclehttpsadventofcodecom2024day25"><a href="https://adventofcode.com/2024/day/25" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Day Twenty-Five: Code Chronicle</a>
+</h2>
+<pre><code class="language-julia">include(&quot;Utils.jl&quot;)
+using .Utils
+input = get_example(2024,25)
+input = [string(i) for i in mapreduce(permutedims, vcat, split.(input,&quot;&quot;))]
+</code></pre>
+<pre><code>35×5 Matrix{String}:
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;
+ ⋮
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;.&quot;
+ &quot;#&quot;  &quot;.&quot;  &quot;#&quot;  &quot;.&quot;  &quot;#&quot;
+ &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;  &quot;#&quot;
+</code></pre>
+<h3 id="part-one-3">Part One<a class="anchor" href="#part-one-3">#</a></h3>
+<p>Much to my relief, the 25th day of the Advent of Code was short and sweet! The input consists of schematics with lock (a slice of the input matrix that starts with a row of all <code>#</code> and ends with a row of all <code>.</code>) and keys (starts with <code>.</code> and ends with <code>#</code>). So a key may look like this:</p>
+<pre><code>#####
+.####
+.####
+.####
+.#.#.
+.#...
+.....
+</code></pre>
+<p>and a lock may look like this:</p>
+<pre><code>.....
+#....
+#....
+#...#
+#.#.#
+#.###
+#####
+</code></pre>
+<p>A lock can only fit into a key if none of the <code>#</code> values overlap when the matrix of the key is overlaid on the matrix of the lock. We have to determine the number of unique pairs of locks and keys that would fit each other.</p>
+<p>To solve this, I first split up my input into locks and keys:</p>
+<pre><code class="language-julia">keys_and_locks = [input[i:i+6,:] for i in 1:7:size(input)[1]]
+my_keys = [x for x in keys_and_locks if all(x[1:1,1:5] .== &quot;#&quot;)]
+my_locks = [x for x in keys_and_locks if all(x[7:7,1:5] .== &quot;#&quot;)]
+</code></pre>
+<p>Then, I wrote a function that would test if a key fit into a given lock by calculating how many <code>#</code> symbols were in each column, and added those together for each lock and key. If any values summed to more than five, the combination was invalid!</p>
+<pre><code class="language-julia">function test_fit(my_key, my_lock)
+    key_heights = [sum(my_key[2:7,i] .== &quot;#&quot;) for i in 1:5]
+    lock_heights = [sum(my_lock[1:6,i] .== &quot;#&quot;) for i in 1:5]
+    return all((key_heights .+ lock_heights) .&lt;= 5)
+end
+</code></pre>
+<p>Finally, I wrote a nested for loop to test all of the locks and keys. And I got my answer!</p>
+<pre><code class="language-julia">counter = 0
+for my_key in my_keys
+    for my_lock in my_locks
+        if test_fit(my_key, my_lock)
+            global counter = counter + 1
+        end
+    end
+end
+println(counter)
+</code></pre>
+<pre><code>3
+</code></pre>
+<h3 id="part-two-3">Part Two<a class="anchor" href="#part-two-3">#</a></h3>
+<p>There was no part two for this problem!</p>
+<h2 id="closing-thoughts">Closing thoughts<a class="anchor" href="#closing-thoughts">#</a></h2>
+<p>I had a wonderful time doing the Advent of Code this year (as opposed to 2022, when I became quite sick in early December and realized I was skipping out on desperately needed sleep just to try to score meaningless leaderboard points)! I really struggled with some of these problems, but struggling with them was good&ndash;I learned a lot in the process (and I certainly learned more than the folks who just fed the problems into an LLM repeatedly until they got an answer)! I&rsquo;m not sure I&rsquo;ll do it again next year&ndash;just having gone all the way through a full AoC was quite taxing, but thank you all for following along! Happy holidays!</p>
+
+
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/julia/">julia</a>
+    </li></ul>
+
+ 
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Bluesky"
+         href="https://bsky.app/profile/johnbedwards.io"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/bluesky.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+
+
+</body>
+
+</html>
