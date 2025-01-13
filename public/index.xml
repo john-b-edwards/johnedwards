@@ -7,7 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Tue, 31 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What I learned from running 26 miles</title>
+      <link>https://johnbedwards.io/blog/marathon_training/</link>
+      <pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/marathon_training/</guid>
+      <description>Introduction I sent out an open request a few weeks ago for potential blog post topics. I expected a lot of requests for technical or sports stuff, but I also got some requests about stuff I did in my personal life&amp;mdash;specifically, An Nguyen requested to hear about my experience training for a marathon!
+marathon training
+— An Nguyen (@nguyenank.bsky.social) November 19, 2024 at 10:59 AM
+After writing a bunch of heavily technical posts about the Advent of Code in December , I thought it would be a good idea to tackle something less technical to balance out my blog&amp;rsquo;s tone.</description>
+    </item>
+    
     <item>
       <title>2024 Advent of Code Week 4</title>
       <link>https://johnbedwards.io/blog/aoc_2024_week_four/</link>

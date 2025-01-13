@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>life on John Edwards</title>
+    <link>https://johnbedwards.io/tags/life/</link>
+    <description>Recent content in life on John Edwards</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2021</copyright>
+    <lastBuildDate>Sun, 12 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What I learned from running 26 miles</title>
+      <link>https://johnbedwards.io/blog/marathon_training/</link>
+      <pubDate>Sun, 12 Jan 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/marathon_training/</guid>
+      <description>Introduction I sent out an open request a few weeks ago for potential blog post topics. I expected a lot of requests for technical or sports stuff, but I also got some requests about stuff I did in my personal life&amp;mdash;specifically, An Nguyen requested to hear about my experience training for a marathon!
+marathon training
+— An Nguyen (@nguyenank.bsky.social) November 19, 2024 at 10:59 AM
+After writing a bunch of heavily technical posts about the Advent of Code in December , I thought it would be a good idea to tackle something less technical to balance out my blog&amp;rsquo;s tone.</description>
+    </item>
+    
+  </channel>
+</rss>
