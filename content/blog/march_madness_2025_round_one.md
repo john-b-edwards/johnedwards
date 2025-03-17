@@ -11,7 +11,7 @@ tags:
 - Julia
 title: March Madness 2025 First Round Projections
 toc: true
-bsky_thread: 
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lklnvb2wks2s
 ---
 
 # Introduction and methodology
