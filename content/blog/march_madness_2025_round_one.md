@@ -26,7 +26,7 @@ Okay, enough flim-flam jibber jabber, let's get to the projections.
 
 # Mens Tournament Odds
 
-These odds reflect each team's odds of reaching a given round in the tournament--for example, Auburn has a 61% chance of reaching the Sweet 16 by my projections.
+These odds reflect each team's odds of winning a given round in the tournament--for example, Auburn has a 61% chance of winning in the Sweet 16 by my projections.
 
 <table class="dataframe" data-quarto-disable-processing="false" data-quarto-bootstrap="false" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: 'Spline Sans Mono', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; display: table; border-collapse: collapse; line-height: normal; margin-left: 50%; transform: translateX(-50%); margin-right: auto; color: #333333; font-size: 12px; font-weight: 500; font-style: normal; background-color: #FFFFFF; width: 200%; border-top-style: none; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;" bgcolor="#FFFFFF">
 <thead style="border-style: none;">
@@ -34,7 +34,7 @@ These odds reflect each team's odds of reaching a given round in the tournament-
       <td colspan="8" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="border-style: none; color: #333333; font-size: 26px; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; background-color: #FFFFFF; text-align: left; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3;  font-weight: 650;" bgcolor="#FFFFFF" align="left"><div style="display: flex; justify-content: space-between; align-items: center;">
   <div style="flex-grow: 1;">
     <span style="font-weight: bold; font-size: 24px; line-height: 0.5;">Men's March Madness Predictions</span><br>
-    <span style="font-size: 16px; font-weight: normal; line-height: 0.5;">Probability of reaching a given tournament round</span>
+    <span style="font-size: 16px; font-weight: normal; line-height: 0.5;">Probability of winning a given tournament round</span>
   </div>
   <div>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/March_Madness_logo.svg/2560px-March_Madness_logo.svg.png" style="height: 45px; width: auto; vertical-align: middle;">
@@ -609,7 +609,7 @@ These odds reflect each team's odds of reaching a given round in the tournament-
       <td colspan="8" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="border-style: none; color: #333333; font-size: 26px; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; background-color: #FFFFFF; text-align: left; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3;  font-weight: 650;" bgcolor="#FFFFFF" align="left"><div style="display: flex; justify-content: space-between; align-items: center;">
   <div style="flex-grow: 1;">
     <span style="font-weight: bold; font-size: 24px; line-height: 0.5;">Women's March Madness Predictions</span><br>
-    <span style="font-size: 16px; font-weight: normal; line-height: 0.5;">Probability of reaching a given tournament round</span>
+    <span style="font-size: 16px; font-weight: normal; line-height: 0.5;">Probability of winning a given tournament round</span>
   </div>
   <div>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/March_Madness_logo.svg/2560px-March_Madness_logo.svg.png" style="height: 45px; width: auto; vertical-align: middle;">
