@@ -12,6 +12,8 @@ draft: false
 toc: true
 ---
 
+![](https://github.com/john-b-edwards/cbbd-data/raw/master/data/outputs/cbbreadr_hex.png?raw=true)
+
 I'm pleased to announce my new college basketball R package, `{cbbreadr}`, has been approved and is now available on CRAN! You can now install with `install.packages()` from base R like so:
 
 ```r
@@ -123,6 +125,6 @@ cbbreadr::load_plays(2025) |>
   )
 ```
 
-![sample cbbreadr plot](public\images\cbbreadr\sample_plot.png)
+![sample cbbreadr plot](https://github.com/john-b-edwards/johnedwards/blob/main/public/images/cbbreadr/sample_plot.png?raw=true)
 
 There are a great many more things you can do with this package; I hope to demonstrate some of them for you later, but I also hope others can use this package to build tutorials and do college basketball research as well. If you encounter any errors or issues with the package, please leave a note [here](https://github.com/john-b-edwards/cbbreadr), and if you are building anything with this package--from the most most barebones of scatterplots to the biggest and best machine-learning model college basketball has ever seen--please let me know about it on [Bluesky](https://bsky.app/profile/johnbedwards.io), I would love to see what you can create with the package!
