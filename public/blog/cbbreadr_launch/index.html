@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <title>cbbreadr: a new package for college basketball data | John Edwards</title>
+
+  <meta charset="UTF-8">
+  <meta name="language" content="en">
+  <meta name="description" content="Loading college basketball data into R rapidly using cbbreadr">
+  <meta name="keywords" content="college_basketball , basketball">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="cbbreadr: a new package for college basketball data" />
+  <meta name="twitter:description" content="Loading college basketball data into R rapidly using cbbreadr"/>
+  <meta name="twitter:site" content="https://twitter.com/John_B_Edwards" />
+  <meta name="twitter:creator" content="https://twitter.com/John_B_Edwards" />
+  
+
+  <link rel="shortcut icon" type="image/png" href="https://johnbedwards.io/favicon.ico" />
+
+
+  
+  
+    
+ 
+  
+  
+  
+  
+  
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/post.min.86d1effd4c412b85ac13db53a90c473a0f256f789b821e131125c9aa25cb6a6d.css" integrity="sha256-htHv/UxBK4WsE9tTqQxHOg8lb3ibgh4TESXJqiXLam0="/>
+  
+    
+    <link type="text/css" rel="stylesheet" href="https://johnbedwards.io/css/custom.min.bd49205c33bab2422fcdba342cf18b5cdee619fe07a666f0191a2eb3681c87af.css" integrity="sha256-vUkgXDO6skIvzbo0LPGLXN7mGf4HpmbwGRous2gch68="/>
+  
+  
+   
+   
+    
+
+<script type="application/ld+json">
+  
+    {
+      "@context" : "http://schema.org",
+      "@type" : "BlogPosting",
+      "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/johnbedwards.io"
+      },
+      "articleSection" : "blog",
+      "name" : "cbbreadr: a new package for college basketball data",
+      "headline" : "cbbreadr: a new package for college basketball data",
+      "description" : "Loading college basketball data into R rapidly using cbbreadr",
+      "inLanguage" : "en-US",
+      "author" : "",
+      "creator" : "",
+      "publisher": "",
+      "accountablePerson" : "",
+      "copyrightHolder" : "",
+      "copyrightYear" : "2025",
+      "datePublished": "2025-07-25 00:00:00 \u002b0000 UTC",
+      "dateModified" : "2025-07-25 00:00:00 \u002b0000 UTC",
+      "url" : "https:\/\/johnbedwards.io\/blog\/cbbreadr_launch\/",
+      "wordCount" : "890",
+      "keywords" : ["college_basketball", "basketball", "Blog"]
+    }
+  
+  </script>
+</head>
+
+<body>
+  <div class="burger__container">
+  <div class="burger" aria-controls="navigation" aria-label="Menu">
+    <div class="burger__meat burger__meat--1"></div>
+    <div class="burger__meat burger__meat--2"></div>
+    <div class="burger__meat burger__meat--3"></div>
+  </div>
+</div>
+ 
+
+  <nav class="nav" id="navigation">
+  <ul class="nav__list">
+    
+    
+      <li>
+        <a  href="https://johnbedwards.io/">home</a>
+      </li>
+    
+      <li>
+        <a  class="active"
+         href="https://johnbedwards.io/blog">blog</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/about">about</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/resume">resume</a>
+      </li>
+    
+      <li>
+        <a  href="https://johnbedwards.io/projects">projects</a>
+      </li>
+    
+  </ul>
+</nav>
+
+
+  <main>
+    
+    
+
+    <div class="flex-wrapper">
+      <div class="post__container">
+        <div class="post">
+          <header class="post__header">
+            <h1 id="post__title">cbbreadr: a new package for college basketball data</h1>
+            <time datetime="2025-07-25 00:00:00 &#43;0000 UTC" class="post__date">Jul 25 2025</time> 
+          </header>
+          <article class="post__content">
+              
+<p>I&rsquo;m pleased to announce my new college basketball R package, <code>{cbbreadr}</code>, has been approved and is now available on CRAN! You can now install with <code>install.packages()</code> from base R like so:</p>
+<pre><code class="language-r">install.packages(&quot;cbbreadr&quot;)
+</code></pre>
+<p>If you&rsquo;re too hip, cool, and trendy for CRAN and would prefer the development version, you can install the most up-to-date version of <code>{cbbreadr}</code> from Github like so:</p>
+<pre><code class="language-r">devtools::install_github(&quot;john-b-edwards/cbbreadr&quot;)
+</code></pre>
+<h2 id="what-is-cbbreadr">What is <code>{cbbreadr}</code>?<a class="anchor" href="#what-is-cbbreadr">#</a></h2>
+<p>Longtime social media followers of mine may know that I am both <a href="https://johnbedwards.io/blog/march_madness_2025_round_one/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>a big college basketball analytics fan</a>
+ and a <a href="https://github.com/nflverse" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>member of the nflverse team</a>
+. Within the nflverse, our major contribution to NFL analytics has been building data pipelines to quickly and efficiently deliver parsed NFL play-by-play and other data sources via a variety of software packages. As you might be able to tell from the name of the package, <code>{cbbreadr}</code> is a version of the <code>{nflreadr}</code> package that, instead of loading NFL data, loads up-to-date college basketball data.</p>
+<h2 id="where-do-you-get-your-data-from">Where do you get your data from?<a class="anchor" href="#where-do-you-get-your-data-from">#</a></h2>
+<p>The data available in the  <code>{cbbreadr}</code> package comes from the wonderful <a href="https://collegebasketballdata.com/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>CollegeBasketballData.com</a>
+ API, maintained by Bill Radjewski (of <a href="https://collegefootballdata.com/" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>CollegeFootballData.com</a>
+ fame). Bill scrapes and parses his CBB data from multiple sources, then cleans it and makes it available via several API endpoints. I have built several pipelines that grab this data, turn it into rectangular data when needed, and then makes this data available in R via <code>cbbreadr::load_*</code> where <code>*</code> is the specified data resource. I do some additional cleaning and renaming to make this data easier to work with.</p>
+<h2 id="how-frequently-is-the-data-in-cbbreadr-updated">How frequently is the data in <code>{cbbreadr}</code> updated?<a class="anchor" href="#how-frequently-is-the-data-in-cbbreadr-updated">#</a></h2>
+<p>Most of the data in <code>{cbbreadr}</code> is updated on a daily basis. For example, overnight overnight, the play-by-play data from the previous day&rsquo;s games becomes available in the API, so I grab it, parse it, and make it available via <code>load_plays()</code>. Some data does not to be updated on a daily basis, however&ndash;for example, I only update the data available via <code>load_conferences()</code> yearly. To see when a resource was most recently updated, or the status of the pipelines, see the <a href="https://github.com/john-b-edwards/cbbd-data" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>cbb-data status page</a>
+.</p>
+<h2 id="what-can-you-do-with-cbbreadr">What can you do with <code>{cbbreadr}</code>?<a class="anchor" href="#what-can-you-do-with-cbbreadr">#</a></h2>
+<p>In theory, a great many things! The availability of substitution, shot-charting, and play-by-play data over many seasons allows for a lot of different projects that can be done with this data.</p>
+<p>As a quick example, we can use <code>load_plays()</code> to plot Cooper Flagg&rsquo;s shot chart from the 2024-2025 season:</p>
+<pre><code class="language-{r}"># load plays (this will take a few seconds)
+cbbreadr::load_plays(2025) |&gt;
+  # filter to shots that Cooper Flagg took &amp; we have shot tracking data
+  dplyr::filter(
+    shooter_athlete_name == &quot;Cooper Flagg&quot; &amp;
+      !is.na(shot_x_coordinate) &amp;
+      !is.na(shot_y_coordinate)
+  ) |&gt;
+  # scale coordinates to be in feet and flip cross-court coordinates so we're all on one court
+  dplyr::mutate(
+    x = (shot_x_coordinate / 10),
+    x = ifelse(x &gt; 47, 94 - x, x),
+    y = (shot_y_coordinate / 10),
+    y = ifelse(shot_x_coordinate / 10 &gt; 47, 50 - y, y)
+  ) |&gt;
+  ggplot2::ggplot(ggplot2::aes(x = x, y = y)) +
+  # hardwood court
+  ggplot2::geom_rect(
+    data = data.frame(x = 0, y = 0),
+    ggplot2::aes(xmin = 0, xmax = 47, ymin = 0, ymax = 50),
+    fill = &quot;#dfbb85&quot;
+  ) +
+  # hexbins for Flagg's shots
+  ggplot2::geom_hex(bins = 20) +
+  # three point line
+  ggforce::geom_arc(
+    data = data.frame(x = c(0), y = c(0)),
+    ggplot2::aes(x0 = 5.25, y0 = 25, r = 20.75, start = 0, end = pi),
+    color = &quot;white&quot;,
+    inherit.aes = FALSE
+  ) +
+  ggplot2::geom_path(
+    data = data.frame(x = c(0, 5.25), y = c(25 + 20.75, 25 + 20.75)),
+    color = &quot;white&quot;
+  ) +
+  ggplot2::geom_path(
+    data = data.frame(x = c(0, 5.25), y = c(25 - 20.75, 25 - 20.75)),
+    color = &quot;white&quot;
+  ) +
+  # free throw line
+  ggplot2::geom_path(
+    data = data.frame(
+      x = c(0, 19, 19, 0),
+      y = c(25 - 6, 25 - 6, 25 + 6, 25 + 6)
+    ),
+    color = &quot;white&quot;
+  ) +
+  ggforce::geom_arc(
+    data = data.frame(x = c(0), y = c(0)),
+    ggplot2::aes(x0 = 19, y0 = 25, r = 6, start = 0, end = pi),
+    color = &quot;white&quot;,
+    inherit.aes = FALSE
+  ) +
+  # interior paint
+  ggforce::geom_arc(
+    data = data.frame(x = c(0), y = c(0)),
+    ggplot2::aes(x0 = 4, y0 = 25, r = 4, start = 0, end = pi),
+    color = &quot;white&quot;,
+    inherit.aes = FALSE
+  ) +
+  ggplot2::geom_path(
+    data = data.frame(x = c(4, 4), y = c(21, 29)),
+    color = &quot;white&quot;
+  ) +
+  # remove all other theme elements
+  ggplot2::theme_void() +
+  # scale gradient to a heatmap
+  ggplot2::scale_fill_gradient(low = &quot;#FFFFFF&quot;, high = &quot;#FF0000&quot;) +
+  # force limits to show exactly half the court
+  ggplot2::ylim(c(0, 50)) +
+  ggplot2::xlim(c(0, 47)) +
+  # add labels
+  ggplot2::labs(
+    title = &quot;Cooper Flagg Shot Chart, 2024-2025&quot;,
+    subtitle = &quot;From games where shot data was available&quot;,
+    caption = &quot;Source: cbbreadr&quot;,
+    fill = &quot;Shots&quot;
+  )
+</code></pre>
+<p><img src="public%5Cimages%5Ccbbreadr%5Csample_plot.png" alt="sample cbbreadr plot"></p>
+<p>There are a great many more things you can do with this package; I hope to demonstrate some of them for you later, but I also hope others can use this package to build tutorials and do college basketball research as well. If you encounter any errors or issues with the package, please leave a note <a href="https://github.com/john-b-edwards/cbbreadr" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>here</a>
+, and if you are building anything with this package&ndash;from the most most barebones of scatterplots to the biggest and best machine-learning model college basketball has ever seen&ndash;please let me know about it on <a href="https://bsky.app/profile/johnbedwards.io" 
+  
+   target="_blank" rel="noreferrer noopener" 
+>Bluesky</a>
+, I would love to see what you can create with the package!</p>
+
+
+              
+          </article>
+	  
+
+<ul class="tags__list">
+    
+    <li class="tag__item">
+        <a class="tag__link" href="https://johnbedwards.io/tags/r/">r</a>
+    </li></ul>
+
+ 
+          <footer class="post__footer">
+            
+
+
+<div class="social-icons">
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Bluesky"
+         href="https://bsky.app/profile/johnbedwards.io"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/bluesky.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="GitHub"
+         href="https://github.com/john-b-edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/github.svg')"></div>
+      </a>
+    
+  
+     
+    
+      <a class="social-icons__link" rel="me" title="Twitter"
+         href="https://twitter.com/John_B_Edwards"
+         target="_blank" rel="noopener">
+        <div class="social-icons__icon" style="background-image: url('https://johnbedwards.io/svg/twitter.svg')"></div>
+      </a>
+    
+     
+</div>
+
+            <p>© 2021</p>
+          </footer>
+          </div>
+      </div>
+      
+      <div class="toc-container">
+          
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-is-cbbreadr">What is <code>{cbbreadr}</code>?</a></li>
+    <li><a href="#where-do-you-get-your-data-from">Where do you get your data from?</a></li>
+    <li><a href="#how-frequently-is-the-data-in-cbbreadr-updated">How frequently is the data in <code>{cbbreadr}</code> updated?</a></li>
+    <li><a href="#what-can-you-do-with-cbbreadr">What can you do with <code>{cbbreadr}</code>?</a></li>
+  </ul>
+</nav>
+      </div>
+      
+    </div>
+    
+
+  </main>
+
+   
+
+  
+  <script src="https://johnbedwards.io/js/index.min.575dda8d49ee02639942c63564273e6da972ab531dda26a08800bdcb477cbd7f.js" integrity="sha256-V13ajUnuAmOZQsY1ZCc&#43;balyq1Md2iagiAC9y0d8vX8=" crossorigin="anonymous"></script>
+  
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/components/prism-core.min.js"></script>
+
+  
+  <script src="https://unpkg.com/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"
+    data-autoloader-path="https://unpkg.com/prismjs@1.20.0/components/"></script>
+
+  
+    <script src="https://johnbedwards.io/js/table-of-contents.js"></script>
+  
+
+
+</body>
+
+</html>
