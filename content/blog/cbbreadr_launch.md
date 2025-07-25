@@ -10,6 +10,7 @@ tags:
 - r
 draft: false
 toc: true
+bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lus7es3ro22w
 ---
 
 ![](https://github.com/john-b-edwards/cbbd-data/raw/master/data/outputs/cbbreadr_hex.png?raw=true)
