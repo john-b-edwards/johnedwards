@@ -14,7 +14,7 @@
       <pubDate>Mon, 17 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/march_madness_2025_round_one/</guid>
-      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finishfrom last year (in addition to my top 30 finish from 2021), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
+      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finish from last year (in addition to my top 30 finish from 2021 ), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
     </item>
     
     <item>
@@ -23,7 +23,7 @@
       <pubDate>Tue, 31 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_four/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at these links: week one, week two, and week three.</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at these links: week one , week two , and week three .</description>
     </item>
     
     <item>
@@ -32,7 +32,7 @@
       <pubDate>Mon, 30 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_three/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here, and if you&amp;rsquo;d like to see my second week, click here.</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here , and if you&amp;rsquo;d like to see my second week, click here .</description>
     </item>
     
     <item>
@@ -41,7 +41,7 @@
       <pubDate>Sat, 14 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_two/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here. Let&amp;rsquo;s dive in!</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here . Let&amp;rsquo;s dive in!</description>
     </item>
     
     <item>
@@ -50,7 +50,7 @@
       <pubDate>Sat, 07 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_one/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! This is my write-up of the first week of AOC problems that I completed&amp;ndash;as these problems progressively get more difficult, I anticipate splitting these posts into chunks that cover fewer days but are more comprehensive.</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! This is my write-up of the first week of AOC problems that I completed&amp;ndash;as these problems progressively get more difficult, I anticipate splitting these posts into chunks that cover fewer days but are more comprehensive.</description>
     </item>
     
     <item>
@@ -68,7 +68,7 @@
       <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/predicting-scrabble-point-values/</guid>
-      <description>I recently participated in a Kaggle community competitionwhere the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on Woogles.io, an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia.</description>
+      <description>I recently participated in a Kaggle community competition where the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on Woogles.io , an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia.</description>
     </item>
     
   </channel>

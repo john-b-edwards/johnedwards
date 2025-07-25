@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>R on John Edwards</title>
+    <title>r on John Edwards</title>
     <link>https://johnbedwards.io/tags/r/</link>
-    <description>Recent content in R on John Edwards</description>
+    <description>Recent content in r on John Edwards</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Mon, 17 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cbbreadr: a new package for college basketball data</title>
+      <link>https://johnbedwards.io/blog/cbbreadr_launch/</link>
+      <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/cbbreadr_launch/</guid>
+      <description>I&amp;rsquo;m pleased to announce my new college basketball R package, {cbbreadr}, has been approved and is now available on CRAN! You can now install with install.packages() from base R like so:
+install.packages(&amp;quot;cbbreadr&amp;quot;) If you&amp;rsquo;re too hip, cool, and trendy for CRAN and would prefer the development version, you can install the most up-to-date version of {cbbreadr} from Github like so:
+devtools::install_github(&amp;quot;john-b-edwards/cbbreadr&amp;quot;) What is {cbbreadr}? Longtime social media followers of mine may know that I am both a big college basketball analytics fan and a member of the nflverse team .</description>
+    </item>
+    
     <item>
       <title>March Madness 2025 First Round Projections</title>
       <link>https://johnbedwards.io/blog/march_madness_2025_round_one/</link>
       <pubDate>Mon, 17 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/march_madness_2025_round_one/</guid>
-      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finishfrom last year (in addition to my top 30 finish from 2021), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
+      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finish from last year (in addition to my top 30 finish from 2021 ), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
     </item>
     
     <item>
@@ -23,8 +34,8 @@
       <pubDate>Mon, 18 Nov 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/olympic_prediction_contest/</guid>
-      <description>Stade de France; Chabe01, CC BY-SA 4.0, via Wikimedia Commons
-I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest.I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
+      <description>Stade de France; Chabe01, CC BY-SA 4.0 , via Wikimedia Commons
+I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest. I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
     </item>
     
     <item>

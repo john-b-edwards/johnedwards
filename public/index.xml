@@ -7,14 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Mon, 17 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cbbreadr: a new package for college basketball data</title>
+      <link>https://johnbedwards.io/blog/cbbreadr_launch/</link>
+      <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/cbbreadr_launch/</guid>
+      <description>I&amp;rsquo;m pleased to announce my new college basketball R package, {cbbreadr}, has been approved and is now available on CRAN! You can now install with install.packages() from base R like so:
+install.packages(&amp;quot;cbbreadr&amp;quot;) If you&amp;rsquo;re too hip, cool, and trendy for CRAN and would prefer the development version, you can install the most up-to-date version of {cbbreadr} from Github like so:
+devtools::install_github(&amp;quot;john-b-edwards/cbbreadr&amp;quot;) What is {cbbreadr}? Longtime social media followers of mine may know that I am both a big college basketball analytics fan and a member of the nflverse team .</description>
+    </item>
+    
     <item>
       <title>March Madness 2025 First Round Projections</title>
       <link>https://johnbedwards.io/blog/march_madness_2025_round_one/</link>
       <pubDate>Mon, 17 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/march_madness_2025_round_one/</guid>
-      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finishfrom last year (in addition to my top 30 finish from 2021), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
+      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finish from last year (in addition to my top 30 finish from 2021 ), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
     </item>
     
     <item>
@@ -26,7 +37,7 @@
       <description>Introduction I sent out an open request a few weeks ago for potential blog post topics. I expected a lot of requests for technical or sports stuff, but I also got some requests about stuff I did in my personal life&amp;mdash;specifically, An Nguyen requested to hear about my experience training for a marathon!
 marathon training
 — An Nguyen (@nguyenank.bsky.social) November 19, 2024 at 10:59 AM
-After writing a bunch of heavily technical posts about the Advent of Code in December, I thought it would be a good idea to tackle something less technical to balance out my blog&amp;rsquo;s tone.</description>
+After writing a bunch of heavily technical posts about the Advent of Code in December , I thought it would be a good idea to tackle something less technical to balance out my blog&amp;rsquo;s tone.</description>
     </item>
     
     <item>
@@ -35,7 +46,7 @@ marathon training
       <pubDate>Tue, 31 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_four/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at these links: week one, week two, and week three.</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! You can view my solutions to each week at these links: week one , week two , and week three .</description>
     </item>
     
     <item>
@@ -44,7 +55,7 @@ marathon training
       <pubDate>Mon, 30 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_three/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here, and if you&amp;rsquo;d like to see my second week, click here.</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here , and if you&amp;rsquo;d like to see my second week, click here .</description>
     </item>
     
     <item>
@@ -53,7 +64,7 @@ marathon training
       <pubDate>Sat, 14 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_two/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here. Let&amp;rsquo;s dive in!</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! If you&amp;rsquo;d like to see my work in completing the first week of AOC problems, click here . Let&amp;rsquo;s dive in!</description>
     </item>
     
     <item>
@@ -62,7 +73,7 @@ marathon training
       <pubDate>Sat, 07 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/aoc_2024_week_one/</guid>
-      <description>Introduction The Advent of Code(AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! This is my write-up of the first week of AOC problems that I completed&amp;ndash;as these problems progressively get more difficult, I anticipate splitting these posts into chunks that cover fewer days but are more comprehensive.</description>
+      <description>Introduction The Advent of Code (AOC) is a series of programming problems that are released daily from December 1st to December 25th, each problem more challenging than the last. As a means of practicing my Julia skills, I decided to try to tackle the AOC this year using just Julia! This is my write-up of the first week of AOC problems that I completed&amp;ndash;as these problems progressively get more difficult, I anticipate splitting these posts into chunks that cover fewer days but are more comprehensive.</description>
     </item>
     
     <item>
@@ -71,8 +82,8 @@ marathon training
       <pubDate>Mon, 18 Nov 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/olympic_prediction_contest/</guid>
-      <description>Stade de France; Chabe01, CC BY-SA 4.0, via Wikimedia Commons
-I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest.I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
+      <description>Stade de France; Chabe01, CC BY-SA 4.0 , via Wikimedia Commons
+I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest. I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
     </item>
     
     <item>
@@ -81,7 +92,7 @@ I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 202
       <pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/google_data_sci_slop/</guid>
-      <description>Google I/O 2019; Alexander Shcherbakov, CC BY-SA 3.0via Wikimedia Commons
+      <description>Google I/O 2019; Alexander Shcherbakov, CC BY-SA 3.0 via Wikimedia Commons
 Google I/O was this past week, and predictably, the focus was LLM-powered tools. Among the products Google rolled out was something that caught my eye&amp;ndash;an LLM powered &amp;ldquo;Data Science Agent&amp;rdquo; that would take in data and with prompting, break down a dataset, develop a plan of attack for approaching a data science problem, and even generate Colab notebooks.
 Today we are launching Data Science Agent, a Google Labs experiment.</description>
     </item>
@@ -110,7 +121,7 @@ Today we are launching Data Science Agent, a Google Labs experiment.</descriptio
       <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/predicting-scrabble-point-values/</guid>
-      <description>I recently participated in a Kaggle community competitionwhere the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on Woogles.io, an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia.</description>
+      <description>I recently participated in a Kaggle community competition where the objective was to predict the point value of a word played on the 20th turn of a Scrabble game given a dataset of Scrabble games played on Woogles.io , an online Scrabble website. After learning a lot about neural networks and Julia, I managed to swing first place! Below is my write-up of my solution, which also represents my first serious foray into working with Julia.</description>
     </item>
     
     <item>
@@ -119,7 +130,7 @@ Today we are launching Data Science Agent, a Google Labs experiment.</descriptio
       <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/picking_2022/</guid>
-      <description>As we reach the end of the 2021-22 college football season (the national championship game is unfolding on my TV as I type this), I wanted to take a look back at my performance in the College Football Data predictions contest. Minimum 400 games picked (not counting the NCG, but it should not affect my performance) (I picked 726 games total, for reference), I finished:
+      <description>As we reach the end of the 2021-22 college football season (the national championship game is unfolding on my TV as I type this), I wanted to take a look back at my performance in the College Football Data predictions contest . Minimum 400 games picked (not counting the NCG, but it should not affect my performance) (I picked 726 games total, for reference), I finished:
  1st in straight-up picks 3rd in ATS picks 1st in absolute error 4th in mean squared error  So I did pretty well, especially for someone who picked as many games as I did!</description>
     </item>
     
@@ -139,7 +150,7 @@ import sys!{sys.executable} -m pip install pandas sklearn numpy rpy2 trueskill 
       <pubDate>Wed, 02 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/lrmc_pt_2/</guid>
-      <description>The following was originally published on the CFBD Blogand has been reproduced here with edits for clarity.
+      <description>The following was originally published on the CFBD Blog and has been reproduced here with edits for clarity.
 This is the second and final part of a series on implementing LRMC rankings for CFB! This entry presupposes you are familiar with the mathematical concepts behind LRMC. To view part one, which covers these concepts, click here.
 When we last left off, we covered how LRMC works and how to implement it mathematically.</description>
     </item>
@@ -150,8 +161,8 @@ When we last left off, we covered how LRMC works and how to implement it mathema
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/lrmc_pt_1/</guid>
-      <description>The following was originally published on the CFBD Blogand has been reproduced here with edits for clarity.
-As Bill covered earlier this season, calculating strength-of-schedule adjusted metrics like SRS are a little tricky given how few non-conference games teams play this year. While I think his technique for conference-based SRS is a great attempt at a really difficult problem, I think there is some value in discussing alternative approaches to evaluating team strength this year that do not struggle with the same singularity issues as SRS.</description>
+      <description>The following was originally published on the CFBD Blog and has been reproduced here with edits for clarity.
+As Bill covered earlier this season , calculating strength-of-schedule adjusted metrics like SRS are a little tricky given how few non-conference games teams play this year. While I think his technique for conference-based SRS is a great attempt at a really difficult problem, I think there is some value in discussing alternative approaches to evaluating team strength this year that do not struggle with the same singularity issues as SRS.</description>
     </item>
     
     <item>
@@ -169,8 +180,8 @@ As Bill covered earlier this season, calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/projects/</guid>
-      <description>NFLData.jl Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package here.
-Royal Statistical Society 2024 Olympic Prediction Contest Finished 1st overall in the RSS&amp;rsquo;s 2024 Olympic Prediction contest. While my code is not available, I have done a high-level writeup of my solution and you can view it here.Kaggle 2024 March Mania Contest Finished 33rd overall in Kaggle&amp;rsquo;s 2024 March Mania contest using using team-strength methods and some minor gaming of the competition.</description>
+      <description>NFLData.jl Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package here .
+Royal Statistical Society 2024 Olympic Prediction Contest Finished 1st overall in the RSS&amp;rsquo;s 2024 Olympic Prediction contest. While my code is not available, I have done a high-level writeup of my solution and you can view it here. Kaggle 2024 March Mania Contest Finished 33rd overall in Kaggle&amp;rsquo;s 2024 March Mania contest using using team-strength methods and some minor gaming of the competition.</description>
     </item>
     
     <item>

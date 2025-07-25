@@ -1,4 +1,4 @@
-theme: hugo-theme-codex
+btheme: hugo-theme-codex
 title: John Edwards
 languageCode: en-us
 baseURL: https://johnbedwards.io
