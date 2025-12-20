@@ -8,6 +8,10 @@ toc: false
 noComment: true
 ---
 
+### cbbd-r
+
+Authored an R package to allow users to interact with the [CollegeBasketballData.com API](https://collegebasketballdata.com/), using continous integration to build and update documentation as the API itself is updated.
+
 ### NFLData.jl
 
 Developed and released an open source Julia package allowing users to easily work with `nflverse` data. You can view the documentation for the package [here](https://julia.nflverse.com/stable/).

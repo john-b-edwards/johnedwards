@@ -45,12 +45,18 @@ noComment: true
 
 ## Experiences
 
-### Manager of Data Science, Seattle Mariners
+### Assistant Director of Data Science, Seattle Mariners
 #### 2024-Present
 
-I manage projects, mentor other data scientists, and develop machine learning models and tools
-for the Mariners baseball operations department. I also assist with player evaluation and acquisition,
-in the draft, trade discussions, and free agency.
+I lead a team of data scientists on a variety of baseball projects and contribute to player evaluation 
+discussions in our war room and draft room.
+
+### Manager of Data Science, Seattle Mariners
+#### 2025
+
+I managed projects and a small team of data scientists, contributing projects to the data science
+department with an emphasis on pitching related projects, and contributed to player evaluation 
+discussions in our war room and draft room.
 
 ### Lead Data Scientist, Pitching, Seattle Mariners
 #### 2024

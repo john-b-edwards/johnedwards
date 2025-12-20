@@ -160,7 +160,7 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/about/</guid>
-      <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my BS in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing with the Seattle Mariners. I have served as an analyst and lead data scientist of pitching before landing in my current position as manager of data science for the team.</description>
+      <description>I am a sports analyst/data scientist from Virginia Beach, VA, currently residing in Seattle, WA. I received my BS in Literature, Media, and Communications from Georgia Tech in 2019. I have previously worked as a contributing writer/analyst for a variety of websites, including The Athletic, and Sporting News, but have since moved to work in front offices, interning with the Baltimore Orioles before landing with the Seattle Mariners. I currently serve as the assistant director of data science for the Mariners.</description>
     </item>
     
     <item>
@@ -169,8 +169,9 @@ As Bill covered earlier this season , calculating strength-of-schedule adjusted 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/projects/</guid>
-      <description>NFLData.jl Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package here .
-Royal Statistical Society 2024 Olympic Prediction Contest Finished 1st overall in the RSS&amp;rsquo;s 2024 Olympic Prediction contest. While my code is not available, I have done a high-level writeup of my solution and you can view it here. Kaggle 2024 March Mania Contest Finished 33rd overall in Kaggle&amp;rsquo;s 2024 March Mania contest using using team-strength methods and some minor gaming of the competition.</description>
+      <description>cbbd-r Authored an R package to allow users to interact with the CollegeBasketballData.com API , using continous integration to build and update documentation as the API itself is updated.
+NFLData.jl Developed and released an open source Julia package allowing users to easily work with nflverse data. You can view the documentation for the package here .
+Royal Statistical Society 2024 Olympic Prediction Contest Finished 1st overall in the RSS&amp;rsquo;s 2024 Olympic Prediction contest.</description>
     </item>
     
     <item>
@@ -179,7 +180,7 @@ Royal Statistical Society 2024 Olympic Prediction Contest Finished 1st overall i
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/resume/</guid>
-      <description>Proficiencies  R  catboost data.table ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   Julia  Dataframes.jl Flux.jl Plots.jl StatsModels.jl MixedModels.jl XGBoost.jl   SQL HTML CSS Git  Experiences Manager of Data Science, Seattle Mariners 2024-Present I manage projects, mentor other data scientists, and develop machine learning models and tools for the Mariners baseball operations department.</description>
+      <description>Proficiencies  R  catboost data.table ggplot shiny lme4 mgcv rvest rselenium tensorflow tidyverse tidymodels xgboost   Python  catboost django numpy pandas sklearn tensorflow xgboost   Julia  Dataframes.jl Flux.jl Plots.jl StatsModels.jl MixedModels.jl XGBoost.jl   SQL HTML CSS Git  Experiences Assistant Director of Data Science, Seattle Mariners 2024-Present I lead a team of data scientists on a variety of baseball projects and contribute to player evaluation discussions in our war room and draft room.</description>
     </item>
     
   </channel>
