@@ -55,7 +55,7 @@ discussions in our war room and draft room.
 #### 2025
 
 I managed projects and a small team of data scientists, contributing projects to the data science
-department with an emphasis on pitching related projects, and contributed to player evaluation 
+department with an emphasis on pitching, and contributed to player evaluation 
 discussions in our war room and draft room.
 
 ### Lead Data Scientist, Pitching, Seattle Mariners
