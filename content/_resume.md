@@ -46,7 +46,7 @@ noComment: true
 ## Experiences
 
 ### Assistant Director of Data Science, Seattle Mariners
-#### 2024-Present
+#### 2025-Present
 
 I lead a team of data scientists on a variety of baseball projects and contribute to player evaluation 
 discussions in our war room and draft room.
