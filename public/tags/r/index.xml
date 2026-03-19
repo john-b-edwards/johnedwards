@@ -7,14 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2021</copyright>
-    <lastBuildDate>Mon, 17 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://johnbedwards.io/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>March Madness 2026 First Round Projections</title>
+      <link>https://johnbedwards.io/blog/march_madness_2026_round_one/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://johnbedwards.io/blog/march_madness_2026_round_one/</guid>
+      <description>Introduction and methodology Last year I released my initial batch of March Madness projections for 2025! I tend to be decently good at the Kaggle competition for March Madness at least, and other people found them useful as well. While I am releasing these a bit late for anyone to really bake them into a bracket (blame a hectic spring training), I did want to share my predictions for the upcoming tournaments.</description>
+    </item>
+    
     <item>
       <title>March Madness 2025 First Round Projections</title>
       <link>https://johnbedwards.io/blog/march_madness_2025_round_one/</link>
       <pubDate>Mon, 17 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/march_madness_2025_round_one/</guid>
-      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finish from last year (in addition to my top 30 finish from 2021 ), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
+      <description>Introduction and methodology Following up on my Kaggle March Mania top 40 finishfrom last year (in addition to my top 30 finish from 2021), I&amp;rsquo;m excited to share my Mach Madness projections for this year! I want to get a bit more granular this year and be able to share some individual game projections as well, as an exercise in preparing these kinds of visuals (not to mention the social media clout).</description>
     </item>
     
     <item>
@@ -23,8 +32,8 @@
       <pubDate>Mon, 18 Nov 2024 00:00:00 +0000</pubDate>
       
       <guid>https://johnbedwards.io/blog/olympic_prediction_contest/</guid>
-      <description>Stade de France; Chabe01, CC BY-SA 4.0 , via Wikimedia Commons
-I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest. I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
+      <description>Stade de France; Chabe01, CC BY-SA 4.0, via Wikimedia Commons
+I had the pleasure of competing in the Royal Statistical Society&amp;rsquo;s 2024 Olympics prediction contest.I also had the pleasure of winning! While I feel that my code is too messy to share at present and I lack the motivation to clean it up for public consumption, I did want to discuss at a high level my approach and lessons learned from this competition.</description>
     </item>
     
     <item>
