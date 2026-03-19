@@ -1,6 +1,6 @@
 ---
-date: "2025-03-19"
-description: My initial tournament projections and first round projections for March Madness, 2026
+date: "2026-03-19"
+description: My initial tournament projections and first round projections for March Madness for 2026
 draft: false
 keywords:
 - college_basketball
@@ -11,7 +11,6 @@ tags:
 - Julia
 title: March Madness 2026 First Round Projections
 toc: true
-bsky_thread: https://bsky.app/profile/johnbedwards.io/post/3lklnvb2wks2s
 ---
 
 # Introduction and methodology
